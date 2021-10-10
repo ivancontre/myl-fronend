@@ -1,13 +1,51 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import '~antd/dist/antd.css';
+
+
+.container {
+  
+  display: block;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.zone {
+  height: 120px;
+  width: 100vh;
+  margin: 10px;
+  border-radius: 3px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  
+}
+
+.movable-item {
+  border-radius: 5px;
+  /* position: absolute; */
+  background-color: #fff3f3;
+  height: 100px;
+  width: 60px;
+  margin: 5px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
+
+.stack {
+  width: 80px;
+}
+
+.stack > .movable-item  {
+  position: absolute;
+  
+}
+
+div.ant-col {
+  border: 0.1px solid rgba(0, 0, 0, 0.06);
+} 
+
+.actions {
+  float: right;
 }
