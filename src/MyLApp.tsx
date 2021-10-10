@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-import Match from './pages/Match';
+import AppRouter from './routers/AppRouter';
 import { setSocket } from './store/socket/action';
 
 const MyLApp: FC = () => {
@@ -16,7 +16,7 @@ const MyLApp: FC = () => {
 
     useEffect(() => {
         dispatch(setSocket(socket.connected, socket))
-	}, [socket]);
+	}, [socket, dispatch]);
 
 	useEffect(() => {
 
@@ -24,7 +24,7 @@ const MyLApp: FC = () => {
             dispatch(setSocket(true, socket))
 		});
 		
-	}, [socket]);
+	}, [socket, dispatch]);
 
 	useEffect(() => {
 
@@ -32,11 +32,11 @@ const MyLApp: FC = () => {
 			dispatch(setSocket(false))
 		});
 
-	}, [socket]);
+	}, [socket, dispatch]);
 
 
     return (
-        <Match />
+        <AppRouter />
     )
 }
 

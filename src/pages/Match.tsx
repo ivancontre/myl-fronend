@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import update from 'immutability-helper';
 import { Button, Col, Divider, Row, Tag } from 'antd';
 import { DndProvider } from 'react-dnd';
@@ -9,7 +9,6 @@ import { EyeFilled } from '@ant-design/icons';
 import Zone from '../components/Zone';
 import Card from '../components/Card';
 import { ZONE_NAMES } from "../constants";
-import { SocketContext } from '../context/SocketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { changeMatch } from '../store/match/action';
