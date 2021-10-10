@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
+import { store } from './store';
 import { SocketProvider } from './context/SocketContext';
 import './index.css';
-import Match from './pages/Match';
+import MyLApp from './MyLApp';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <SocketProvider>
-      <Match />
-    </SocketProvider> 
-    
-  </React.StrictMode>,
+	<Provider store={ store } >
+		<MyLApp />
+	</Provider>
+
+    ,
   document.getElementById('root')
 );

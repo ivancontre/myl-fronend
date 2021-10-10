@@ -2,7 +2,10 @@ import { FC, useRef } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import { ZONE_NAMES } from "../constants";
-import { Dictionary, DragItem, Item } from '../pages/Match';
+import { DragItem, Item } from '../pages/Match';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { changeMatch } from '../store/match/action';
 
 export interface CardProps {
     id: any;
@@ -10,12 +13,15 @@ export interface CardProps {
     index: number;
     moveCard?: (dragIndex: number, hoverIndex: number, zoneName: string) => void;
     zone: string;
-    setCards?: Function;
 };
 
-const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, setCards }) => {
+const Card: FC<CardProps> = ({ id, text, index, moveCard, zone }) => {
 
     const ref = useRef<HTMLInputElement>(null);
+
+    const dispatch = useDispatch();
+
+    const { match } = useSelector((state: RootState) => state.match);
 
     const changeCardZone = (item: DragItem, zoneName: string) => {
         
@@ -23,18 +29,14 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, setCards }) => {
             return;
         }
 
-        setCards && setCards((cards: Dictionary<Item[] | []>) => {
-            
-            const card = cards[item.zone].find(card => card.id === item.id) as Item;
-            let newCards = {...cards};
+        const card = match[item.zone].find(card => card.id === item.id) as Item;
+        let newCards = {...match};
 
-            newCards[item.zone] = cards[item.zone].filter(card => card.id !== item.id);
+        newCards[item.zone] = match[item.zone].filter(card => card.id !== item.id);
 
-            newCards[zoneName] = [...cards[zoneName], card];        
+        newCards[zoneName] = [...match[zoneName], card];        
 
-            return newCards;
-
-        });
+        dispatch(changeMatch(newCards));
 
     }
 
@@ -147,9 +149,6 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, setCards }) => {
         <div ref={ ref } style={{ opacity }} className='movable-item' data-handler-id={ handlerId } onDoubleClick={ detail} >
             { text }
         </div>
-        
-
-
         
     )
 }

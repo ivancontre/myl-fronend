@@ -10,6 +10,9 @@ import Zone from '../components/Zone';
 import Card from '../components/Card';
 import { ZONE_NAMES } from "../constants";
 import { SocketContext } from '../context/SocketContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { changeMatch } from '../store/match/action';
 
 export interface Item {
     id: number;
@@ -30,6 +33,10 @@ const Match: FC = () => {
 
     const { DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE } = ZONE_NAMES;
 
+    const dispatch = useDispatch();
+
+    const { match } = useSelector((state: RootState) => state.match);
+    const { online, socket } = useSelector((state: RootState) => state.socket);
 
     let data: Dictionary<Item[] | []> = {};
     data[DEFENSE_ZONE] =  [
@@ -69,7 +76,12 @@ const Match: FC = () => {
     data[ATTACK_ZONE] = [];
     data[CEMETERY_ZONE] = [];
     data[EXILE_ZONE] = [];
-    data[REMOVAL_ZONE] = [];
+    data[REMOVAL_ZONE] = [];    
+
+    useEffect(() => {
+        dispatch(changeMatch(data));
+        
+    }, [dispatch]);
 
     let oponentData: Dictionary<Item[] | []> = {};
     oponentData[DEFENSE_ZONE] =  [
@@ -95,25 +107,23 @@ const Match: FC = () => {
     oponentData[EXILE_ZONE] = [];
     oponentData[REMOVAL_ZONE] = [];
 
-    const [cards, setCards] = useState<Dictionary<Item[] | []>>(data);
-
     const [oponentsCards, setOponentsCards] = useState<Dictionary<Item[] | []>>(oponentData);
     
-    const { socket } = useContext(SocketContext);
+    //const { socket } = useContext(SocketContext);
 
     useEffect(() => {
 
-        socket?.emit('changing', cards);
+        socket?.emit('changing', match);
 
-    }, [cards, socket]);
+    }, [match, socket]);
 
     useEffect(() => {
 
-        socket?.on('changing-oponent', (data) => {
+        // socket?.on('changing-oponent', (data) => {
             
-            setOponentsCards(data);
+        //     setOponentsCards(data);
 
-        });
+        // });
         
     }, [socket, setOponentsCards]);
 
@@ -122,33 +132,28 @@ const Match: FC = () => {
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
 
-            const dragCard = cards[zoneName][dragIndex];
+            const dragCard = match[zoneName][dragIndex];
 
-            if (!cards[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
+            if (!match[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
                 return;
             }
 
-            setCards((cards: Dictionary<Item[] | []>) => {
-                let newCards = {...cards};
+            let newCards = {...match};
 
-                newCards[zoneName] = update(cards[zoneName], {
-                    $splice: [
-                        [dragIndex, 1],
-                        [hoverIndex, 0, dragCard],
-                    ],
-                });
-
-                return newCards;
+            newCards[zoneName] = update(match[zoneName], {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, dragCard],
+                ],
             });
 
-
+            dispatch(changeMatch(newCards));
         },
-        [cards],
+        [match, dispatch],
     );
 
     const returnItemsForZone = (zoneName: string) => {
-
-        return cards[zoneName]
+        return match[zoneName]
             .map((card, index) => (
                 <Card key={ card.id }
                     index={ index }
@@ -156,10 +161,9 @@ const Match: FC = () => {
                     text={ card.text }
                     moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
                     zone={ zoneName }
-                    setCards={ setCards }
 
                 />
-            ))
+            ));
     };
 
     const returnItemsForZoneOponent = (zoneName: string) => {
@@ -203,7 +207,7 @@ const Match: FC = () => {
                 </Col>
             </Row>  */}
 
-            <Divider>División</Divider>
+            <Divider>{online ? 'Online' : 'Offline'}</Divider>
 
             <Row>
                 <Col span={ 21 }> 
@@ -214,27 +218,27 @@ const Match: FC = () => {
 
                             <Col span={ 3 }> 
                                 <div className="actions">
-                                    <Tag color="green">{ cards[EXILE_ZONE].length }</Tag>
+                                    <Tag color="green">{ match[EXILE_ZONE] && match[EXILE_ZONE].length }</Tag>
                                     <Button type="primary" size="small" icon={<EyeFilled />}></Button>
                                 </div>
                                 <Zone title={ EXILE_ZONE } className='zone stack'>
-                                    { returnItemsForZone(EXILE_ZONE) }
+                                    { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE) }
                                 </Zone>
                             </Col>
 
                             <Col span={ 3 }> 
                                 <div className="actions">
-                                    <Tag color="green">{ cards[REMOVAL_ZONE].length }</Tag>
+                                    <Tag color="green">{ match[REMOVAL_ZONE] && match[REMOVAL_ZONE].length }</Tag>
                                     <Button type="primary" size="small" icon={<EyeFilled />}></Button>
                                 </div>
                                 <Zone title={ REMOVAL_ZONE } className='zone stack'>
-                                    { returnItemsForZone(REMOVAL_ZONE) }
+                                    { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE) }
                                 </Zone>
                             </Col>
 
                             <Col span={ 18 }> 
                                 <Zone title={ ATTACK_ZONE } className='zone'>
-                                    { returnItemsForZone(ATTACK_ZONE) }
+                                    { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE) }
                                 </Zone> 
                             </Col>
 
@@ -244,11 +248,11 @@ const Match: FC = () => {
 
                             <Col span={ 3 }> 
                                 <div className="actions">
-                                    <Tag color="green">{ cards[CEMETERY_ZONE].length }</Tag>
+                                    <Tag color="green">{ match[CEMETERY_ZONE] && match[CEMETERY_ZONE].length }</Tag>
                                     <Button type="primary" size="small" icon={<EyeFilled />}></Button>
                                 </div>
                                 <Zone title={ CEMETERY_ZONE } className='zone stack'>
-                                    { returnItemsForZone(CEMETERY_ZONE) }
+                                    { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE) }
                                 </Zone>
                             </Col>
 
@@ -258,7 +262,7 @@ const Match: FC = () => {
 
                             <Col span={ 18 }> 
                                 <Zone title={ DEFENSE_ZONE } className='zone'>
-                                    { returnItemsForZone(DEFENSE_ZONE) }
+                                    { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE) }
                                 </Zone>
                             </Col>
 
