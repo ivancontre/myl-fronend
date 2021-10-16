@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { store } from './store';
-import { SocketProvider } from './context/SocketContext';
 import './index.css';
 import MyLApp from './MyLApp';
 

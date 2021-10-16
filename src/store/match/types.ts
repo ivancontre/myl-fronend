@@ -1,14 +1,14 @@
-import { Dictionary, Item } from '../../pages/Match';
+import { Dictionary, ICard } from '../../pages/MatchPage';
 
 export const change = '[match] change';
 
 export type MatchState = {
-    match: Dictionary<Item[] | []>;
+    match: Dictionary<ICard[] | []>;
 };
 
 type ChangeAction = {
     type: typeof change;
-    payload: Dictionary<Item[] | []>;
+    payload: Dictionary<ICard[] | []>;
 };
 
 export type MatchActionTypes = ChangeAction;

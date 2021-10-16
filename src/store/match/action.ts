@@ -1,7 +1,7 @@
-import { Dictionary, Item } from "../../pages/Match";
+import { Dictionary, ICard } from "../../pages/MatchPage";
 import { change, MatchActionTypes} from "./types";
 
-export const changeMatch = (match: Dictionary<Item[] | []>): MatchActionTypes => {
+export const changeMatch = (match: Dictionary<ICard[] | []>): MatchActionTypes => {
     return {
         type: change,
         payload: match

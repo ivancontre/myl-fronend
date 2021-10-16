@@ -1,6 +1,15 @@
 import React from 'react'
+import { useLocation } from 'react-router';
+import useHideMenu from '../../hooks/useHideMenu';
 
 const Play = () => {
+
+    const { pathname } = useLocation();
+    const path = pathname.replace('/', '');
+
+    useHideMenu(false, path);
+
+
     return (
         <div>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id dictum diam. Cras id molestie ipsum. Mauris gravida, nunc id placerat aliquet, ante nisl porta felis, hendrerit feugiat odio erat interdum nulla. Integer placerat rhoncus ipsum, ac dignissim risus suscipit ut. Proin vehicula leo nec libero scelerisque aliquam. Maecenas porttitor gravida lectus, non consectetur eros hendrerit laoreet. Praesent quis massa laoreet, auctor justo et, accumsan felis. Nam condimentum pulvinar nunc, a posuere augue consequat vel. Cras maximus mattis lorem, at fermentum purus malesuada nec. Morbi eleifend elit sollicitudin, bibendum odio ut, condimentum lorem. Nam tempor tincidunt est eget dapibus. Proin pellentesque purus posuere sapien faucibus varius. Phasellus ut sollicitudin nulla. Praesent libero nibh, dignissim id pulvinar sed, pulvinar vel augue.

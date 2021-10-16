@@ -3,5 +3,7 @@ export const ZONE_NAMES = {
     ATTACK_ZONE: 'Ataque',
     CEMETERY_ZONE: 'Cementerio',
     EXILE_ZONE: 'Destierro',
-    REMOVAL_ZONE: 'Remoción'
+    REMOVAL_ZONE: 'Remoción',
+    SUPPORT_ZONE: 'Apoyo',
+    HAND_ZONE: 'Mano'
 };
