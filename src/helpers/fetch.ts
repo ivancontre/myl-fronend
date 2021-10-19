@@ -12,14 +12,16 @@ export const runFetch = (endpoint: string, data: object, method: string, token?:
 
     let options: any = {
         method,
-        headers: {
-            "Content-type": "application/json"
-        }
+        headers: {}
     };
+
+    if (!(data instanceof FormData)){
+        options.headers["Content-type"] = "application/json";
+    } 
 
     if (token) options.headers["x-token"] = token;
 
-    if (method.toUpperCase() !== 'GET') options.body = JSON.stringify(data);
+    if (method.toUpperCase() !== 'GET') options.body = !(data instanceof FormData) ? JSON.stringify(data) : data;
 
     return fetch(url, options);
 };

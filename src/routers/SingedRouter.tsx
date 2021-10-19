@@ -2,19 +2,23 @@ import { Layout, Menu,  } from 'antd';
 import React, { FC, useContext } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
-    BarChartOutlined,
+    BlockOutlined,
     UserOutlined,
-    //PoweroffOutlined
+    PlayCircleOutlined,
+    AppstoreOutlined
 } from '@ant-design/icons';
 
-import Cards from '../components/signed/Cards';
-//import Play from '../components/signed/Play';
-import MatchPage from '../pages/MatchPage';
+import MyCards from '../components/signed/Cards';
+import Play from '../components/signed/Play';
+//import MatchPage from '../pages/MatchPage';
 
 import '../css/signed.css'
-import AdminCards from '../components/signed/AdminCards';
+import Cards from '../components/signed/admin/Cards';
 import { MenuContext } from '../context/MenuContext';
-import NewCard from '../components/signed/NewCard';
+import NewCard from '../components/signed/admin/NewCard';
+//import { useSelector } from 'react-redux';
+//import { RootState } from '../store';
+import Users from '../components/signed/admin/Users';
 
 const { Content, Sider } = Layout;
 
@@ -22,11 +26,9 @@ export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
 
-    console.log(selectedOption)
+    //const { role } = useSelector((state: RootState) => state.auth);
     
     return (
-        // <SocketProvider>
-        //<MenuProvider> 
             <Layout  style={{ height: '100vh' }}>
                 <Sider
                     hidden={ hiddenMenu }
@@ -42,27 +44,27 @@ export const SingedRouter: FC = () => {
                     <div className="logo" />
                     <Menu theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="play" icon={<UserOutlined />}>
+                        <Menu.Item key="play" icon={<PlayCircleOutlined />}>
                             <Link to="/play">
                                 Jugar
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="cards" icon={<BarChartOutlined />}>
-                            <Link to="/cards">
+                        <Menu.Item key="my-cards" icon={<BlockOutlined />}>
+                            <Link to="/my-cards">
                                 Mis Cartas
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="cards-created" icon={<BarChartOutlined />}>
-                            <Link to="/cards-created">
-                                Cartas creadas
+                        <Menu.Item key="cards" icon={<AppstoreOutlined />}>
+                            <Link to="/cards">
+                                Cartas
                             </Link>
                         </Menu.Item>
-                        {/* <Menu.Item key="users-created" icon={<BarChartOutlined />}>
-                            <Link to="/users-created">
-                                Usuarios creados
+                        <Menu.Item key="users" icon={<UserOutlined />}>
+                            <Link to="/users">
+                                Usuarios
                             </Link>
-                        </Menu.Item> */}
+                        </Menu.Item>
 
                     </Menu>
                     
@@ -74,13 +76,17 @@ export const SingedRouter: FC = () => {
                         <div className="site-layout-background" style={{ padding: 24 }} >
                             <Switch>
 
-                                <Route exact path="/play" component={ MatchPage } />
+                                <Route exact path="/play" component={ Play } />
 
-                                <Route exact path="/cards" component={ Cards } />                               
+                                <Route exact path="/my-cards" component={ MyCards } />                               
 
-                                <Route exact path="/cards-created" component={ AdminCards } />
+                                <Route exact path="/cards" component={ Cards } />
 
-                                <Route exact path="/cards-created/new" component={ NewCard } />
+                                <Route exact path="/cards/new" component={ NewCard } />
+
+                                <Route exact path="/cards/:id/edit" component={ NewCard } />
+
+                                <Route exact path="/users" component={ Users } />
 
                                 <Redirect to="/play" />
 
@@ -92,12 +98,6 @@ export const SingedRouter: FC = () => {
                 
 
 
-            </Layout>
-        //</MenuProvider>
-
-
-
-
-            
+            </Layout>            
     )
 };

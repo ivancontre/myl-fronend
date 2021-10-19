@@ -23,7 +23,8 @@ export const startLogin = (email: string, password: string) => {
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
-                    username: respJson.user.username
+                    username: respJson.user.username,
+                    role: respJson.user.role
                 }));
 
             } else {
@@ -53,7 +54,8 @@ export const startRegister = (name: string, lastname: string, email: string, use
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
-                    username: respJson.user.username
+                    username: respJson.user.username,
+                    role: respJson.user.role
                 }));
 
             } else {
@@ -89,7 +91,8 @@ export const startChecking = () => {
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
-                    username: respJson.user.username
+                    username: respJson.user.username,
+                    role: respJson.user.role
                 }));
 
             } else {

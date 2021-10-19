@@ -4,10 +4,16 @@ import thunk from 'redux-thunk';
 import { authReducer } from './auth/reducer';
 import { matchReducer } from './match/reducer';
 //import { socketReducer } from './socket/reducer';
+import { descriptionReducer } from './description/reducer';
 
 import { MatchState } from './match/types';
 //import { SocketState } from './socket/types';
 import { AuthState } from './auth/types';
+import { DescriptionState } from './description/types';
+import { cardReducer } from './card/reducer';
+import { CardState } from './card/types';
+import { SpinState } from './spinUI/types';
+import { spinReducer } from './spinUI/reducer';
 
 declare global {
     interface Window {
@@ -21,12 +27,18 @@ export interface RootState {
     match: MatchState;
     //socket: SocketState;
     auth: AuthState;
+    description: DescriptionState,
+    cards: CardState,
+    spin: SpinState
 }
 
 export const rootReducer = combineReducers({
     match: matchReducer,
     //socket: socketReducer,
-    auth: authReducer
+    auth: authReducer,
+    description: descriptionReducer,
+    cards: cardReducer,
+    spin: spinReducer
 });
 
 export const store = createStore(

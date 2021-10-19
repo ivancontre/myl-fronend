@@ -11,6 +11,7 @@ export type User = {
     lastname: string;
     email: string;
     username: string;
+    role: string;
 };
 
 export type AuthState = {
@@ -21,6 +22,7 @@ export type AuthState = {
     lastname?: string;
     email?: string;
     username?: string;
+    role?: string;
 };
 
 type AuthLogin = {    
