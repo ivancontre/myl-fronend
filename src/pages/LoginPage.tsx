@@ -13,11 +13,7 @@ const LoginPage: FC = () => {
 
     const onFinish = (values: any) => {
 
-        console.log(values)
-        
         const { email, password } = values;
-
-        
         dispatch(startLogin(email, password));
 
     };

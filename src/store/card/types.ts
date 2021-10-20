@@ -2,19 +2,20 @@ export const cardAddNew = '[card] Add new';
 export const cardLoad = '[card] Load';
 export const cardLoadUpdating = '[card] Load updating';
 export const cardResetUpdating = '[card] Reset updating';
+export const cardUpdate = '[card] Update';
 
 export type Card = {
     id?: string;
     num: number;
     name: string;
-    ability: string;
+    ability?: string;
     legend: string;
     type: string;
     frecuency: string;
     edition: string;
-    race: string;
-    cost: number;
-    strength: number;
+    race?: string;
+    cost?: number;
+    strength?: number;
     isMachinery: boolean;
     img: string;
     isUnique: boolean;
@@ -30,6 +31,12 @@ type CardAddNewAction = {
     payload: Card
 };
 
+type CardUpdateAction = {    
+    type: typeof cardUpdate,
+    payload: Card
+};
+
+
 type CardLoadAction = {    
     type: typeof cardLoad,
     payload: Card[]
@@ -37,11 +44,11 @@ type CardLoadAction = {
 
 type CardLoadUpdatingAction = {    
     type: typeof cardLoadUpdating,
-    payload: Card
+    payload: string
 };
 
 type CardResetUpdatingAction = {    
     type: typeof cardResetUpdating
 };
 
-export type CardActionTypes = CardAddNewAction | CardLoadAction | CardLoadUpdatingAction | CardResetUpdatingAction;
+export type CardActionTypes = CardAddNewAction | CardLoadAction | CardLoadUpdatingAction | CardResetUpdatingAction | CardUpdateAction;

@@ -1,11 +1,12 @@
 import { Layout, Menu,  } from 'antd';
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
     BlockOutlined,
     UserOutlined,
     PlayCircleOutlined,
-    AppstoreOutlined
+    AppstoreOutlined,
+    LogoutOutlined
 } from '@ant-design/icons';
 
 import MyCards from '../components/signed/Cards';
@@ -20,14 +21,23 @@ import NewCard from '../components/signed/admin/NewCard';
 //import { RootState } from '../store';
 import Users from '../components/signed/admin/Users';
 
+import '../css/signed.css'
+import { useDispatch } from 'react-redux';
+import { startLogout } from '../store/auth/action';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
 
+    const dispatch = useDispatch();
+
     //const { role } = useSelector((state: RootState) => state.auth);
     
+    const handleLogout = () => {
+        dispatch(startLogout());
+    };    
+
     return (
             <Layout  style={{ height: '100vh' }}>
                 <Sider
@@ -42,7 +52,7 @@ export const SingedRouter: FC = () => {
                     }}
                 >
                     <div className="logo" />
-                    <Menu theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
+                    <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
                         <Menu.Item key="play" icon={<PlayCircleOutlined />}>
                             <Link to="/play">
@@ -64,6 +74,10 @@ export const SingedRouter: FC = () => {
                             <Link to="/users">
                                 Usuarios
                             </Link>
+                        </Menu.Item>
+
+                        <Menu.Item onClick={ handleLogout } className="btn-logout" key="logout" icon={<LogoutOutlined />}>
+                            Cerrar sesión
                         </Menu.Item>
 
                     </Menu>

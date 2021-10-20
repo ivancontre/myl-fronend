@@ -23,6 +23,7 @@ export type FrecuencyCard = {
 export type RaceCard = {
     id: string;
     name: string;
+    edition: string;
 };
 
 export type EditionCard = {

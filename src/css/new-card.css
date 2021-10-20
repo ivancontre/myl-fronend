@@ -1,0 +1,3 @@
+div.label-custom > div.ant-form-item-label > label {
+    display: none;
+}

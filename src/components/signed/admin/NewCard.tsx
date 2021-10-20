@@ -9,22 +9,22 @@ import {
     InputNumber,
     Tooltip,
     Upload,
-    Alert,
+    Image,
+    message
 } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useHideMenu from '../../../hooks/useHideMenu';
 import { RootState } from '../../../store';
-import { startAddNewCard, startLoadCardUpdating } from '../../../store/card/action';
+import { startAddNewCard, loadCardUpdating, startUpdateCard, startLoadCard } from '../../../store/card/action';
 import { useHistory, useParams } from 'react-router';
-import { Card } from '../../../store/card/types';
 import { hideSpin, showSpin } from '../../../store/spinUI/action';
-import { startLoadEditionCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../../../store/description/action';
+
+import '../../../css/new-card.css'
 
 const { Title } = Typography;
 const { TextArea } = Input;
-
 
 interface FieldData {
     name: string | number | (string | number)[];
@@ -39,36 +39,35 @@ const NewCard = () => {
 
     const dispatch = useDispatch();
 
+    const { cardUpdating, cards } = useSelector((state: RootState) => state.cards);
+
     const [fields, setFields] = useState<FieldData[]>([]);
 
-    const { cardUpdating } = useSelector((state: RootState) => state.cards);
+    const [checkIsMachinery, setCheckIsMachinery] = useState<boolean>(false);
+    const [checkIsUnique, setCheckIsUnique] = useState<boolean>(false);
+    const [disableMachinery, setDisableMachinery] = useState<boolean>(true);
+    const [fileList, setFileList] = useState<any>();
+    const [editionName, setEditionName] = useState<string>('');
+
+    const { types, frecuencies, editions, races } = useSelector((state: RootState) => state.description);    
+
+    const history = useHistory();
 
     useEffect(() => {
+        async function getFromAPI() {
+            await dispatch(startLoadCard());
+            await dispatch(loadCardUpdating(params.id));
+        }
 
-        dispatch(startLoadTypeCard());
-        dispatch(startLoadFrecuencyCard());
-        dispatch(startLoadRaceCard());
-        dispatch(startLoadEditionCard());
-
-    }, [dispatch]);
-
-    useEffect(() => {
         if (params.id && params.id !== 'undefined') {
-
-            //dispatch(showSpin('Guadando carta...'));
-            dispatch(startLoadCardUpdating(params.id));
-            //dispatch(hideSpin());
-
-            
-
+            if (cards.length === 0) {
+                getFromAPI();
+            } else {
+                dispatch(loadCardUpdating(params.id));   
+            }
         }
 
-        if (!params.id) {
-        //if (!params.id || params.id === 'undefined') {
-            //dispatch(resetCardUpdating());
-        }
-
-    }, [params.id, dispatch, startLoadCardUpdating]);
+    }, [params.id, dispatch]);
 
     useEffect(() => {
         
@@ -89,9 +88,6 @@ const NewCard = () => {
                 name: 'type',
                 value: cardUpdating.type
             },{
-                name: 'isMachinery',
-                value: cardUpdating.isMachinery
-            },{
                 name: 'frecuency',
                 value: cardUpdating.frecuency
             },{
@@ -106,46 +102,78 @@ const NewCard = () => {
             },{
                 name: 'strength',
                 value: cardUpdating.strength
-            },{
-                name: 'isUnique',
-                value: cardUpdating.isUnique
-            }]
+            }];
 
             setFields(fields);
-
+            if (cardUpdating.isMachinery) setDisableMachinery(false);
+            setCheckIsMachinery(cardUpdating.isMachinery);
+            setCheckIsUnique(cardUpdating.isUnique);
+            setEditionName(cardUpdating.edition);
         }
-    }, [cardUpdating])
 
-    const { types, frecuencies, races, editions } = useSelector((state: RootState) => state.description);
-
-    
-
-    const history = useHistory();
-
-    const [disableMachinery, setDisableMachinery] = useState(true);
-
-    const [fileList, setFileList] = useState<any>()
+    }, [cardUpdating]);
 
     const onFinish = async (values: any) => {
-
-        dispatch(showSpin('Guardando carta...'));
         let formData = new FormData();
 
-        for (let key in values) {
-            
-            if (values[key]) {
-                formData.append(key, values[key]);
+        let armTypeId;
+
+        for (const type of types) {
+            if (type.name === 'Arma') {
+                armTypeId = type.id;
+                break;
             }
-            
+        }        
+
+        for (let key in values) {
+            if (values[key] || values['strength'] === 0 ) formData.append(key, values[key]);                  
+        }     
+        
+        if (values.type !== armTypeId){
+            formData.append('isMachinery', 'false');
+        } else if (checkIsMachinery) {
+            formData.append('isMachinery', 'true');
         }
 
-        formData.append('files[]', fileList);
+        if (checkIsUnique) {
+            formData.append('isUnique', 'true');
+        } else {
+            formData.append('isUnique', 'false');
+        }
 
-        await dispatch(startAddNewCard(formData));
+        if (!cardUpdating) {      
+            
+            if (!fileList) {
+                message.error('Debe adjuntar una imagen');
+                return;
+            }
 
-        dispatch(hideSpin());
+            formData.append('files[]', fileList);
+            dispatch(showSpin('Guardando carta...'));
+            await dispatch(startAddNewCard(formData));
+            dispatch(hideSpin());
+            history.replace(`/cards`);
 
-        history.replace(`/cards`);
+        } else {
+
+            if (fileList){
+
+                const isJPG = fileList.type === 'image/jpeg' || fileList.type === 'image/png';
+    
+                if (!isJPG) {
+                    message.error('Solo se pueden subir imágenes');
+                    return;
+                }
+    
+                formData.append('files[]', fileList);
+    
+            }
+
+            dispatch(showSpin('Guardando carta...'));
+            await dispatch(startUpdateCard(cardUpdating?.id as string, formData));          
+            dispatch(hideSpin());
+              
+        }
 
     };
 
@@ -155,9 +183,54 @@ const NewCard = () => {
                 setDisableMachinery(false);
             } else {
                 setDisableMachinery(true);
+                setCheckIsMachinery(false)
             }
         }
     };
+
+    const handleSwitchMaquinery = (checked: boolean) => {
+        setCheckIsMachinery(checked);
+    };
+
+    const handleSwitchUnique = (checked: boolean) => {
+        setCheckIsUnique(checked);
+    };
+
+    const handleEdition = (editionId: string) => {
+        
+        for (const edition of editions) {
+            if (edition.id === editionId) {
+                setEditionName(edition.name);
+                break;
+            }
+        }
+
+        if (cardUpdating) {
+            setFields((fields) => {
+                return fields.map(item => {
+                    if (item.name === 'race') {
+                        return {
+                            ...item,
+                            value: ''
+                        }
+                    } else {
+                        return item;
+                    }
+                })
+            });
+        } else {
+            setFields([{name: 'race', value: ''}])
+        }
+    };
+
+    const getEditionName = (editionId: string) => {
+
+        for (const edition of editions) {
+            if (edition.id === editionId) {
+                return edition.name;
+            }
+        }
+    }
 
     const back = () => {
         if (cardUpdating?.id && !cardUpdating?.img) {
@@ -246,7 +319,7 @@ const NewCard = () => {
                 </Form.Item>
 
                 <Form.Item label="¿Es maquinaria?" valuePropName="isMachinery">
-                    <Switch disabled={ disableMachinery } />
+                    <Switch disabled={ disableMachinery } onChange={ handleSwitchMaquinery } checked={ checkIsMachinery }/>
                 </Form.Item>  
 
                 <Form.Item 
@@ -264,8 +337,8 @@ const NewCard = () => {
                     
                     >
                     {
-                        frecuencies.length > 0 && frecuencies.map(type => (
-                            <Select.Option key={ type.id } value={ type.id }>{ type.name }</Select.Option>
+                        frecuencies.length > 0 && frecuencies.map(frecuency => (
+                            <Select.Option key={ frecuency.id } value={ frecuency.id }>{ frecuency.name }</Select.Option>
                         ))
                     }                    
                     
@@ -286,11 +359,12 @@ const NewCard = () => {
                     <Select
                             placeholder="Seleccione una opción"
                             style={{ width: "100%" }}
+                            onChange={ handleEdition }
                         
                         >
                         {
-                            editions.length > 0 && editions.map(type => (
-                                <Select.Option key={ type.id } value={ type.id }>{ type.name }</Select.Option>
+                            editions.length > 0 && editions.map(edition => (
+                                <Select.Option key={ edition.id } value={ edition.id }>{ edition.name }</Select.Option>
                             ))
                         }                    
                         
@@ -300,13 +374,14 @@ const NewCard = () => {
                 <Form.Item label="Raza" name="race">
                     <Select
                             placeholder="Seleccione una opción"
-                            style={{ width: "100%" }}
-                        
+                            style={{ width: "100%" }}                        
                         >
                         {
-                            races.length > 0 && races.map(type => (
-                                <Select.Option key={ type.id } value={ type.id }>{ type.name }</Select.Option>
-                            ))
+                            races.length > 0 && races.map(race => {
+                                if (getEditionName(race.edition) === editionName) {
+                                    return (<Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>)
+                                }
+                            })
                         }                    
                         
                     </Select>
@@ -317,11 +392,11 @@ const NewCard = () => {
                 </Form.Item>
 
                 <Form.Item label="Fuerza" name="strength">
-                    <InputNumber style={{width: '100%'}} min={ 1 } />
+                    <InputNumber style={{width: '100%'}} min={ 0 } />
                 </Form.Item>
 
                 <Form.Item label="¿Es única?" valuePropName="isUnique">
-                    <Switch />
+                    <Switch checked={ checkIsUnique } onChange={ handleSwitchUnique }/>
                 </Form.Item>   
 
                 <Form.Item label="Imagen">
@@ -329,6 +404,7 @@ const NewCard = () => {
                         listType="picture"
                         multiple={ false } 
                         beforeUpload = { (file: any) => {
+                                
                                 setFileList(file);
                                 return false;
                             }                      
@@ -339,22 +415,27 @@ const NewCard = () => {
                         }
                         
                     >
-                        <Button type="dashed" disabled={ fileList } >Selecciona una imagen</Button>
+                        <Button type="dashed" disabled={ fileList } > {!cardUpdating?.img ? 'Selecciona una imagen' : 'Imagen de la BD'}</Button>
                     </Upload> 
                     
                 </Form.Item>   
-                    
+
+                <Form.Item className="label-custom" label="preview">
+                    { cardUpdating && !fileList && (<Image   
+                                            width={200}
+                                            src={ cardUpdating.img }
+                                        />)
+                    }
+                </Form.Item>
             
-                <Form.Item label="." >
+                <Form.Item className="label-custom" label="." >
                     <Button type="primary"  htmlType="submit" className="login-form-button" block>
                         {!cardUpdating ? 'Crear' : 'Modificar' }
                     </Button>
                 </Form.Item>
-            </Form>
-
-            
+            </Form>            
         </>
     )
 }
 
-export default NewCard
+export default NewCard;

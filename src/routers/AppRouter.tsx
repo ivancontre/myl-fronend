@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import { RootState } from '../store';
 import { startChecking } from '../store/auth/action';
+import { startLoadCard } from '../store/card/action';
+import { startLoadEditionCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../store/description/action';
 //import Match from '../pages/Match';
 import { AuthRouter } from './AuthRouter';
 import { PrivateRouter } from './PrivateRouter';
@@ -18,13 +20,23 @@ const AppRouter: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { checking, logged } = useSelector((state: RootState) => state.auth);
-
-    
+    const { checking, logged } = useSelector((state: RootState) => state.auth);    
 
     useEffect(() => {
         dispatch(startChecking());
     }, [dispatch])
+
+    useEffect(() => {
+        if (logged) {
+            dispatch(startLoadTypeCard());
+            dispatch(startLoadFrecuencyCard());
+            dispatch(startLoadRaceCard());
+            dispatch(startLoadEditionCard());
+            dispatch(startLoadCard());       
+        }
+        
+    }, [dispatch, logged])
+
 
     if (checking) {
         return (<h1>Espere...</h1>)

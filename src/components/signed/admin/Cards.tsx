@@ -5,13 +5,13 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 
-import 'antd/dist/antd.css';
+//import 'antd/dist/antd.css';
 import { useHistory, useLocation } from 'react-router';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '../../../store/card/types';
 import { RootState } from '../../../store';
-import { resetCardUpdating, startLoadCard } from '../../../store/card/action';
+import { resetCardUpdating } from '../../../store/card/action';
 import { Link } from 'react-router-dom';
 
 const Cards: FC = () => {
@@ -28,8 +28,7 @@ const Cards: FC = () => {
     const { cards } = useSelector((state: RootState) => state.cards);
 
     useEffect(() => {
-
-        dispatch(startLoadCard());
+        
         dispatch(resetCardUpdating());
 
     }, [dispatch]);
@@ -212,8 +211,6 @@ const Cards: FC = () => {
     const addNewCard = () => {
         history.push(`/cards/new`);
     };
-    
-    
 
     return (
         <>
@@ -223,7 +220,7 @@ const Cards: FC = () => {
 
             <Table<Card> 
                 pagination={{ defaultPageSize: 50 }}
-                rowKey="name" 
+                rowKey="id" 
                 columns={ columns } 
                 dataSource={ cards } 
                 style={{ paddingTop: 10 }}

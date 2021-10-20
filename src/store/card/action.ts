@@ -1,8 +1,8 @@
+import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { showSpin } from "../spinUI/action";
 import { SpinActionTypes } from "../spinUI/types";
-import { Card, CardActionTypes, cardAddNew, cardLoad, cardLoadUpdating, cardResetUpdating } from "./types";
+import { Card, CardActionTypes, cardAddNew, cardLoad, cardLoadUpdating, cardResetUpdating, cardUpdate } from "./types";
 
 export const startAddNewCard = (card: any) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -13,16 +13,45 @@ export const startAddNewCard = (card: any) => {
             let respJson = await resp.json();
 
             if (resp.status === 201) {
-                dispatch(addNewCard(respJson));
+                dispatch(addNewCard(respJson));                
+                message.success(`Carta "${respJson.name}" creada correctamente`);
             } else {
-                console.log(resp)
+                console.log(resp);
+                message.error('Error al crear carta');
             }
 
         } catch (error) {
             console.log(error);
+            message.error('Error al crear carta!');
         }
     }
 };
+
+export const startUpdateCard = (id: string, card: any) => {
+
+    return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/card/' + id, card, 'PUT', token);
+            let respJson = await resp.json();
+
+            if (resp.status === 200) {
+                dispatch(updateCard(respJson));
+                message.success(`Carta "${respJson.name}" actualizada correctamente`);
+            } else {
+                console.log(resp);
+                message.error('Error al actualizar carta');
+            }
+
+        } catch (error) {
+            console.log(error);
+            message.error('Error al actualizar carta!');
+
+        }
+    }
+
+}
 
 export const startLoadCard = () => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -35,11 +64,12 @@ export const startLoadCard = () => {
             if (resp.status === 200) {
                 dispatch(loadCards(respJson));
             } else {
-                console.log(resp)
+                message.error('Error al obtener cartas');
             }
 
         } catch (error) {
             console.log(error);
+            message.error('Error al obtener cartas!');
         }
     }
 };
@@ -48,7 +78,6 @@ export const startLoadCardUpdating = (id: string) => {
     return async (dispatch: Dispatch<CardActionTypes | SpinActionTypes>) => {
 
         try {
-            //dispatch(showSpin('Guadando carta...'));
             const token = localStorage.getItem('token') as string;
             const resp = await runFetch('api/card/' + id, {}, 'GET', token);
             const respJson = await resp.json();
@@ -72,10 +101,10 @@ export const resetCardUpdating = () => {
 }
 
 
-const loadCardUpdating = (card: Card): CardActionTypes => {
+export const loadCardUpdating = (id: string): CardActionTypes => {
     return {
         type: cardLoadUpdating,
-        payload: card
+        payload: id
     }
 }
 
@@ -89,6 +118,13 @@ const loadCards = (cards: Card[]): CardActionTypes => {
 const addNewCard = (card: Card): CardActionTypes => {
     return {
         type: cardAddNew,
+        payload: card
+    }
+};
+
+const updateCard = (card: Card): CardActionTypes => {
+    return {
+        type: cardUpdate,
         payload: card
     }
 };

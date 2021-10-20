@@ -107,7 +107,7 @@ export const startChecking = () => {
 
 export const startLogout = () => {
     return (dispatch: Dispatch<AuthActionTypes>) => {
-        localStorage.clear();
+        localStorage.removeItem('token');
         dispatch(logout());
     }
 };
