@@ -1,8 +1,10 @@
-import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card } from "./types";
+import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card, cardByEdition, selectMyCards } from "./types";
 
 const initialState: CardState = {
     cards: [],
-    cardUpdating: null
+    cardUpdating: null,
+    cardsByEdition: [],
+    selectMyCards: []
 };
 
 export const cardReducer = (state: typeof initialState = initialState, action: CardActionTypes): CardState => {
@@ -42,6 +44,20 @@ export const cardReducer = (state: typeof initialState = initialState, action: C
                 ...state,
                 cardUpdating: null
             };
+
+        case cardByEdition:
+            return {
+                ...state,
+                cardsByEdition: [...action.payload]
+            };
+
+        case selectMyCards:
+            return {
+                ...state,
+                selectMyCards: [...action.payload]
+            };
+    
+    
 
         default:
             return state;

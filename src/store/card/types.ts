@@ -3,6 +3,10 @@ export const cardLoad = '[card] Load';
 export const cardLoadUpdating = '[card] Load updating';
 export const cardResetUpdating = '[card] Reset updating';
 export const cardUpdate = '[card] Update';
+export const cardByEdition = '[card] By edition';
+export const selectMyCards = '[card] My select';
+export const cardsToMySelection = '[card] To my selection';
+export const cardsToOrigin = '[card] To origin';
 
 export type Card = {
     id?: string;
@@ -23,7 +27,9 @@ export type Card = {
 
 export type CardState = {
     cards: Card[];
-    cardUpdating: Card | null
+    cardUpdating: Card | null;
+    cardsByEdition: Card[];
+    selectMyCards: Card[];
 };
 
 type CardAddNewAction = {    
@@ -51,4 +57,34 @@ type CardResetUpdatingAction = {
     type: typeof cardResetUpdating
 };
 
-export type CardActionTypes = CardAddNewAction | CardLoadAction | CardLoadUpdatingAction | CardResetUpdatingAction | CardUpdateAction;
+type CardByEditionAction = {    
+    type: typeof cardByEdition,
+    payload: Card[]
+};
+
+type SelectMyCardsAction = {    
+    type: typeof selectMyCards,
+    payload: Card[]
+};
+
+type CardsToMySelection = {    
+    type: typeof cardsToMySelection,
+    payload: Card[]
+};
+
+type CardsToOrigin = {    
+    type: typeof cardsToOrigin,
+    payload: Card[]
+};
+
+export type CardActionTypes = 
+
+CardAddNewAction | 
+CardLoadAction | 
+CardLoadUpdatingAction | 
+CardResetUpdatingAction | 
+CardUpdateAction | 
+CardByEditionAction | 
+SelectMyCardsAction |
+CardsToMySelection |
+CardsToOrigin;

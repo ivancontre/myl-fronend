@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router';
-import useHideMenu from '../../hooks/useHideMenu';
+import useHideMenu from '../../../hooks/useHideMenu';
 
 const Play = () => {
 

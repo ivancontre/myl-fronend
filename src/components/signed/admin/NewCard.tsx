@@ -10,7 +10,8 @@ import {
     Tooltip,
     Upload,
     Image,
-    message
+    message,
+    Divider
 } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,7 +68,7 @@ const NewCard = () => {
             }
         }
 
-    }, [params.id, dispatch]);
+    }, [params.id, dispatch, cards.length]);
 
     useEffect(() => {
         
@@ -244,6 +245,8 @@ const NewCard = () => {
             <Tooltip className="actions" title="Volver al listado">
                 <Button onClick={ back } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
             </Tooltip>
+
+            <Divider />
 
             <Title level={ 1 }>{!cardUpdating ?  'Crear Carta' : 'Modificar Carta'}</Title>
             

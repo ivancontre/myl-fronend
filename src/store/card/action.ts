@@ -2,7 +2,7 @@ import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { SpinActionTypes } from "../spinUI/types";
-import { Card, CardActionTypes, cardAddNew, cardLoad, cardLoadUpdating, cardResetUpdating, cardUpdate } from "./types";
+import { Card, CardActionTypes, cardAddNew, cardByEdition, cardLoad, cardLoadUpdating, cardResetUpdating, cardUpdate, selectMyCards } from "./types";
 
 export const startAddNewCard = (card: any) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -94,6 +94,27 @@ export const startLoadCardUpdating = (id: string) => {
     }
 };
 
+export const startLoadCardByEdition = (editionId: string) => {
+    return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/card/' + editionId + '/edition', {}, 'GET', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                dispatch(loadCardsByEdition(respJson));
+            } else {
+                message.error('Error al obtener cartas');
+            }
+
+        } catch (error) {
+            console.log(error);
+            message.error('Error al obtener cartas!');
+        }
+    }
+};
+
 export const resetCardUpdating = () => {
     return {
         type: cardResetUpdating
@@ -106,7 +127,7 @@ export const loadCardUpdating = (id: string): CardActionTypes => {
         type: cardLoadUpdating,
         payload: id
     }
-}
+};
 
 const loadCards = (cards: Card[]): CardActionTypes => {
     return {
@@ -128,3 +149,18 @@ const updateCard = (card: Card): CardActionTypes => {
         payload: card
     }
 };
+
+export const loadCardsByEdition = (cards: Card[]): CardActionTypes => {
+    return {
+        type: cardByEdition,
+        payload: cards
+    }
+};
+
+export const loadCardsMySelection = (cards: Card[]): CardActionTypes => {
+    return {
+        type: selectMyCards,
+        payload: cards
+    }
+};
+

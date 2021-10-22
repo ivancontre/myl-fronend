@@ -1,5 +1,5 @@
 import { Layout, Menu,  } from 'antd';
-import React, { FC, useContext, useEffect } from 'react';
+import React, { FC, useContext } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
     BlockOutlined,
@@ -9,8 +9,8 @@ import {
     LogoutOutlined
 } from '@ant-design/icons';
 
-import MyCards from '../components/signed/Cards';
-import Play from '../components/signed/Play';
+import MyCards from '../components/signed/user/Decks';
+import Play from '../components/signed/user/Play';
 //import MatchPage from '../pages/MatchPage';
 
 import '../css/signed.css'
@@ -24,6 +24,8 @@ import Users from '../components/signed/admin/Users';
 import '../css/signed.css'
 import { useDispatch } from 'react-redux';
 import { startLogout } from '../store/auth/action';
+import Decks from '../components/signed/user/Decks';
+import NewDeck from '../components/signed/user/NewDeck';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
@@ -60,9 +62,9 @@ export const SingedRouter: FC = () => {
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="my-cards" icon={<BlockOutlined />}>
-                            <Link to="/my-cards">
-                                Mis Cartas
+                        <Menu.Item key="decks" icon={<BlockOutlined />}>
+                            <Link to="/decks">
+                                Mis Mazos
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="cards" icon={<AppstoreOutlined />}>
@@ -92,13 +94,23 @@ export const SingedRouter: FC = () => {
 
                                 <Route exact path="/play" component={ Play } />
 
-                                <Route exact path="/my-cards" component={ MyCards } />                               
+                                <Route exact path="/decks" component={ Decks } />                               
 
                                 <Route exact path="/cards" component={ Cards } />
 
                                 <Route exact path="/cards/new" component={ NewCard } />
 
                                 <Route exact path="/cards/:id/edit" component={ NewCard } />
+
+
+                                <Route exact path="/decks" component={ Decks } />
+
+                                <Route exact path="/decks/new" component={ NewDeck } />
+
+                                <Route exact path="/decks/:id/edit" component={ NewDeck } />
+
+
+
 
                                 <Route exact path="/users" component={ Users } />
 

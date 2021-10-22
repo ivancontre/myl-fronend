@@ -1,11 +1,10 @@
-import { Button, Input, Popconfirm, Space, Tooltip } from 'antd'
-import { Table } from "antd";
 import React, { FC, useEffect, useRef, useState } from 'react'
+import { Button, Input, Popconfirm, Space, Tooltip, Table } from 'antd';
+
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 
-//import 'antd/dist/antd.css';
 import { useHistory, useLocation } from 'react-router';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { useDispatch, useSelector } from 'react-redux';
@@ -218,8 +217,8 @@ const Cards: FC = () => {
                 <Button onClick={ addNewCard } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
 
-            <Table<Card> 
-                pagination={{ defaultPageSize: 50 }}
+            <Table<Card>
+                pagination={{ defaultPageSize: 15 }}
                 rowKey="id" 
                 columns={ columns } 
                 dataSource={ cards } 
