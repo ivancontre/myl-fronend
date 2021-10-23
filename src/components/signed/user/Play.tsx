@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import useHideMenu from '../../../hooks/useHideMenu';
+import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
 
 const Play = () => {
 
@@ -8,6 +10,15 @@ const Play = () => {
     const path = pathname.replace('/', '');
 
     useHideMenu(false, path);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        
+        dispatch(resetCardUpdating());
+        dispatch(resetMySelection());
+
+    }, [dispatch]);
 
 
     return (

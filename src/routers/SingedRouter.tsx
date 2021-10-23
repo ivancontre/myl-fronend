@@ -94,7 +94,6 @@ export const SingedRouter: FC = () => {
 
                                 <Route exact path="/play" component={ Play } />
 
-                                <Route exact path="/decks" component={ Decks } />                               
 
                                 <Route exact path="/cards" component={ Cards } />
 
@@ -108,8 +107,6 @@ export const SingedRouter: FC = () => {
                                 <Route exact path="/decks/new" component={ NewDeck } />
 
                                 <Route exact path="/decks/:id/edit" component={ NewDeck } />
-
-
 
 
                                 <Route exact path="/users" component={ Users } />

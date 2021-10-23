@@ -1,36 +1,72 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message } from 'antd';
-import { useHistory } from 'react-router';
+import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message, Input, Form, Popconfirm } from 'antd';
+import { useHistory, useParams } from 'react-router';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import update from 'immutability-helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import NewDeckCardContainer from './NewDeckCardContainer';
-import { loadCardsByEdition, loadCardsMySelection, startLoadCardByEdition } from '../../../store/card/action';
+import {  loadCardsMySelection, resetMySelection, startLoadCardByEdition } from '../../../store/card/action';
 import NewDeckCard from './NewDeckCard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import '../../../css/new-deck.css';
+import { loadDeckUpdating, startAddNewDeck, startLoadDeck } from '../../../store/deck/action';
+import { Card } from '../../../store/card/types';
+
+interface FieldData {
+    name: string | number | (string | number)[];
+    value?: any;
+};
 
 const NewDeck: FC = () => {
 
     const history = useHistory();
 
+    const params: any = useParams();
+
     const { cardsByEdition, selectMyCards } = useSelector((state: RootState) => state.cards);
-    const { types, frecuencies, editions, races } = useSelector((state: RootState) => state.description); 
+    const { types, editions } = useSelector((state: RootState) => state.description); 
+    const { deckUpdating, decks } = useSelector((state: RootState) => state.decks); 
 
     const [typeId, setTypeId] = useState<string>('all');
+    const [fields, setFields] = useState<FieldData[]>([]);
 
     const dispatch = useDispatch();
 
-    const back = () => {
-        history.push('/decks');
-    };
+    useEffect(() => {
+        async function getFromAPI() {
+            await dispatch(startLoadDeck());
+            await dispatch(loadDeckUpdating(params.id));
+        }
+
+        if (params.id && params.id !== 'undefined') {
+            if (decks.length === 0) {
+                getFromAPI();
+            } else {
+                dispatch(loadDeckUpdating(params.id));
+            }
+        }
+
+    }, [params.id, dispatch, decks.length]);
+
+    useEffect(() => {
+        
+        if (deckUpdating) {
+            let fields = [{
+                name: 'name',
+                value: deckUpdating.name
+            }];
+
+            setFields(fields);
+        }
+
+    }, [deckUpdating]);
 
     const handleSelectEdition = (editionId: string) => {
-        dispatch(startLoadCardByEdition(editionId))
+        dispatch(startLoadCardByEdition(editionId));
     };
 
     const handleSelectType = (typeId: string) => {
@@ -38,16 +74,14 @@ const NewDeck: FC = () => {
     };
 
     useEffect(() => {
-        if (selectMyCards.length >= 50) {            
-            message.warning('No puede agregar más de 50 cartas');
+        if (deckUpdating?.cards) {
+            dispatch(loadCardsMySelection(deckUpdating?.cards as Card[]));
         }
 
-    }, [selectMyCards.length])
+    }, [dispatch, deckUpdating?.cards])
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
-            console.log(zoneName)
-            let list;
 
             if (zoneName === 'cards') {
                 return;
@@ -65,7 +99,7 @@ const NewDeck: FC = () => {
             dispatch(loadCardsMySelection(newList));
             
         },
-        [cardsByEdition, selectMyCards, dispatch],
+        [selectMyCards, dispatch],
     );
 
     const returnItemsForZone = (zoneName: string) => {
@@ -124,16 +158,56 @@ const NewDeck: FC = () => {
 
     const isMobile = window.innerWidth < 600;
 
+    const handleOnFinish = (values: any) => {
+
+
+        if (selectMyCards.length < 50) {
+            message.warning('El mazo debe tener 50 cartas')
+            return;
+        }
+
+        const body = {
+            name: values.name,
+            cards: selectMyCards.map(card => card.id)
+        }
+
+        dispatch(startAddNewDeck(body));
+
+    }
+
+    const confirm = (e: any) => {
+        dispatch(resetMySelection());
+        history.push('/decks');
+    };
+      
+    const cancel = (e: any) => {};      
+
     return (
         <>
             <Row>
                 <Col span={ 24 } >
-                    <Tooltip className="actions" title="Volver al listado">
-                        <Button onClick={ back } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
-                    </Tooltip>
+
+                    { selectMyCards.length > 0 ? (
+                        <Popconfirm
+                            title="Si vuelve al listado perderá todos los datos no guardados. ¿Volver al listado?"
+                            okText="Sí"
+                            placement="right"
+                            onConfirm={confirm}
+                            onCancel={cancel}
+                            cancelText="No"
+                        >
+                            <Tooltip className="actions" title="Volver al listado">
+                                <Button type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
+                            </Tooltip>
+                        </Popconfirm>
+                    ) : (
+                        <Tooltip className="actions" title="Volver al listado">
+                            <Button onClick={ confirm } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
+                        </Tooltip>
+                    )}
+                    
                 </Col>
-            </Row>
-            
+            </Row>            
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
@@ -174,6 +248,7 @@ const NewDeck: FC = () => {
                 </Col>
             </Row>
 
+                       
             <Row style={{ paddingTop: 10 }}>
                 <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
                     <Col className="container-deck" span={ 14 } >
@@ -192,16 +267,47 @@ const NewDeck: FC = () => {
                     </Col>
 
                     <Col className="container-deck" offset={ 1 } span={ 9 }>
-                        <Tag color="gold">{`Total: ${selectMyCards.length}`}</Tag>
-                        <Tag color="green">{`Aliados: ${(selectMyCards.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
-                        <Tag color="green">{`Armas: ${(selectMyCards.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
-                        <Tag color="green">{`Oros: ${(selectMyCards.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
-                        <Tag color="green">{`Talismanes: ${(selectMyCards.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>
-                        <Tag color="green">{`Tótems: ${(selectMyCards.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
-                        <Divider />
-                        <NewDeckCardContainer title="my-cards" >
-                            { selectMyCards && returnItemsForZone('my-cards')}
-                        </NewDeckCardContainer> 
+                        <Row style={{ paddingTop: 10 }}>
+                            <Col span={ 24 }>
+                                <Form
+                                    layout="inline"
+                                    autoComplete="off"
+                                    onFinish={ handleOnFinish }
+                                    fields={ fields }
+                                >
+                                    <Form.Item
+                                        name="name" 
+                                        rules={[{
+                                            required: true,
+                                            message: 'Por favor ingrese el nombre del mazo'
+                                        }
+                                    ]} >
+                                        <Input placeholder="Ingrese nombre del Mazo" />
+                                    </Form.Item>
+
+                                    <Form.Item >
+                                        <Button htmlType="submit" type="primary">Guardar</Button>
+                                    </Form.Item>
+
+                                </Form>
+                            </Col>
+                        </Row>
+
+                        <Row style={{ paddingTop: 10 }}>
+                            <Col span={ 24 }>
+                                <Tag color="gold">{`Total: ${selectMyCards.length}`}</Tag>
+                                <Tag color="green">{`Aliados: ${(selectMyCards.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
+                                <Tag color="green">{`Armas: ${(selectMyCards.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
+                                <Tag color="green">{`Oros: ${(selectMyCards.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
+                                <Tag color="green">{`Talismanes: ${(selectMyCards.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>
+                                <Tag color="green">{`Tótems: ${(selectMyCards.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
+                                <Divider />
+                                <NewDeckCardContainer title="my-cards" >
+                                    { selectMyCards && returnItemsForZone('my-cards')}
+                                </NewDeckCardContainer> 
+                            </Col>
+                        </Row>
+                        
                     </Col>
                 </DndProvider>   
             </Row>

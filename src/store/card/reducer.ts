@@ -1,4 +1,4 @@
-import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card, cardByEdition, selectMyCards } from "./types";
+import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card, cardByEdition, selectMyCards, cardsResetMySelection } from "./types";
 
 const initialState: CardState = {
     cards: [],
@@ -52,11 +52,18 @@ export const cardReducer = (state: typeof initialState = initialState, action: C
             };
 
         case selectMyCards:
+            console.log(action.payload)
             return {
                 ...state,
                 selectMyCards: [...action.payload]
             };
-    
+
+        case cardsResetMySelection:
+            return {
+                ...state,
+                cardsByEdition: [],
+                selectMyCards: []
+            }
     
 
         default:

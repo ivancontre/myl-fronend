@@ -39,38 +39,26 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
             //mover hacia "my-cards"
             const card = cardsByEdition.find((card: Card) => card.id === item.id) as Card;
 
-            const newCardsByEdition = cardsByEdition.filter((card: Card) => card.id !== item.id);
-
             const newCardsToMySelection = [...selectMyCards, card];   
             
             dispatch(loadCardsMySelection(newCardsToMySelection));
 
         } else { // cards
-            
+
+            const editionId = cardsByEdition[0]?.edition;
             const card = selectMyCards[index];
+
+            if (card.edition === editionId) {
+                const existCardInCards = cardsByEdition.find(c => c.id === card.id);
+
+                if (!existCardInCards) {
+                    dispatch(loadCardsByEdition([...cardsByEdition, card]));
+                }
+            }
 
             selectMyCards.splice(index, 1);
 
-            const existCardInCards = cardsByEdition.find(c => c.id === card.id);
-
-            if (!existCardInCards) {
-                dispatch(loadCardsByEdition([...cardsByEdition, card]));
-            }
-
             dispatch(loadCardsMySelection(selectMyCards));
-
-
-            /*const card = selectMyCards.find((card: Card) => card.id === item.id) as Card;
-
-            const newCardsToMySelection = selectMyCards.filter((card: Card) => card.id !== item.id);
-
-            const existCardInCards = cardsByEdition.find(c => c.id === card.id);
-
-            if (!existCardInCards) {
-                dispatch(loadCardsByEdition([...cardsByEdition, card]));
-            }
-
-            dispatch(loadCardsMySelection(newCardsToMySelection));*/
 
         }
     }

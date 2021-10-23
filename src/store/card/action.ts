@@ -2,7 +2,7 @@ import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { SpinActionTypes } from "../spinUI/types";
-import { Card, CardActionTypes, cardAddNew, cardByEdition, cardLoad, cardLoadUpdating, cardResetUpdating, cardUpdate, selectMyCards } from "./types";
+import { Card, CardActionTypes, cardAddNew, cardByEdition, cardLoad, cardLoadUpdating, cardResetUpdating, cardsResetMySelection, cardUpdate, selectMyCards } from "./types";
 
 export const startAddNewCard = (card: any) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -164,3 +164,8 @@ export const loadCardsMySelection = (cards: Card[]): CardActionTypes => {
     }
 };
 
+export const resetMySelection = () => {
+    return {
+        type: cardsResetMySelection
+    }
+}

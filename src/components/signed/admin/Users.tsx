@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import useHideMenu from '../../../hooks/useHideMenu';
-import { resetCardUpdating } from '../../../store/card/action';
+import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
 
 const Users: FC = () => {
 
@@ -13,10 +13,10 @@ const Users: FC = () => {
 
     const dispatch = useDispatch();
 
-
     useEffect(() => {
 
         dispatch(resetCardUpdating());
+        dispatch(resetMySelection());
 
     }, [dispatch]);
 

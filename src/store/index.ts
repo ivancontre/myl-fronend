@@ -14,6 +14,8 @@ import { cardReducer } from './card/reducer';
 import { CardState } from './card/types';
 import { SpinState } from './spinUI/types';
 import { spinReducer } from './spinUI/reducer';
+import { DeckState } from './deck/types';
+import { deckReducer } from './deck/reducer';
 
 declare global {
     interface Window {
@@ -29,7 +31,8 @@ export interface RootState {
     auth: AuthState;
     description: DescriptionState,
     cards: CardState,
-    spin: SpinState
+    spin: SpinState,
+    decks: DeckState
 }
 
 export const rootReducer = combineReducers({
@@ -38,7 +41,8 @@ export const rootReducer = combineReducers({
     auth: authReducer,
     description: descriptionReducer,
     cards: cardReducer,
-    spin: spinReducer
+    spin: spinReducer,
+    decks: deckReducer
 });
 
 export const store = createStore(

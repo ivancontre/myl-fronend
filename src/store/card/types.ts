@@ -7,6 +7,7 @@ export const cardByEdition = '[card] By edition';
 export const selectMyCards = '[card] My select';
 export const cardsToMySelection = '[card] To my selection';
 export const cardsToOrigin = '[card] To origin';
+export const cardsResetMySelection = '[card] Reset my selection';
 
 export type Card = {
     id?: string;
@@ -77,6 +78,11 @@ type CardsToOrigin = {
     payload: Card[]
 };
 
+type CardResetMySelectionAction = {    
+    type: typeof cardsResetMySelection
+};
+
+
 export type CardActionTypes = 
 
 CardAddNewAction | 
@@ -87,4 +93,5 @@ CardUpdateAction |
 CardByEditionAction | 
 SelectMyCardsAction |
 CardsToMySelection |
-CardsToOrigin;
+CardsToOrigin | 
+CardResetMySelectionAction;
