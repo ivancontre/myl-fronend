@@ -1,4 +1,4 @@
-import { DescriptionCardActionTypes, DescriptionState, editionsCardLoad, frecuenciesCardLoad, racesCardLoad, typesCardLoad } from "./types";
+import { DescriptionCardActionTypes, DescriptionState, editionsCardLoad, frecuenciesCardLoad, racesCardLoad, resetDescription, typesCardLoad } from "./types";
 
 
 const initialState: DescriptionState = {
@@ -35,6 +35,9 @@ export const descriptionReducer = (state: typeof initialState = initialState, ac
                 ...state,
                 editions: [...action.payload]
             };
+
+        case resetDescription:
+            return initialState;
     
 
         default:

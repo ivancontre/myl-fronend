@@ -30,7 +30,7 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
     
     const changeCardZone = (item: DragCard, zoneName: string) => {
         // zoneName es el destino
-
+        
         if (item.zone === zoneName) {
             return;
         }

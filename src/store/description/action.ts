@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { DescriptionCardActionTypes, RaceCard, TypeCard, typesCardLoad, racesCardLoad, FrecuencyCard, frecuenciesCardLoad, EditionCard, editionsCardLoad } from "./types";
+import { DescriptionCardActionTypes, RaceCard, TypeCard, typesCardLoad, racesCardLoad, FrecuencyCard, frecuenciesCardLoad, EditionCard, editionsCardLoad, resetDescription } from "./types";
 
 export const startLoadTypeCard = () => {
     return async (dispatch: Dispatch<DescriptionCardActionTypes>) => {
@@ -82,7 +82,11 @@ export const startLoadEditionCard = () => {
     }
 };
 
-
+export const resetAllDescription = () => {
+    return {
+        type: resetDescription
+    }
+}
 
 const loadTypeCard = (typesCard: TypeCard[]): DescriptionCardActionTypes => {
     return {

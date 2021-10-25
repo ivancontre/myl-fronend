@@ -13,10 +13,15 @@ const useSocket = (serverPath: string) => {
 
     const conectarSocket = useCallback( () => {
 
-        //const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || '';
 
         const socketTemp = io(serverPath, {
-            transports: ['websocket']
+            transports: ['websocket'],
+            autoConnect: true,
+            forceNew: true,
+            query: {
+                'x-token': token
+            }
         
         }).connect();
 

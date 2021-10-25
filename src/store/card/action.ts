@@ -51,7 +51,7 @@ export const startUpdateCard = (id: string, card: any) => {
         }
     }
 
-}
+};
 
 export const startLoadCard = () => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -168,4 +168,4 @@ export const resetMySelection = () => {
     return {
         type: cardsResetMySelection
     }
-}
+};

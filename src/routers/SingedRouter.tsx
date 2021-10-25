@@ -1,5 +1,5 @@
-import { Layout, Menu,  } from 'antd';
-import React, { FC, useContext } from 'react';
+import { Button, Layout, Menu, notification, Popconfirm } from 'antd';
+import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
     BlockOutlined,
@@ -9,7 +9,6 @@ import {
     LogoutOutlined
 } from '@ant-design/icons';
 
-import MyCards from '../components/signed/user/Decks';
 import Play from '../components/signed/user/Play';
 //import MatchPage from '../pages/MatchPage';
 
@@ -20,25 +19,96 @@ import NewCard from '../components/signed/admin/NewCard';
 //import { useSelector } from 'react-redux';
 //import { RootState } from '../store';
 import Users from '../components/signed/admin/Users';
-
+import { useHistory } from 'react-router';
 import '../css/signed.css'
 import { useDispatch } from 'react-redux';
 import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
+import { SocketContext } from '../context/SocketContext';
+import { matchSetMatchId, resetMatch } from '../store/match/action';
+import { resetDeckUpdating } from '../store/deck/action';
+import { resetCardUpdating } from '../store/card/action';
+import { resetAllDescription } from '../store/description/action';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
+    const { online, socket } = useContext(SocketContext);
 
     const dispatch = useDispatch();
+
+    const history = useHistory();
 
     //const { role } = useSelector((state: RootState) => state.auth);
     
     const handleLogout = () => {
         dispatch(startLogout());
-    };    
+        dispatch(resetDeckUpdating());
+        dispatch(resetCardUpdating());
+        dispatch(resetMatch());
+        dispatch(resetAllDescription())
+    };   
+
+    const confirm = () => {
+        handleLogout();
+    };
+
+    const cancel = () => {
+
+    }
+
+
+
+    const close = () => {
+        console.log('close notification')
+    };
+
+    const acceptInvitation = useCallback((key: string, opponentId: string) => {
+        console.log('object')
+        console.log(socket)
+        socket?.emit('create-match', {
+            opponentId
+        });
+
+        notification.close(key);
+    }, [socket]);
+
+    const openNotification = useCallback( (username: string, id: string) => {
+        const key = `open${Date.now()}`;
+        const btn = (
+            <Button type="primary" size="small" onClick={() => {
+                acceptInvitation(key, id);            
+            }}>
+                Aceptar
+            </Button>
+        );
+
+        notification.open({
+            message: 'Nueva invitación',
+            description:
+              `El usuario ${username.toUpperCase()} te está invitando a jugar`,
+            btn,
+            key,
+            onClose: close,
+            duration: 10,
+        });
+    }, [acceptInvitation]);
+    
+    useEffect(() => {
+        socket?.on('send-notification', (payload: any) => {
+            openNotification(payload.from, payload.id);
+        });
+    }, [socket, openNotification]);
+
+    useEffect(() => {
+        socket?.on('match', (payload: any) => {
+
+            dispatch(matchSetMatchId(payload.matchId));
+            history.replace('/play')
+        });
+    }, [socket, openNotification, dispatch]);
 
     return (
             <Layout  style={{ height: '100vh' }}>
@@ -78,8 +148,18 @@ export const SingedRouter: FC = () => {
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item onClick={ handleLogout } className="btn-logout" key="logout" icon={<LogoutOutlined />}>
-                            Cerrar sesión
+                        <Menu.Item className="btn-logout" key="logout" icon={<LogoutOutlined />}>
+
+                            <Popconfirm
+                                title="¿Salir?"
+                                okText="Sí"
+                                placement="right"
+                                onConfirm={confirm}
+                                onCancel={cancel}
+                                cancelText="No"
+                            >
+                                Cerrar sesión
+                            </Popconfirm>
                         </Menu.Item>
 
                     </Menu>
@@ -91,6 +171,8 @@ export const SingedRouter: FC = () => {
                     <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >
                         <div className="site-layout-background" style={{ padding: 24 }} >
                             <Switch>
+
+                                <Route exact path="/match" component={ Play } />
 
                                 <Route exact path="/play" component={ Play } />
 
@@ -116,11 +198,7 @@ export const SingedRouter: FC = () => {
                             </Switch>
                         </div>
                     </Content>
-                </Layout>        
-
-                
-
-
+                </Layout>
             </Layout>            
     )
 };

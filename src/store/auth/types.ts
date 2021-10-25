@@ -6,24 +6,32 @@ export const authLogout = '[auth] Logout';
 export const authStartRenewToken = '[auth] Start renew token';
 
 export type User = {
-    _id: string;
+    id: string;
     name: string;
     lastname: string;
     email: string;
     username: string;
     role: string;
+    status: boolean;
+    online?: boolean;
+    playing?: boolean;
+    victories?: number;
+    defeats?: number;
 };
 
-export type AuthState = {
+export type AuthState = Partial<User> & {
     checking: boolean;
     logged: boolean;
-    _id?: string;
-    name?: string;
-    lastname?: string;
-    email?: string;
-    username?: string;
-    role?: string;
-};
+}
+
+
+/*(User & {
+    checking: boolean;
+    logged: boolean;
+}) | {
+    checking: boolean;
+    logged: boolean;
+};*/
 
 type AuthLogin = {    
     type: typeof authLogin,

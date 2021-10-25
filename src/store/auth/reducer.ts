@@ -24,11 +24,11 @@ export const authReducer = (state: typeof initialState = initialState, action: A
                 checking: false
             };
         
-            case authLogout:
-                return {
-                   checking: false,
-                   logged: false
-                };
+        case authLogout:
+            return {
+                checking: false,
+                logged: false
+            };
     
         default:
             return state;

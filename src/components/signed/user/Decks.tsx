@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { Button, Input, Popconfirm, Space, Tooltip, Table } from 'antd';
+import { Button, Input, Popconfirm, Space, Tooltip, Table, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { Deck } from '../../../store/deck/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { resetDeckUpdating, startLoadDeck } from '../../../store/deck/action';
+import { resetDeckUpdating, startDeleteDeck, startLoadDeck } from '../../../store/deck/action';
 import { resetCardUpdating } from '../../../store/card/action';
 
 const Decks: FC = () => {
@@ -111,7 +111,7 @@ const Decks: FC = () => {
     });
 
     const handleDelete = (deckId?: string) => {
-
+        dispatch(startDeleteDeck(deckId as string));
     };
 
     const ref0 = useRef();
@@ -149,6 +149,8 @@ const Decks: FC = () => {
             <Tooltip className="actions" title="Crear nuevo Mazo">
                 <Button onClick={ handleNewDesk } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
+
+            <Alert style={{marginTop: 10}} message="En esta sección podrás crear tus mazos. Si no tiene al menos un mazo creado no podrás jugar" type="info" showIcon/>
 
             <Table<Deck>
                 pagination={{ defaultPageSize: 15 }}

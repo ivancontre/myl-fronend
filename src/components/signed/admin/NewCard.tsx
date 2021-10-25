@@ -261,13 +261,7 @@ const NewCard = () => {
         
                 <Form.Item 
                     label="Número" 
-                    name="num"
-                    rules={[{
-                            required: true,
-                            message: 'Por favor ingrese el número de la carta'
-                        }
-                    ]}    
-                    
+                    name="num"                    
                 >
                     <InputNumber style={{width: '100%'}} min={ 1 } />
                 </Form.Item>

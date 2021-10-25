@@ -2,6 +2,7 @@ export const typesCardLoad = '[typesCard] Load';
 export const frecuenciesCardLoad = '[frecuenciesCard] Load';
 export const racesCardLoad = '[racesCard] Load';
 export const editionsCardLoad = '[editionsCard] Load';
+export const resetDescription = '[description] Rest';
 
 export type DescriptionState = {
     types: TypeCard[];
@@ -51,4 +52,8 @@ type EditionCardLoadAction = {
     payload: EditionCard[]
 };
 
-export type DescriptionCardActionTypes = TypeLoadAction | FrecuencyCardLoadAction | RaceCardLoadAction | EditionCardLoadAction;
+type ResetDescriptionAction = {
+    type: typeof resetDescription;
+}
+
+export type DescriptionCardActionTypes = TypeLoadAction | FrecuencyCardLoadAction | RaceCardLoadAction | EditionCardLoadAction | ResetDescriptionAction;

@@ -1,7 +1,6 @@
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { AuthActionTypes, 
-        authCheckingFinish, 
+import { AuthActionTypes,
         authLogin, 
         authLogout, 
         User 
@@ -19,12 +18,16 @@ export const startLogin = (email: string, password: string) => {
                 localStorage.setItem('token-init-date', new Date().getTime().toString());
 
                 dispatch(login({
-                    _id: respJson.user.id,
+                    id: respJson.user.id,
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
-                    role: respJson.user.role
+                    role: respJson.user.role,
+                    status: respJson.user.status,
+                    online: respJson.user.online,
+                    playing: respJson.user.playing,
+                    defeats: respJson.user.defeats
                 }));
 
             } else {
@@ -50,12 +53,16 @@ export const startRegister = (name: string, lastname: string, email: string, use
                 localStorage.setItem('token-init-date', new Date().getTime().toString());
 
                 dispatch(login({
-                    _id: respJson.user.id,
+                    id: respJson.user.id,
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
-                    role: respJson.user.role
+                    role: respJson.user.role,
+                    status: respJson.user.status,
+                    online: respJson.user.online,
+                    playing: respJson.user.playing,
+                    defeats: respJson.user.defeats
                 }));
 
             } else {
@@ -74,7 +81,6 @@ export const startChecking = () => {
         try {
             const token = localStorage.getItem('token') as string;
 
-
             if (!token) {
                 dispatch(logout());
             }
@@ -84,15 +90,18 @@ export const startChecking = () => {
 
             if (resp.status === 200) {
                 localStorage.setItem('token', respJson.token);
-                localStorage.setItem('token-init-date', new Date().getTime().toString());
 
                 dispatch(login({
-                    _id: respJson.user.id,
+                    id: respJson.user.id,
                     name: respJson.user.name,
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
-                    role: respJson.user.role
+                    role: respJson.user.role,
+                    status: respJson.user.status,
+                    online: respJson.user.online,
+                    playing: respJson.user.playing,
+                    defeats: respJson.user.defeats
                 }));
 
             } else {
@@ -109,12 +118,6 @@ export const startLogout = () => {
     return (dispatch: Dispatch<AuthActionTypes>) => {
         localStorage.removeItem('token');
         dispatch(logout());
-    }
-};
-
-const checkingFinish = (): AuthActionTypes => {
-    return {
-        type: authCheckingFinish
     }
 };
 

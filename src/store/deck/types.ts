@@ -5,6 +5,8 @@ export const deckLoad = '[deck] Load';
 export const deckUpdating = '[deck] Load';
 export const deckLoadUpdating = '[deck] Load updating';
 export const deckResetUpdating = '[deck] Reset updating';
+export const deckDelete = '[deck] Delete';
+export const deckUpdate = '[deck] Update';
 
 export type Deck = {
     id?: string;
@@ -36,8 +38,20 @@ type DeckResetUpdatingAction = {
     type: typeof deckResetUpdating
 };
 
+type DeckDeleteAction = {    
+    type: typeof deckDelete,
+    payload: string
+};
+
+type DeckUpdateAction = {
+    type: typeof deckUpdate,
+    payload: Deck
+};
+
 export type DeckActionTypes = 
 DeckAddNewAction | 
 DeckLoadAction |
 DeckLoadUpdatingAction |
-DeckResetUpdatingAction;
+DeckResetUpdatingAction |
+DeckDeleteAction |
+DeckUpdateAction;

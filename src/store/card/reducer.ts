@@ -52,7 +52,6 @@ export const cardReducer = (state: typeof initialState = initialState, action: C
             };
 
         case selectMyCards:
-            console.log(action.payload)
             return {
                 ...state,
                 selectMyCards: [...action.payload]

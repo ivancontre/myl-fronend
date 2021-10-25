@@ -13,7 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import '../../../css/new-deck.css';
-import { loadDeckUpdating, startAddNewDeck, startLoadDeck } from '../../../store/deck/action';
+import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
 import { Card } from '../../../store/card/types';
 
 interface FieldData {
@@ -160,7 +160,6 @@ const NewDeck: FC = () => {
 
     const handleOnFinish = (values: any) => {
 
-
         if (selectMyCards.length < 50) {
             message.warning('El mazo debe tener 50 cartas')
             return;
@@ -169,9 +168,13 @@ const NewDeck: FC = () => {
         const body = {
             name: values.name,
             cards: selectMyCards.map(card => card.id)
-        }
+        };
 
-        dispatch(startAddNewDeck(body));
+        if (!deckUpdating) {
+            dispatch(startAddNewDeck(body));
+        } else {
+            dispatch(startUpdateDeck(deckUpdating.id as string, body));
+        }   
 
     }
 
@@ -259,11 +262,11 @@ const NewDeck: FC = () => {
                         <Tag color="green">{`Talismanes: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>                        
                         <Tag color="green">{`Tótems: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
                         <Divider />
-                        {cardsByEdition.length > 0 && (
+                        
                             <NewDeckCardContainer title="cards" >
                                 { cardsByEdition && returnItemsForZone('cards')}
                             </NewDeckCardContainer>
-                        )}
+                        
                     </Col>
 
                     <Col className="container-deck" offset={ 1 } span={ 9 }>
@@ -286,7 +289,7 @@ const NewDeck: FC = () => {
                                     </Form.Item>
 
                                     <Form.Item >
-                                        <Button htmlType="submit" type="primary">Guardar</Button>
+                                        <Button htmlType="submit" type="primary">{params.id ? 'Actualizar' : 'Guardar'}</Button>
                                     </Form.Item>
 
                                 </Form>
