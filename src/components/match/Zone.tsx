@@ -1,7 +1,8 @@
+import { Tooltip } from 'antd';
 import React, { FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { ZONE_NAMES } from '../../constants';
-import { DragCard } from '../../pages/MatchPage';
+import { DragCard  } from '../../store/match/types';
 
 interface ZoneProps {
     children: ReactNode;
@@ -23,7 +24,9 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
             const { DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
             const { zone: currentZone } = item;
 
-            return (currentZone === title) ||
+            return true
+            
+                /*(currentZone === title) ||
 
                 (currentZone === ATTACK_ZONE && title === DEFENSE_ZONE) ||
                 (currentZone === ATTACK_ZONE && title === CEMETERY_ZONE) ||
@@ -72,7 +75,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
                 (currentZone === HAND_ZONE && title === DEFENSE_ZONE) ||
                 (currentZone === HAND_ZONE && title === EXILE_ZONE) ||
                 (currentZone === HAND_ZONE && title === REMOVAL_ZONE) ||
-                (currentZone === HAND_ZONE && title === SUPPORT_ZONE)
+                (currentZone === HAND_ZONE && title === SUPPORT_ZONE)*/
                 
         }
     });
@@ -84,21 +87,23 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
         }
 
         if (!canDrop) {
-            return 'rgb(255,188,188)';
+            return 'rgb(0,0,0)';
         }
 
-        return 'rgb(188,251,255)';
+        return 'rgb(0,0,0)';
         
     };
 
     return (
         <>
-            <p>{ title }</p>
-            <div ref={ drop } className={ className } style={ {backgroundColor: getBackgroundColor()} }>
-                
-                { children }
+            <Tooltip title={title}>
+                <div ref={ drop } className={ className } style={ {backgroundColor: getBackgroundColor()} }>
+                    
+                    { children }
 
-            </div>
+                </div>
+            </Tooltip>
+            
         </>
     )
 }

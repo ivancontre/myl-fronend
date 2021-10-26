@@ -5,5 +5,6 @@ export const ZONE_NAMES = {
     EXILE_ZONE: 'Destierro',
     REMOVAL_ZONE: 'Remoción',
     SUPPORT_ZONE: 'Apoyo',
-    HAND_ZONE: 'Mano'
+    HAND_ZONE: 'Mano',
+    CASTLE_ZONE: 'Castillo'
 };

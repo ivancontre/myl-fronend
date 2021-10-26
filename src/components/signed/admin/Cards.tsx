@@ -214,7 +214,7 @@ const Cards: FC = () => {
 
     return (
         <>
-            <Tooltip className="actions" title="Agregar carta">
+            <Tooltip title="Agregar carta">
                 <Button onClick={ addNewCard } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
 

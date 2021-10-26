@@ -1,26 +1,31 @@
 import { FC, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
+
+import { Card  } from '../../store/card/types';
+import { DragCard  } from '../../store/match/types';
+
 import { ZONE_NAMES } from "../../constants";
-import { DragCard, ICard } from '../../pages/MatchPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch } from '../../store/match/action';
-import { Button, Popover } from 'antd';
+import { Button, Image, Popover } from 'antd';
 import {
     ToolFilled
 } from '@ant-design/icons';
 
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+
 export interface CardProps {
-    id: string;
-    text: string;
+    id?: string;
     index: number;
     moveCard?: (dragIndex: number, hoverIndex: number, zoneName: string) => void;
     zone: string;
-    arms?: string[];
+    isOpponent?: boolean;
+    card: Card;
 };
 
-const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, card }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -34,14 +39,15 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
             return;
         }
 
-        const card = match[item.zone].find(card => card.id === item.id) as ICard;
+        const card = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
+
         let newCards = { ...match };
 
-        newCards[item.zone] = match[item.zone].filter(card => card.id !== item.id);
+        newCards[item.zone] = match[item.zone].filter((card: Card, index2: number) => index2 !== index);
 
         newCards[zoneName] = [...match[zoneName], card];
 
-        const { HAND_ZONE, EXILE_ZONE, CEMETERY_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, DEFENSE_ZONE, ATTACK_ZONE } = ZONE_NAMES;
+        /*
 
         const sendArmsZones = [
             HAND_ZONE, 
@@ -82,7 +88,7 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
                 return card;
                 
             });
-        }
+        }*/
 
         dispatch(changeMatch(newCards));
 
@@ -149,7 +155,7 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
     const [{ isDragging }, drag] = useDrag({
         type: 'card',
         item: () => {
-            return { id, index, zone, arms }
+            return { id, index, zone, ...card }
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -160,7 +166,7 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
             
             if (dropResult) {
                 const { name } = dropResult;
-                const { DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+                
                 
                 switch (name) {
                     case DEFENSE_ZONE:
@@ -183,6 +189,9 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
                         break;
                     case SUPPORT_ZONE:
                         changeCardZone(item, SUPPORT_ZONE);
+                        break;
+                    case CASTLE_ZONE:
+                        changeCardZone(item, CASTLE_ZONE);
                         break;
                     default:
                         break;
@@ -216,25 +225,33 @@ const Card: FC<CardProps> = ({ id, text, index, moveCard, zone, arms }) => {
     return (
             <Popover 
                 placement="right" 
-                content={ content } 
-                title={ text }
+                content={ content }
                 trigger="click"
                 visible={ visiblePopover }
                 onVisibleChange={ handleVisibleChange }
             >
                 
-                <div ref={ ref }  style={{ opacity }} className='movable-item' data-handler-id={ handlerId } onContextMenu={ detail } >
-                    {
-                        arms && arms.length > 0 && (<Button type="primary" shape="circle" size="small" icon={<ToolFilled />} /> ) 
+                <div ref={ ref }  style={{ opacity, borderRadius: 10 }} className='movable-item' data-handler-id={ handlerId } onContextMenu={ detail } >
+                    { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
+                        <Image
+                            width={ 50 }
+                            height={ 75 }
+                            src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
+                            className={isOpponent ? 'img-180-deg' : ''}
+                        />
+                        : 
+                        <Image
+                            width={ 50 }
+                            height={ 75 }
+                            src={ card.img }
+                            className={isOpponent ? 'img-180-deg' : ''}
+                        />                        
                     }
-
-                    { text }
+                    
                 </div>
             </Popover>
-        
-        
         
     )
 }
 
-export default Card;
+export default CardComponent;

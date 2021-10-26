@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate } from "./types";
+import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault } from "./types";
 
 export const startAddNewDeck = (deck: any) => {
     return async (dispatch: Dispatch<DeckActionTypes>) => {
@@ -103,6 +103,35 @@ export const loadDeckUpdating = (id: string): DeckActionTypes => {
 export const resetDeckUpdating = () => {
     return {
         type: deckResetUpdating
+    }
+};
+
+export const startSetDefaultDeck = (id: string) => {
+
+    console.log('object')
+    return async (dispatch: Dispatch<DeckActionTypes>) => {
+
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/deck/'+ id, {}, 'PATCH', token);
+
+            if (resp.status === 200) {
+                dispatch(setDefaultDeck(id));
+            } else {
+                message.error('Error al actualizar mazo por defecto');
+            }
+
+        } catch (error) {
+            console.log(error);
+            message.error('Error al actualizar mazo por defecto!');
+        }
+    }
+};
+
+const setDefaultDeck = (id: string): DeckActionTypes => {
+    return {
+        type: deckSetDefault,
+        payload: id
     }
 };
 

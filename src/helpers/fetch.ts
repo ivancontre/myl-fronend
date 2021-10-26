@@ -1,6 +1,6 @@
 const baseUrl = process.env.REACT_APP_HOST_BACKEND;
 
-const allowedMethods = ['GET', 'POST', 'PUT', 'DELETE']
+const allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
 export const runFetch = (endpoint: string, data: object, method: string, token?: string): Promise<Response> => {
 

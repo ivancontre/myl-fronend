@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { Deck } from '../../../store/deck/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { resetDeckUpdating, startDeleteDeck, startLoadDeck } from '../../../store/deck/action';
+import { resetDeckUpdating, startDeleteDeck, startLoadDeck, startSetDefaultDeck } from '../../../store/deck/action';
 import { resetCardUpdating } from '../../../store/card/action';
 
 const Decks: FC = () => {
@@ -23,7 +23,7 @@ const Decks: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { decks } = useSelector((state: RootState) => state.decks);
+    const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
 
     const handleNewDesk = () => {
         history.push(`/decks/new`);
@@ -117,6 +117,7 @@ const Decks: FC = () => {
     const ref0 = useRef();
 
     const columns: ColumnsType<Deck> = [
+        
         {
             title: 'Nombre',
             dataIndex: 'name',
@@ -143,16 +144,28 @@ const Decks: FC = () => {
         },
     ];
 
+    const rowSelection = {
+        onChange: (selectedRowKeys: React.Key[]) => {
+            console.log(`selectedRowKeys1: ${selectedRowKeys}`);
+            const id = selectedRowKeys.toString();
+            dispatch(startSetDefaultDeck(id));
+        }
+    };
 
     return (
         <>
-            <Tooltip className="actions" title="Crear nuevo Mazo">
+            <Tooltip title="Crear nuevo Mazo">
                 <Button onClick={ handleNewDesk } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
 
             <Alert style={{marginTop: 10}} message="En esta sección podrás crear tus mazos. Si no tiene al menos un mazo creado no podrás jugar" type="info" showIcon/>
 
             <Table<Deck>
+                rowSelection={{
+                    type: 'radio',
+                    ...rowSelection,
+                    selectedRowKeys: [deckDefault?.id as string]
+                }}
                 pagination={{ defaultPageSize: 15 }}
                 rowKey="id" 
                 columns={ columns } 

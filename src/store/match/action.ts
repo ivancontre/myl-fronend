@@ -1,11 +1,17 @@
-import { Dictionary, ICard } from "../../pages/MatchPage";
 import { User } from "../auth/types";
-import { Deck } from "../deck/types";
-import { change, MatchActionTypes, setActiveUsers, setDeck, setMatchId, resetMatchValues } from "./types";
+import { Card } from "../card/types";
+import { change, MatchActionTypes, setActiveUsers, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent } from "./types";
 
-export const changeMatch = (match: Dictionary<ICard[] | []>): MatchActionTypes => {
+export const changeMatch = (match: Dictionary<Card[] | []>): MatchActionTypes => {
     return {
         type: change,
+        payload: match
+    }
+};
+
+export const changOpponenteMatch = (match: Dictionary<Card[] | []>): MatchActionTypes => {
+    return {
+        type: changeOpponent,
         payload: match
     }
 };
@@ -24,10 +30,10 @@ export const matchSetMatchId = (id: string) => {
     }
 };
 
-export const matchSetDeck = (deck: Deck) => {
+export const matchSetOpponentId = (id: string) => {
     return {
-        type: setDeck,
-        payload: deck
+        type: setOpponentId,
+        payload: id
     }
 };
 

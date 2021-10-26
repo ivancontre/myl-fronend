@@ -1,5 +1,5 @@
 .zone {
-    height: 120px;
+    height: 83px;
     width: 100vh;
     margin: 10px;
     border-radius: 3px;
@@ -11,11 +11,11 @@
   }
   
   .movable-item {
-    border-radius: 5px;
+    border-radius: 10px;
     /* position: absolute; */
     background-color: #fff3f3;
-    height: 100px;
-    width: 60px;
+    height: 75px;
+    width: 50px;
     margin: 5px auto;
     display: flex;
     justify-content: center;
@@ -45,6 +45,10 @@
     bottom: 0;    
   }
   
+
+.img-180-deg {
+  transform: rotate(180deg)
+}
   
   
   div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{

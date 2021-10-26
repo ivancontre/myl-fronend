@@ -1,4 +1,4 @@
-import { Alert, Button, Input, Modal, Space, Table, Tag, Select, message } from 'antd';
+import { Alert, Button, Input, Modal, Space, Table, Tag } from 'antd';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
@@ -11,8 +11,6 @@ import { User } from '../../../store/auth/types';
 import { ColumnsType } from 'antd/lib/table';
 import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
-import { matchSetDeck } from '../../../store/match/action';
-import { Deck } from '../../../store/deck/types';
 
 const Play: FC = () => {
 
@@ -23,13 +21,13 @@ const Play: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { activeUsers, deckByPlay } = useSelector((state: RootState) => state.match);
+    const { activeUsers } = useSelector((state: RootState) => state.match);
     const { decks } = useSelector((state: RootState) => state.decks);   
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
-    const { online, socket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
 
     const ref0 = useRef();
 
@@ -123,14 +121,14 @@ const Play: FC = () => {
         let secondsToGo = 10;
         const modal = Modal.info({
             title: 'Esperando confirmación',
-            content: `El usuario ${username.toUpperCase()} tiene ${secondsToGo} segundos para confirmar`,
+            content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
             okButtonProps: { hidden: true },
         });
         
         const timer = setInterval(() => {
             secondsToGo -= 1;
             modal.update({
-                content: `El usuario ${username.toUpperCase()} tiene ${secondsToGo} segundos para confirmar`,
+                content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
             });
         }, 1000);
 
@@ -145,23 +143,16 @@ const Play: FC = () => {
 
     const invite = (opponentId: string, username: string) => {
 
-        if (!deckByPlay) {
-            message.warn('Antes de invitar tiene que seleccionar el mazo con el que deseas jugar');
-            return;
-        }
+        // if (!deckByPlay) {
+        //     message.warn('Antes de invitar tiene que seleccionar el mazo con el que deseas jugar');
+        //     return;
+        // }
 
         socket?.emit('invite', {
             opponentId
         });
         
         countDown(username);
-    };
-
-    const handleSelectDeck = (deckId: string) => {
-
-        const deck = decks.find(deck => deck.id === deckId) as Deck;
-
-        dispatch(matchSetDeck(deck))
     };
 
     const columns: ColumnsType<User> = [
@@ -249,18 +240,6 @@ const Play: FC = () => {
         <>
              <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado" type="info" showIcon/>
  
-            <Select
-                placeholder="Seleccione el mazo con el que quiere jugar"
-                style={{ width: "100%"}}
-                onChange={ handleSelectDeck }   
-            >
-
-                {
-                    decks.length > 0 && decks.map(deck => (
-                        <Select.Option key={ deck.id } value={ deck.id as string }>{ deck.name }</Select.Option>
-                    ))
-                }
-            </Select>
              <Table<User>
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 

@@ -26,10 +26,11 @@ import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
-import { matchSetMatchId, resetMatch } from '../store/match/action';
+import { matchSetMatchId, matchSetOpponentId, resetMatch } from '../store/match/action';
 import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
+import MatchPage2 from '../pages/MatchPage2';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
@@ -103,12 +104,11 @@ export const SingedRouter: FC = () => {
     }, [socket, openNotification]);
 
     useEffect(() => {
-        socket?.on('match', (payload: any) => {
-
-            dispatch(matchSetMatchId(payload.matchId));
-            history.replace('/play')
+        socket?.on('go-match', (payload: any) => {
+            dispatch(matchSetOpponentId(payload.opponentId));
+            history.replace('/match')
         });
-    }, [socket, openNotification, dispatch]);
+    }, [socket, openNotification, dispatch, history]);
 
     return (
             <Layout  style={{ height: '100vh' }}>
@@ -172,7 +172,7 @@ export const SingedRouter: FC = () => {
                         <div className="site-layout-background" style={{ padding: 24 }} >
                             <Switch>
 
-                                <Route exact path="/match" component={ Play } />
+                                <Route exact path="/match" component={ MatchPage2 } />
 
                                 <Route exact path="/play" component={ Play } />
 

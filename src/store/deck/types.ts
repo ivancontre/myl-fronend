@@ -7,16 +7,19 @@ export const deckLoadUpdating = '[deck] Load updating';
 export const deckResetUpdating = '[deck] Reset updating';
 export const deckDelete = '[deck] Delete';
 export const deckUpdate = '[deck] Update';
+export const deckSetDefault = '[deck] Set default';
 
 export type Deck = {
     id?: string;
     name: string;
     cards: Card[];
+    byDefault: boolean;
 };
 
 export type DeckState = {
     decks: Deck[];
     deckUpdating: Deck | null;
+    deckDefault: Deck | null;
 };
 
 type DeckAddNewAction = {    
@@ -48,10 +51,16 @@ type DeckUpdateAction = {
     payload: Deck
 };
 
+type DeckSetDefaultAction = {    
+    type: typeof deckSetDefault,
+    payload: string
+};
+
 export type DeckActionTypes = 
 DeckAddNewAction | 
 DeckLoadAction |
 DeckLoadUpdatingAction |
 DeckResetUpdatingAction |
 DeckDeleteAction |
-DeckUpdateAction;
+DeckUpdateAction |
+DeckSetDefaultAction;
