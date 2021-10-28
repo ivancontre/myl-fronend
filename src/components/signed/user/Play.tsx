@@ -115,7 +115,9 @@ const Play: FC = () => {
         ) : (
             text
         ),
-    });  
+    });
+
+    let timer: any;
     
     const countDown = (username: string) => {
         let secondsToGo = 10;
@@ -125,7 +127,7 @@ const Play: FC = () => {
             okButtonProps: { hidden: true },
         });
         
-        const timer = setInterval(() => {
+        timer = setInterval(() => {
             secondsToGo -= 1;
             modal.update({
                 content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
@@ -141,12 +143,20 @@ const Play: FC = () => {
         }, secondsToGo * 1050);
     };
 
+    useEffect(() => {
+        socket?.on('go-match', (payload: any) => {
+            Modal.destroyAll();
+            // destruir modal
+        });
+
+        return () => {
+            clearInterval(timer);
+        }
+
+    }, [socket, timer]);
+
     const invite = (opponentId: string, username: string) => {
 
-        // if (!deckByPlay) {
-        //     message.warn('Antes de invitar tiene que seleccionar el mazo con el que deseas jugar');
-        //     return;
-        // }
 
         socket?.emit('invite', {
             opponentId

@@ -19,6 +19,8 @@ import Zone from '../components/match/Zone';
 import { Dictionary } from '../store/match/types';
 
 import '../css/match.css';
+import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
+import ViewCastleModal from '../components/modals/ViewCastleModal';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
 
@@ -33,6 +35,8 @@ const MatchPage2: FC = () => {
 
     const { match, matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
+    const { modalOpenThrowXcards, modalOpenViewCastle } = useSelector((state: RootState) => state.uiModal);
+
     const { online, socket } = useContext(SocketContext);
 
     const opponentCards: Dictionary<Card[] | []> = {};
@@ -75,24 +79,22 @@ const MatchPage2: FC = () => {
             ) {
                 console.log('changing');
                 socket?.emit('changing', {
-
                     match,
                     opponentId
                 });
             }
         }        
 
-    }, [socket, match, matchId]);
+    }, [socket, match, matchId, opponentId]);
 
     useEffect(() => {
         
         socket?.on('changing-oponent', (data) => {
             console.log('changing-oponent');
-            dispatch(changOpponenteMatch(data))
-
+            dispatch(changOpponenteMatch(data));
         });
         
-    }, [socket]);
+    }, [socket, dispatch]);
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
@@ -146,182 +148,186 @@ const MatchPage2: FC = () => {
 
     return (
         <>
-        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-            <Row gutter={[8, 8]}>
-                <Col span={ 21 }>
 
-                        <Row gutter={[8, 8]}>
-                            <Col offset={ 6 }>
-                                <Zone title={ HAND_ZONE } className='zone'>
-                                    { opponentMatch[HAND_ZONE] && returnItemsForZoneOpponent(HAND_ZONE) }
-                                </Zone>
-                            </Col>
-                        </Row> 
-
-                        <Row gutter={[8, 8]}>
-                            <Col span={ 3 }> 
-                                Oros sin pagar
-                            </Col>
-
-                            <Col span={ 3 }> 
-                                Oros pagados
-                            </Col>
-
-                            <Col span={ 18 }> 
-                                <Zone title={ SUPPORT_ZONE } className='zone'>
-                                    { opponentMatch[SUPPORT_ZONE] && returnItemsForZoneOpponent(SUPPORT_ZONE) }
-                                </Zone>
-                            </Col>
-                        </Row>  
-
-                        <Row gutter={[8, 8]}>
-                            <Col span={ 3 }> 
-                                <div className="actions">
-                                    <Tag color="green">{ opponentMatch[REMOVAL_ZONE] && opponentMatch[REMOVAL_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ REMOVAL_ZONE } className='zone stack'>
-                                    { opponentMatch[REMOVAL_ZONE] && returnItemsForZoneOpponent(REMOVAL_ZONE) }
-                                </Zone>
-                            </Col>
-
-                            <Col span={ 3 }> 
-                                <div className="actions">
-                                    <Tag color="green">{ opponentMatch[CASTLE_ZONE] && opponentMatch[CASTLE_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ CASTLE_ZONE } className='zone stack'>
-                                    { opponentMatch[CASTLE_ZONE] && returnItemsForZoneOpponent(CASTLE_ZONE) }
-                                </Zone>
-                            </Col>
-
-                            <Col span={ 18 }> 
-                                <Zone title={ DEFENSE_ZONE } className='zone'>
-                                    { opponentMatch[DEFENSE_ZONE] && returnItemsForZoneOpponent(DEFENSE_ZONE) }
-                                </Zone>
-                            </Col>
-                        </Row>
-
-                        <Row gutter={[8, 8]}>
-                            <Col span={ 3 }> 
-                                <div className="actions">
-                                    <Tag color="green">{ opponentMatch[EXILE_ZONE] && opponentMatch[EXILE_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ EXILE_ZONE } className='zone stack'>
-                                    { opponentMatch[EXILE_ZONE] && returnItemsForZoneOpponent(EXILE_ZONE) }
-                                </Zone>
-                            </Col>
-
-                            <Col span={ 3 }>
-                                <div className="actions">
-                                    <Tag color="green">{ opponentMatch[CEMETERY_ZONE] && opponentMatch[CEMETERY_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ CEMETERY_ZONE } className='zone stack'>
-                                    { opponentMatch[CEMETERY_ZONE] && returnItemsForZoneOpponent(CEMETERY_ZONE) }
-                                </Zone>
-                            </Col>
-
-                            <Col span={ 18 }> 
-                                <Zone title={ ATTACK_ZONE } className='zone'>
-                                    { opponentMatch[ATTACK_ZONE] && returnItemsForZoneOpponent(ATTACK_ZONE) }
-                                </Zone> 
-                            </Col>
-                        </Row>
-                    
-                </Col>
-            </Row>
+            { modalOpenThrowXcards && <ThrowXcardsModal /> }
+            { modalOpenViewCastle && <ViewCastleModal /> }
 
 
-            <Divider>{ online ? 'Online' : 'Offline' }</Divider>
+            <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >
+                <Row gutter={[8, 8]}>
+                    <Col span={ 21 }>
 
-            <Row gutter={[8, 8]}>
-                <Col span={ 21 }>
-                    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-                        <Row gutter={[8, 8]}>
+                            <Row gutter={[8, 8]}>
+                                <Col offset={ 6 }>
+                                    <Zone title={ HAND_ZONE } className='zone'>
+                                        { opponentMatch[HAND_ZONE] && returnItemsForZoneOpponent(HAND_ZONE) }
+                                    </Zone>
+                                </Col>
+                            </Row> 
 
-                            <Col span={ 3 }> 
-                                <div className="actions">
-                                    <Tag color="green">{ match[EXILE_ZONE] && match[EXILE_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ EXILE_ZONE } className='zone stack'>
-                                    { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE) }
-                                </Zone>
-                            </Col>
+                            <Row gutter={[8, 8]}>
+                                <Col span={ 3 }> 
+                                    Oros sin pagar
+                                </Col>
 
-                            <Col span={ 3 }>
-                                <div className="actions">
-                                    <Tag color="green">{ match[CEMETERY_ZONE] && match[CEMETERY_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ CEMETERY_ZONE } className='zone stack'>
-                                    { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE) }
-                                </Zone>
-                            </Col>
+                                <Col span={ 3 }> 
+                                    Oros pagados
+                                </Col>
 
-                            <Col span={ 18 }> 
-                                <Zone title={ ATTACK_ZONE } className='zone'>
-                                    { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE) }
-                                </Zone> 
-                            </Col>
+                                <Col span={ 18 }> 
+                                    <Zone title={ SUPPORT_ZONE } className='zone'>
+                                        { opponentMatch[SUPPORT_ZONE] && returnItemsForZoneOpponent(SUPPORT_ZONE) }
+                                    </Zone>
+                                </Col>
+                            </Row>  
 
-                        </Row>
+                            <Row gutter={[8, 8]}>
+                                <Col span={ 3 }> 
+                                    <div className="actions">
+                                        <Tag color="green">{ opponentMatch[REMOVAL_ZONE] && opponentMatch[REMOVAL_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ REMOVAL_ZONE } className='zone stack'>
+                                        { opponentMatch[REMOVAL_ZONE] && returnItemsForZoneOpponent(REMOVAL_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                        <Row gutter={[8, 8]}>
+                                <Col span={ 3 }> 
+                                    <div className="actions">
+                                        <Tag color="green">{ opponentMatch[CASTLE_ZONE] && opponentMatch[CASTLE_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ CASTLE_ZONE } className='zone stack'>
+                                        { opponentMatch[CASTLE_ZONE] && returnItemsForZoneOpponent(CASTLE_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                            <Col span={ 3 }> 
-                                <div className="actions">
-                                    <Tag color="green">{ match[REMOVAL_ZONE] && match[REMOVAL_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ REMOVAL_ZONE } className='zone stack'>
-                                    { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE) }
-                                </Zone>
-                            </Col>
+                                <Col span={ 18 }> 
+                                    <Zone title={ DEFENSE_ZONE } className='zone'>
+                                        { opponentMatch[DEFENSE_ZONE] && returnItemsForZoneOpponent(DEFENSE_ZONE) }
+                                    </Zone>
+                                </Col>
+                            </Row>
 
-                            <Col span={ 3 }> 
-                            <   div className="actions">
-                                    <Tag color="green">{ match[CASTLE_ZONE] && match[CASTLE_ZONE].length }</Tag>
-                                </div>
-                                <Zone title={ CASTLE_ZONE } className='zone stack'>
-                                    { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE) }
-                                </Zone>
-                            </Col>
+                            <Row gutter={[8, 8]}>
+                                <Col span={ 3 }> 
+                                    <div className="actions">
+                                        <Tag color="green">{ opponentMatch[EXILE_ZONE] && opponentMatch[EXILE_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ EXILE_ZONE } className='zone stack'>
+                                        { opponentMatch[EXILE_ZONE] && returnItemsForZoneOpponent(EXILE_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                            <Col span={ 18 }> 
-                                <Zone title={ DEFENSE_ZONE } className='zone'>
-                                    { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE) }
-                                </Zone>
-                            </Col>
+                                <Col span={ 3 }>
+                                    <div className="actions">
+                                        <Tag color="green">{ opponentMatch[CEMETERY_ZONE] && opponentMatch[CEMETERY_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ CEMETERY_ZONE } className='zone stack'>
+                                        { opponentMatch[CEMETERY_ZONE] && returnItemsForZoneOpponent(CEMETERY_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                        </Row>
+                                <Col span={ 18 }> 
+                                    <Zone title={ ATTACK_ZONE } className='zone'>
+                                        { opponentMatch[ATTACK_ZONE] && returnItemsForZoneOpponent(ATTACK_ZONE) }
+                                    </Zone> 
+                                </Col>
+                            </Row>
+                        
+                    </Col>
+                </Row>
 
-                        <Row gutter={[8, 8]}>
+                <Divider>{ online ? 'Online' : 'Offline' }</Divider>
 
-                            <Col span={ 3 }> 
-                                Oros sin pagar
-                            </Col>
+                <Row gutter={[8, 8]}>
+                    <Col span={ 21 }>
+                        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+                            <Row gutter={[8, 8]}>
 
-                            <Col span={ 3 }> 
-                                Oros pagados
-                            </Col>
+                                <Col span={ 3 }> 
+                                    <div className="actions">
+                                        <Tag color="green">{ match[EXILE_ZONE] && match[EXILE_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ EXILE_ZONE } className='zone stack'>
+                                        { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                            <Col span={ 18 }> 
-                                <Zone title={ SUPPORT_ZONE } className='zone'>
-                                    { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE) }
-                                </Zone>
-                            </Col>
+                                <Col span={ 3 }>
+                                    <div className="actions">
+                                        <Tag color="green">{ match[CEMETERY_ZONE] && match[CEMETERY_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ CEMETERY_ZONE } className='zone stack'>
+                                        { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE) }
+                                    </Zone>
+                                </Col>
 
-                        </Row>  
+                                <Col span={ 18 }> 
+                                    <Zone title={ ATTACK_ZONE } className='zone'>
+                                        { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE) }
+                                    </Zone> 
+                                </Col>
 
-                        <Row gutter={[8, 8]}>
-                            <Col offset={ 6 }>
-                                <Zone title={ HAND_ZONE } className='zone'>
-                                    { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE) }
-                                </Zone>
-                            </Col>
-                        </Row>    
+                            </Row>
 
-                    </DndProvider>
-                </Col>
-            </Row>
+                            <Row gutter={[8, 8]}>
 
-        </DndProvider>
+                                <Col span={ 3 }> 
+                                    <div className="actions">
+                                        <Tag color="green">{ match[REMOVAL_ZONE] && match[REMOVAL_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ REMOVAL_ZONE } className='zone stack'>
+                                        { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE) }
+                                    </Zone>
+                                </Col>
+
+                                <Col span={ 3 }> 
+                                <   div className="actions">
+                                        <Tag color="green">{ match[CASTLE_ZONE] && match[CASTLE_ZONE].length }</Tag>
+                                    </div>
+                                    <Zone title={ CASTLE_ZONE } className='zone stack'>
+                                        { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE) }
+                                    </Zone>
+                                </Col>
+
+                                <Col span={ 18 }> 
+                                    <Zone title={ DEFENSE_ZONE } className='zone'>
+                                        { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE) }
+                                    </Zone>
+                                </Col>
+
+                            </Row>
+
+                            <Row gutter={[8, 8]}>
+
+                                <Col span={ 3 }> 
+                                    Oros sin pagar
+                                </Col>
+
+                                <Col span={ 3 }> 
+                                    Oros pagados
+                                </Col>
+
+                                <Col span={ 18 }> 
+                                    <Zone title={ SUPPORT_ZONE } className='zone'>
+                                        { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE) }
+                                    </Zone>
+                                </Col>
+
+                            </Row>  
+
+                            <Row gutter={[8, 8]}>
+                                <Col offset={ 6 }>
+                                    <Zone title={ HAND_ZONE } className='zone'>
+                                        { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE) }
+                                    </Zone>
+                                </Col>
+                            </Row>    
+
+                        </DndProvider>
+                    </Col>
+                </Row>
+
+            </DndProvider>
         </>
     )
 }

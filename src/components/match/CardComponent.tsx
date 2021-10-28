@@ -2,17 +2,17 @@ import { FC, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 
-import { Card  } from '../../store/card/types';
+import { Card } from '../../store/card/types';
 import { DragCard  } from '../../store/match/types';
 
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch } from '../../store/match/action';
-import { Button, Image, Popover } from 'antd';
-import {
-    ToolFilled
-} from '@ant-design/icons';
+import { Button, Image, message, Popover } from 'antd';
+import { openModalThrowXcards, openModalViewCastle } from '../../store/ui-modal/action';
+import { shuffle } from '../../helpers/shuffle';
+import { throwXcards } from '../../helpers/throwsCards';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
 
@@ -32,6 +32,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     const dispatch = useDispatch();
 
     const { match } = useSelector((state: RootState) => state.match);
+    const [visiblePopover, setVisiblePopover] = useState(false);
+    const [animated, setAnimated] = useState(false);
 
     const changeCardZone = (item: DragCard, zoneName: string) => {
         
@@ -41,56 +43,13 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
         const card = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
-        let newCards = { ...match };
+        const newCards = { ...match };
 
         newCards[item.zone] = match[item.zone].filter((card: Card, index2: number) => index2 !== index);
 
         newCards[zoneName] = [...match[zoneName], card];
 
-        /*
-
-        const sendArmsZones = [
-            HAND_ZONE, 
-            EXILE_ZONE, 
-            CEMETERY_ZONE, 
-            REMOVAL_ZONE
-        ];
-
-        if (item.arms && sendArmsZones.includes(zoneName) ) { // Si un aliado con armas es enviado a una de las zonas de sendArmsZones entonces sus armas también son enviadas
-            const arms = newCards[SUPPORT_ZONE].filter(card => item.arms?.includes(card.id));
-            newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter(card => !item.arms?.includes(card.id));
-            newCards[zoneName] = [...newCards[zoneName], ...arms];
-        }
-
-        if (item.zone === SUPPORT_ZONE && sendArmsZones.includes(zoneName)) { // Si es un arma y está en la zona de apoyo, entonces se busca el aliado portador del arma para quitársela
-            newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map(card => {
-
-                if (card.arms) {
-                    const index = card.arms.indexOf(item.id);
-                    if (index > -1) {
-                        card.arms.splice(index, 1);
-                    }
-                }
-
-                return card;
-                
-            });
-
-            newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map(card => {
-
-                if (card.arms) {
-                    const index = card.arms.indexOf(item.id);
-                    if (index > -1) {
-                        card.arms.splice(index, 1);
-                    }
-                }
-
-                return card;
-                
-            });
-        }*/
-
-        dispatch(changeMatch(newCards));
+       dispatch(changeMatch(newCards));
 
     }
 
@@ -201,41 +160,107 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     });
 
     const opacity = isDragging ? 0.4 : 1;
-    drag(drop(ref));
-
-    const [visiblePopover, setVisiblePopover] = useState(false);
+    drag(drop(ref));    
     
-    const detail = (event: any) => {
-        event.preventDefault()
-        console.log('detalle', id);
+    const detail = (event: any, id:string) => {
+        event.preventDefault();
         setVisiblePopover(true)
+    };
+
+    const handleVisibleChangePopever = (visible: boolean) => {
+        setVisiblePopover(visible);
+    };
+
+    const shuffleCaslte = () => {
+
+        setAnimated(true);
+
+        const newMatch = shuffle(match, CASTLE_ZONE); 
+
+        dispatch(changeMatch(newMatch));
+        handleVisibleChangePopever(false);
+
+        setTimeout(() => {
+            setAnimated(false);
+        }, 500);
     }
 
-    const handleVisibleChange = (visible: boolean) => {
-        setVisiblePopover(visible)
+    const getHand = () => {
+        if (!match[CASTLE_ZONE].length) {
+            message.warning(`No hay cartas en ${CASTLE_ZONE}`);
+            handleVisibleChangePopever(false);
+            return;
+        }
+
+        if (match[HAND_ZONE].length) {
+            message.warning(`Para obtener una nueva mano debes descartarte todas las cartas`);
+            handleVisibleChangePopever(false);
+            return;
+        }
+
+        const newMatch = throwXcards(8, match, CASTLE_ZONE, HAND_ZONE);
+
+        dispatch(changeMatch(newMatch));
+        handleVisibleChangePopever(false);
+        
     };
 
 
     const content = (
         <div>
-            <p>{ id }</p>
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/></div>
+            )}
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => getHand() }>Obtener mano</Button><br/></div>
+            )}
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/></div>
+            )}
+            
+            
+            {/* <Button type="link">Ver las primeras X cartas</Button> <br/>  */}
+
+            {/* {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => throwXcards(8, CASTLE_ZONE, HAND_ZONE) }>Robar X cartas</Button> <br/></div>
+            )} */}
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => openlThrowCardsModal()}>Botar X cartas</Button> <br/></div>
+            )}          
+            
         </div>
     );
 
+    const openlThrowCardsModal = () => {
+        handleVisibleChangePopever(false);
+        dispatch(openModalThrowXcards());
+    }; 
+
+    const openViewCastleModal = () => {
+        handleVisibleChangePopever(false);
+        dispatch(openModalViewCastle());
+    };
+
     return (
+
+        <>
             <Popover 
                 placement="right" 
                 content={ content }
                 trigger="click"
                 visible={ visiblePopover }
-                onVisibleChange={ handleVisibleChange }
+                onVisibleChange={ handleVisibleChangePopever }
             >
                 
-                <div ref={ ref }  style={{ opacity, borderRadius: 10 }} className='movable-item' data-handler-id={ handlerId } onContextMenu={ detail } >
+                <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ (e: any) => detail(e, card.id as string) } >
                     { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
-                        <Image
+                        <img
                             width={ 50 }
                             height={ 75 }
+                            alt={ card.name }
                             src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
                             className={isOpponent ? 'img-180-deg' : ''}
                         />
@@ -250,6 +275,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     
                 </div>
             </Popover>
+        </>
         
     )
 }

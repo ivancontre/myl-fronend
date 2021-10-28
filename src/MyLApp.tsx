@@ -6,6 +6,8 @@ import { SocketProvider } from './context/SocketContext';
 import AppRouter from './routers/AppRouter';
 import { RootState } from './store';
 
+import 'animate.css';
+
 const MyLApp: FC = () => {
 
     const { show, text } = useSelector((state: RootState) => state.spin);

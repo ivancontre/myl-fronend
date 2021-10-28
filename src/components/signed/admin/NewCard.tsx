@@ -374,11 +374,10 @@ const NewCard = () => {
                             style={{ width: "100%" }}                        
                         >
                         {
-                            races.length > 0 && races.map(race => {
-                                if (getEditionName(race.edition) === editionName) {
-                                    return (<Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>)
-                                }
-                            })
+
+                            races.length > 0 && races.filter(race => getEditionName(race.edition) === editionName).map(race => (
+                                <Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>
+                            ))
                         }                    
                         
                     </Select>

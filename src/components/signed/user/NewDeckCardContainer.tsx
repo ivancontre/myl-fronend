@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import React, { FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';

@@ -108,33 +108,20 @@ const NewDeck: FC = () => {
             
             if (typeId !== 'all') {
                 return cardsByEdition
+                    .filter(card => card.type === typeId)
                     .map((card, index) => {
-                        if (card.type === typeId) {
-                            return (
-                                <NewDeckCard 
-                                    key={ index }
-                                    id={ card.id }
-                                    index={ index }
-                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                    zone={ zoneName }
-                                    card={ card }
-                                />
-                            )
-                        }
+                        return (
+                            <NewDeckCard 
+                                key={ index }
+                                id={ card.id }
+                                index={ index }
+                                moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                zone={ zoneName }
+                                card={ card }
+                            />
+                        )                        
                     });
             }
-
-            return cardsByEdition
-                .map((card, index) => (
-                    <NewDeckCard 
-                        key={ index }
-                        id={ card.id }
-                        index={ index }
-                        moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                        zone={ zoneName }
-                        card={ card }
-                    />
-                ));
 
         } else {
             return selectMyCards

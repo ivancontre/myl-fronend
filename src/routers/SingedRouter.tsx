@@ -26,7 +26,7 @@ import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
-import { matchSetMatchId, matchSetOpponentId, resetMatch } from '../store/match/action';
+import { matchSetOpponentId, resetMatch } from '../store/match/action';
 import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
@@ -36,7 +36,7 @@ const { Content, Sider } = Layout;
 export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
-    const { online, socket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
 
     const dispatch = useDispatch();
 
@@ -58,17 +58,13 @@ export const SingedRouter: FC = () => {
 
     const cancel = () => {
 
-    }
-
-
+    };
 
     const close = () => {
         console.log('close notification')
     };
 
     const acceptInvitation = useCallback((key: string, opponentId: string) => {
-        console.log('object')
-        console.log(socket)
         socket?.emit('create-match', {
             opponentId
         });
@@ -94,6 +90,7 @@ export const SingedRouter: FC = () => {
             key,
             onClose: close,
             duration: 10,
+            className: 'centered',
         });
     }, [acceptInvitation]);
     
@@ -106,6 +103,7 @@ export const SingedRouter: FC = () => {
     useEffect(() => {
         socket?.on('go-match', (payload: any) => {
             dispatch(matchSetOpponentId(payload.opponentId));
+            // destruir modal
             history.replace('/match')
         });
     }, [socket, openNotification, dispatch, history]);

@@ -90,14 +90,28 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
             return 'rgb(0,0,0)';
         }
 
-        return 'rgb(0,0,0)';
+        return 'rgb(46,44,44)';
         
     };
 
+    const getClassAnimated = () => {
+        
+        if (!isOver) {
+            return '';
+        }
+
+        if (!canDrop) {
+            return '';
+        }
+
+        return 'animate__animated animate__pulse';
+    }
+
+
     return (
         <>
-            <Tooltip title={title}>
-                <div ref={ drop } className={ className } style={ {backgroundColor: getBackgroundColor()} }>
+            <Tooltip title={ title }>
+                <div ref={ drop } className={ className + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } }>
                     
                     { children }
 
