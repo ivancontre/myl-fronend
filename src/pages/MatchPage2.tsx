@@ -20,9 +20,10 @@ import { Dictionary } from '../store/match/types';
 
 import '../css/match.css';
 import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
-import ViewCastleModal from '../components/modals/ViewCastleModal';
+import ViewCardsModal from '../components/modals/ViewCardsModal';
+import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
 const MatchPage2: FC = () => {
 
@@ -33,9 +34,9 @@ const MatchPage2: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentMatch, opponentId, amountCardsView } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
-    const { modalOpenThrowXcards, modalOpenViewCastle } = useSelector((state: RootState) => state.uiModal);
+    const { modalOpenThrowXcards, modalOpenViewCastle, modalOpenViewXcards, modalOpenSelectXcards } = useSelector((state: RootState) => state.uiModal);
 
     const { online, socket } = useContext(SocketContext);
 
@@ -88,9 +89,17 @@ const MatchPage2: FC = () => {
     }, [socket, match, matchId, opponentId]);
 
     useEffect(() => {
+
+        socket?.on('showing-clastle-to-opponent', (data) => {
+            console.log(opponentMatch[CASTLE_ZONE])
+        });
+
+    }, [socket]);
+
+    useEffect(() => {
         
-        socket?.on('changing-oponent', (data) => {
-            console.log('changing-oponent');
+        socket?.on('changing-opponent', (data) => {
+            console.log('changing-opponent');
             dispatch(changOpponenteMatch(data));
         });
         
@@ -98,7 +107,7 @@ const MatchPage2: FC = () => {
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
-
+            return; // para evitar que ordene
             const dragCard = match[zoneName][dragIndex];
 
             if (!match[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
@@ -137,7 +146,7 @@ const MatchPage2: FC = () => {
             .map((card: Card, index: number) => (
                 <CardComponent
                     key={ index }
-                    isOpponent={true}
+                    isOpponent={ true }
                     index={ index }
                     moveCard={(dragIndex: number, hoverIndex: number, zoneName: string) => moveCard(dragIndex, hoverIndex, zoneName)}
                     zone={ zoneName }
@@ -150,8 +159,10 @@ const MatchPage2: FC = () => {
         <>
 
             { modalOpenThrowXcards && <ThrowXcardsModal /> }
-            { modalOpenViewCastle && <ViewCastleModal /> }
+            { modalOpenViewCastle && <ViewCardsModal zone={ CASTLE_ZONE } /> }
 
+            { modalOpenSelectXcards && <SelectXcardsModal /> }
+            { modalOpenViewXcards && <ViewCardsModal zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
 
             <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >
                 <Row gutter={[8, 8]}>
@@ -299,14 +310,9 @@ const MatchPage2: FC = () => {
 
                             <Row gutter={[8, 8]}>
 
-                                <Col span={ 3 }> 
+                                <Col span={ 6 }> 
                                     Oros sin pagar
                                 </Col>
-
-                                <Col span={ 3 }> 
-                                    Oros pagados
-                                </Col>
-
                                 <Col span={ 18 }> 
                                     <Zone title={ SUPPORT_ZONE } className='zone'>
                                         { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE) }
@@ -316,6 +322,9 @@ const MatchPage2: FC = () => {
                             </Row>  
 
                             <Row gutter={[8, 8]}>
+                                <Col span={ 6 }> 
+                                    Oros pagados
+                                </Col>
                                 <Col offset={ 6 }>
                                     <Zone title={ HAND_ZONE } className='zone'>
                                         { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE) }

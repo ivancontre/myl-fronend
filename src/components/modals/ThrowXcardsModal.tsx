@@ -35,7 +35,7 @@ const ThrowXcardsModal: FC = () => {
 
     return (
         <Modal centered title="Botar Cartas" visible={ modalOpenThrowXcards } onOk={ handleOkModal } onCancel={ handleCancelModal }>
-            <p>Indique la cantidad de cartas desea botar desde el {CASTLE_ZONE} al {CEMETERY_ZONE}</p>                
+            <p>Indique la cantidad de cartas que desea botar desde el {CASTLE_ZONE} al {CEMETERY_ZONE}</p>                
             <InputNumber min={ 1 } max={ match[CASTLE_ZONE].length } defaultValue={ 1 } onChange={ onChangeInputAmount }/>
         </Modal>
     )

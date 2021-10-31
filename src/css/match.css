@@ -1,59 +1,65 @@
 .zone {
-    height: 83px;
-    width: 100vh;
-    margin: 10px;
-    border-radius: 3px;
-    box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    
-  }
+  height: 83px;
+  width: 100vh;
+  margin: 5px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;  
+}
   
-  .movable-item {
-    border-radius: 10px;
-    /* position: absolute; */
-    background-color: #fff3f3;
-    height: 75px;
-    width: 50px;
-    margin: 5px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
-  }
+.movable-item {
+  border-radius: 10px;
+  /* position: absolute; */
+  background-color: #fff3f3;
+  height: 75px;
+  width: 50px;
+  margin: 5px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
   
-  .stack {
-    width: 80px;
-  }
+.stack {
+  width: 80px;
+}
+
+.stack > .movable-item  {
+  position: absolute;
   
-  .stack > .movable-item  {
-    position: absolute;
-    
-  }
-  /* 
-  div.ant-col {
-    border: 0.1px solid rgba(0, 0, 0, 0.06);
-  }  */
+}
+
+.actions {
+  float: right;
+}
   
-  .actions {
-    float: right;
-  }
-  
-  .button-logout {
-    position: fixed;
-    bottom: 0;    
-  }
+.button-logout {
+  position: fixed;
+  bottom: 0;    
+}
   
 
 .img-180-deg {
   transform: rotate(180deg);
+}  
+  
+div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
+  justify-content: center;
+  display: flex;
 }
-  
-  
-  div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
-    justify-content: center;
-    display: flex;
-  }
-  
-  
+
+.view-moda-origin {
+  width: 98vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  height: 85px;
+  margin: 1px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

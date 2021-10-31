@@ -1,8 +1,10 @@
-import { ModalActionTypes, UiModalState, uiCloseModalThrowXcards, uiOpenModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle } from "./types";
+import { ModalActionTypes, UiModalState, uiCloseModalThrowXcards, uiOpenModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiOpenModalViewXCastle, uiCloseModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle } from "./types";
 
 const initialState: UiModalState = {
     modalOpenThrowXcards: false,
-    modalOpenViewCastle: false
+    modalOpenViewCastle: false,
+    modalOpenViewXcards: false,
+    modalOpenSelectXcards: false
 };
 
 export const uiModalReducer = (state: typeof initialState = initialState, action: ModalActionTypes): UiModalState => {
@@ -31,7 +33,31 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
                 ...state,
                 modalOpenViewCastle: false
             };
-    
+
+        case uiOpenModalViewXCastle:            
+            return {
+                ...state,
+                modalOpenViewXcards: true
+            };
+
+        case uiCloseModalViewXCastle:        
+            return {
+                ...state,
+                modalOpenViewXcards: false
+            };
+
+        case uiOpenModalSelectXCastle:            
+            return {
+                ...state,
+                modalOpenSelectXcards: true
+            };
+
+        case uiCloseModalSelectXCastle:
+            return {
+                ...state,
+                modalOpenSelectXcards: false
+            };
+
         default:
             return state;
     }

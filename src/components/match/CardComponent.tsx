@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 
@@ -10,9 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalThrowXcards, openModalViewCastle } from '../../store/ui-modal/action';
+import { openModalSelectXcards, openModalThrowXcards, openModalViewCastle } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
+import { SocketContext } from '../../context/SocketContext';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
 
@@ -31,7 +32,10 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
     const dispatch = useDispatch();
 
-    const { match } = useSelector((state: RootState) => state.match);
+    const { socket } = useContext(SocketContext);
+
+    const { match, opponentId } = useSelector((state: RootState) => state.match);
+
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
 
@@ -51,7 +55,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
        dispatch(changeMatch(newCards));
 
-    }
+    };
 
     const [{ handlerId }, drop] = useDrop({
         accept: 'card',
@@ -185,40 +189,69 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         }, 500);
     }
 
-    const getHand = () => {
+    const getHand = (ammunt: number) => {
         if (!match[CASTLE_ZONE].length) {
             message.warning(`No hay cartas en ${CASTLE_ZONE}`);
             handleVisibleChangePopever(false);
             return;
         }
 
-        if (match[HAND_ZONE].length) {
-            message.warning(`Para obtener una nueva mano debes descartarte todas las cartas`);
-            handleVisibleChangePopever(false);
-            return;
-        }
-
-        const newMatch = throwXcards(8, match, CASTLE_ZONE, HAND_ZONE);
+        const newMatch = throwXcards(ammunt, match, CASTLE_ZONE, HAND_ZONE);
 
         dispatch(changeMatch(newMatch));
-        handleVisibleChangePopever(false);
-        
+        handleVisibleChangePopever(false);        
     };
 
+    const showToOpponent = () => {
+        socket?.emit('show-clastle-to-opponent', {
+            opponentId
+        });
+        handleVisibleChangePopever(false);   
+    };
 
     const content = (
         <div>
             {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/></div>
+                <div><Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/></div>
             )}
 
             {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => getHand() }>Obtener mano</Button><br/></div>
+                <div><Button type="link" onClick={ () => getHand(8) }>Robar mano</Button><br/></div>
             )}
 
             {(zone === CASTLE_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/></div>
             )}
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/></div>
+            )}
+            
+
+
+
+            
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/></div>
+            )}          
+            
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/></div>
+            )}        
+
+
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/></div>
+            )}  
+            
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/></div>
+            )}  
+
+            
+            
             
             
             {/* <Button type="link">Ver las primeras X cartas</Button> <br/>  */}
@@ -227,14 +260,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                 <div><Button type="link" onClick={ () => throwXcards(8, CASTLE_ZONE, HAND_ZONE) }>Robar X cartas</Button> <br/></div>
             )} */}
 
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => openlThrowCardsModal()}>Botar X cartas</Button> <br/></div>
-            )}          
             
         </div>
     );
 
-    const openlThrowCardsModal = () => {
+    const openThrowCardsModal = () => {
         handleVisibleChangePopever(false);
         dispatch(openModalThrowXcards());
     }; 
@@ -242,6 +272,16 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     const openViewCastleModal = () => {
         handleVisibleChangePopever(false);
         dispatch(openModalViewCastle());
+    };
+
+    const throwOneCard = () => {
+        const newMatch = throwXcards(1, match, CASTLE_ZONE, CEMETERY_ZONE);
+        dispatch(changeMatch(newMatch));
+    };
+
+    const openSelectXcardsCastleModal = () => {
+        handleVisibleChangePopever(false);
+        dispatch(openModalSelectXcards());
     };
 
     return (

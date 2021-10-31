@@ -43,7 +43,6 @@ type CardUpdateAction = {
     payload: Card
 };
 
-
 type CardLoadAction = {    
     type: typeof cardLoad,
     payload: Card[]

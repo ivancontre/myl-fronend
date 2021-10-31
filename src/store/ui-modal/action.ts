@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -21,5 +21,29 @@ export const openModalViewCastle = (): ModalActionTypes => {
 export const closeModalViewCastle = (): ModalActionTypes => {
     return {
         type: uiCloseModalViewCastle
+    }
+};
+
+export const openModalViewXCastle = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewXCastle
+    }
+};
+
+export const closeModalViewXCastle = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewXCastle
+    }
+};
+
+export const openModalSelectXcards = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalSelectXCastle
+    }
+};
+
+export const closeModalSelectXcards = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalSelectXCastle
     }
 };
