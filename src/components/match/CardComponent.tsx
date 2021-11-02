@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalSelectXcards, openModalThrowXcards, openModalViewCastle } from '../../store/ui-modal/action';
+import { openModalSelectXcards, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
 export interface CardProps {
     id?: string;
@@ -166,14 +166,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     const opacity = isDragging ? 0.4 : 1;
     drag(drop(ref));    
     
-    const detail = (event: any, id:string) => {
-        event.preventDefault();
-        setVisiblePopover(true)
-    };
-
-    const handleVisibleChangePopever = (visible: boolean) => {
-        setVisiblePopover(visible);
-    };
+    
 
     const shuffleCaslte = () => {
 
@@ -209,8 +202,41 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         handleVisibleChangePopever(false);   
     };
 
+    const viewMyCementery = () => {
+        dispatch(openModalViewCementery());
+        handleVisibleChangePopever(false);
+    };
+
+    const viewMyExile = () => {
+        dispatch(openModalViewExile());
+        handleVisibleChangePopever(false);
+    };
+
+    const viewMyRemoval = () => {
+        dispatch(openModalViewRemoval());
+        handleVisibleChangePopever(false);
+    };
+
+    const viewCementeryOpponent = () => {
+        dispatch(openModalViewCementeryOpponent());
+        handleVisibleChangePopever(false);
+    };
+
+    const viewExileOpponent = () => {
+        dispatch(openModalViewExileOpponent());
+        handleVisibleChangePopever(false);
+    };
+
+    const viewRemovalOpponent = () => {
+        dispatch(openModalViewRemovalOpponent());
+        handleVisibleChangePopever(false);
+    };
+    
+    
+
     const content = (
         <div>
+            {/* Acciones en mi castillo */}
             {(zone === CASTLE_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/></div>
             )}
@@ -226,11 +252,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             {(zone === CASTLE_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/></div>
             )}
-            
-
-
-
-            
 
             {(zone === CASTLE_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/></div>
@@ -250,15 +271,49 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                 <div><Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/></div>
             )}  
 
-            
-            
-            
-            
-            {/* <Button type="link">Ver las primeras X cartas</Button> <br/>  */}
 
-            {/* {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => throwXcards(8, CASTLE_ZONE, HAND_ZONE) }>Robar X cartas</Button> <br/></div>
-            )} */}
+            {/* Acciones en mi cementerio, destierro y remoción */}
+
+            {(zone === CEMETERY_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyCementery }>Ver Cementerio</Button> <br/></div>
+            )}  
+
+            {(zone === EXILE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyExile }>Ver Destierro</Button> <br/></div>
+            )}  
+
+            {(zone === REMOVAL_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyRemoval }>Ver Remoción</Button> <br/></div>
+            )}
+
+
+            {/* Acciones en cementerio, destierro y remoción oponentes */}
+
+            {(zone === CEMETERY_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewCementeryOpponent }>Ver Cementerio</Button> <br/></div>
+            )}  
+
+            {(zone === EXILE_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewExileOpponent }>Ver Destierro</Button> <br/></div>
+            )}  
+
+            {(zone === REMOVAL_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewRemovalOpponent }>Ver Remoción</Button> <br/></div>
+            )}   
+            
+            {/* Acciones sobre oros, aliados, armas y totems oponentes */}
+
+            {((zone === DEFENSE_ZONE || zone === ATTACK_ZONE) && isOpponent) && (
+                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Aliado</Button> <br/></div>
+            )}
+
+            {(zone === SUPPORT_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Tótem</Button> <br/></div>
+            )} 
+
+            {((zone === GOLDS_PAID_ZONE || zone === UNPAID_GOLD_ZONE) && isOpponent) && (
+                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Oro</Button> <br/></div>
+            )}
 
             
         </div>
@@ -284,18 +339,26 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         dispatch(openModalSelectXcards());
     };
 
+    const handleVisibleChangePopever = (visible: boolean) => {
+        if (!visible) setVisiblePopover(visible);        
+    };
+
+    const detail = (event: any) => {
+        event.preventDefault();
+        setVisiblePopover(true);
+    };
+
     return (
 
-        <>
             <Popover 
                 placement="right" 
-                content={ content }
                 trigger="click"
+                content={ content }
                 visible={ visiblePopover }
                 onVisibleChange={ handleVisibleChangePopever }
             >
                 
-                <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ (e: any) => detail(e, card.id as string) } >
+                <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
                     { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                         <img
                             width={ 50 }
@@ -315,7 +378,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     
                 </div>
             </Popover>
-        </>
         
     )
 }

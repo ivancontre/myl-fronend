@@ -51,15 +51,11 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .view-moda-origin {
-  width: 98vh;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  height: 85px;
-  margin: 1px;
+  height: 300px;
+  margin: 5px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  flex-wrap: wrap;  
 }

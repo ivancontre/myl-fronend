@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -45,5 +45,89 @@ export const openModalSelectXcards = (): ModalActionTypes => {
 export const closeModalSelectXcards = (): ModalActionTypes => {
     return {
         type: uiCloseModalSelectXCastle
+    }
+};
+
+export const openModalViewCastleOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewCastleOpponent
+    }
+};
+
+export const closeModalViewCastleOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewCastleOpponent
+    }
+};
+
+export const openModalViewCementery = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewCementery
+    }
+};
+
+export const closeModalViewCementery = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewCementery
+    }
+};
+
+export const openModalViewExile = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewExile
+    }
+};
+
+export const closeModalViewExile = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewExile
+    }
+};
+
+export const openModalViewRemoval = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewRemoval
+    }
+};
+
+export const closeModalViewRemoval = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewRemoval
+    }
+};
+
+export const openModalViewCementeryOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewCementeryOpponent
+    }
+};
+
+export const closeModalViewCementeryOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewCementeryOpponent
+    }
+};
+
+export const openModalViewExileOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewExileOpponent
+    }
+};
+
+export const closeModalViewExileOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewExileOpponent
+    }
+};
+
+export const openModalViewRemovalOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewRemovalOpponent
+    }
+};
+
+export const closeModalViewRemovalOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewRemovalOpponent
     }
 };

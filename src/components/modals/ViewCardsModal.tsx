@@ -9,66 +9,88 @@ import update from 'immutability-helper';
 import { ZONE_NAMES } from "../../constants";
 import { RootState } from '../../store';
 import { Card } from '../../store/card/types';
-import { closeModalViewCastle, closeModalViewXCastle } from '../../store/ui-modal/action';
+import { closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
 import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
+import { Dictionary } from '../../store/match/types';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
 
 interface ViewCastleModalProps {
+    origin: Dictionary<Card[] | []>;
     zone: string;
     amount?: number;
     onlyRead?: boolean;
 };
 
-const ViewCardsModal: FC<ViewCastleModalProps> = ({ zone, amount, onlyRead }) => {
+const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRead }) => {
 
-    const { match, viewCardsOrigin, viewCardsDestiny } = useSelector((state: RootState) => state.match);
+    const { viewCardsOrigin, viewCardsDestiny } = useSelector((state: RootState) => state.match);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
 
         if (amount) {
-            dispatch(setViewCardsOrigin(match[zone].slice(-amount)));
+            dispatch(setViewCardsOrigin(origin[zone].slice(-amount)));
         } else {
-            dispatch(setViewCardsOrigin(match[zone]));
+            dispatch(setViewCardsOrigin(origin[zone]));
         }
-        
-    }, [dispatch, match, zone, amount]);
 
-    const { modalOpenViewCastle, modalOpenViewXcards } = useSelector((state: RootState) => state.uiModal);
+        dispatch(setViewCardsDestiny([]));
+        
+        
+    }, [dispatch, origin, zone, amount]);
+
+    const { 
+            modalOpenViewCastle, 
+            modalOpenViewXcards, 
+            modalOpenViewCastleToOpponent, 
+            modalOpenViewCementery, 
+            modalOpenViewExile, 
+            modalOpenViewRemoval,
+            modalOpenViewCementeryOpponent, 
+            modalOpenViewExileOpponent, 
+            modalOpenViewRemovalOpponent
+    } = useSelector((state: RootState) => state.uiModal);
 
     const [optionSelect, setOptionSelect] = useState('');
 
-    const handleCancelModal = () => {
+    const resetModal = () => {
         dispatch(closeModalViewCastle());
         dispatch(closeModalViewXCastle());
-        dispatch(setAmountCardsViewAction(1))
+        dispatch(closeModalViewCastleOpponent());
+        dispatch(closeModalViewCementery());
+        dispatch(closeModalViewExile());
+        dispatch(closeModalViewRemoval());
+        dispatch(closeModalViewCementeryOpponent());
+        dispatch(closeModalViewExileOpponent());
+        dispatch(closeModalViewRemovalOpponent());
+        dispatch(setAmountCardsViewAction(1));
+    };
+
+    const handleCancelModal = () => {
+        resetModal();
     };
 
     const handleOkModal = () => {
 
         if (onlyRead) {
-            dispatch(closeModalViewCastle());
-            dispatch(closeModalViewXCastle());
-            dispatch(setAmountCardsViewAction(1));
+            resetModal();            
             return;
         }
 
-        const newMatch = { ...match };
+        const newMatch = { ...origin };
 
-        newMatch[zone] = !amount ? viewCardsOrigin : [...match[zone].filter((card: Card, index: number) => index < match[zone].length - amount), ...viewCardsOrigin];
+        newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];
         
         if (optionSelect && viewCardsDestiny.length) {
-            newMatch[optionSelect] = viewCardsDestiny;
+            newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
         }    
 
         dispatch(changeMatch(newMatch));
-        dispatch(closeModalViewCastle());
-        dispatch(closeModalViewXCastle());
-        dispatch(setAmountCardsViewAction(1))
+        resetModal();
     }
 
     const moveCard = useCallback(
@@ -137,7 +159,24 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ zone, amount, onlyRead }) =>
     };
 
     return (
-        <Modal width={ 1000 } centered title={`Viendo ${zone}...`} visible={ modalOpenViewCastle || modalOpenViewXcards } onCancel={ handleCancelModal } onOk={ handleOkModal }>
+        <Modal 
+            width={ 1000 } 
+            centered 
+            title={`Viendo ${zone}...`} 
+            visible={ 
+                modalOpenViewCastle ||
+                modalOpenViewXcards || 
+                modalOpenViewCastleToOpponent || 
+                modalOpenViewCementery ||
+                modalOpenViewExile ||
+                modalOpenViewRemoval ||
+                modalOpenViewCementeryOpponent ||
+                modalOpenViewExileOpponent ||
+                modalOpenViewRemovalOpponent
+            } 
+            onCancel={ handleCancelModal } 
+            onOk={ handleOkModal }
+        >
             <Alert style={{marginBottom: 20}} message="Las cartas que están a la derecha son las primeras en el Castillo" type="info" showIcon/>
 
             <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
@@ -157,7 +196,6 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ zone, amount, onlyRead }) =>
                         </Select>
                     )
                 }
-                
                 { !onlyRead && optionSelect !== '' && (
                     <CardComponentContainer title={ optionSelect } >
                         { viewCardsDestiny && returnItemsForZoneDestiny(optionSelect, false)}

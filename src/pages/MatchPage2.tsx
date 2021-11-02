@@ -22,6 +22,7 @@ import '../css/match.css';
 import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
 import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
+import { openModalViewCastleOpponent } from '../store/ui-modal/action';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
@@ -36,7 +37,19 @@ const MatchPage2: FC = () => {
 
     const { match, matchId, opponentMatch, opponentId, amountCardsView } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
-    const { modalOpenThrowXcards, modalOpenViewCastle, modalOpenViewXcards, modalOpenSelectXcards } = useSelector((state: RootState) => state.uiModal);
+    const { 
+            modalOpenThrowXcards, 
+            modalOpenViewCastle, 
+            modalOpenViewXcards, 
+            modalOpenSelectXcards, 
+            modalOpenViewCastleToOpponent, 
+            modalOpenViewCementery, 
+            modalOpenViewExile, 
+            modalOpenViewRemoval,
+            modalOpenViewCementeryOpponent, 
+            modalOpenViewExileOpponent, 
+            modalOpenViewRemovalOpponent 
+    } = useSelector((state: RootState) => state.uiModal);
 
     const { online, socket } = useContext(SocketContext);
 
@@ -89,21 +102,25 @@ const MatchPage2: FC = () => {
     }, [socket, match, matchId, opponentId]);
 
     useEffect(() => {
-
-        socket?.on('showing-clastle-to-opponent', (data) => {
-            console.log(opponentMatch[CASTLE_ZONE])
-        });
-
-    }, [socket]);
-
-    useEffect(() => {
         
         socket?.on('changing-opponent', (data) => {
+            console.log(data)
             console.log('changing-opponent');
             dispatch(changOpponenteMatch(data));
         });
         
     }, [socket, dispatch]);
+    
+
+    useEffect(() => {
+
+        socket?.on('showing-clastle-to-opponent', () => {
+            dispatch(openModalViewCastleOpponent());
+        });
+
+    }, [socket]);
+
+    
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
@@ -159,10 +176,21 @@ const MatchPage2: FC = () => {
         <>
 
             { modalOpenThrowXcards && <ThrowXcardsModal /> }
-            { modalOpenViewCastle && <ViewCardsModal zone={ CASTLE_ZONE } /> }
+            { modalOpenViewCastle && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } /> }
 
             { modalOpenSelectXcards && <SelectXcardsModal /> }
-            { modalOpenViewXcards && <ViewCardsModal zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
+            { modalOpenViewXcards && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
+
+            { modalOpenViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } onlyRead /> }
+            
+            { modalOpenViewCementery && <ViewCardsModal origin={ match } zone={ CEMETERY_ZONE } />}
+            { modalOpenViewExile && <ViewCardsModal origin={ match } zone={ EXILE_ZONE } />}
+            { modalOpenViewRemoval && <ViewCardsModal origin={ match } zone={ REMOVAL_ZONE } />}
+
+            { modalOpenViewCementeryOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CEMETERY_ZONE } onlyRead />}
+            { modalOpenViewExileOpponent && <ViewCardsModal origin={ opponentMatch } zone={ EXILE_ZONE } onlyRead />}
+            { modalOpenViewRemovalOpponent && <ViewCardsModal origin={ opponentMatch } zone={ REMOVAL_ZONE } onlyRead />}
+
 
             <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >
                 <Row gutter={[8, 8]}>
