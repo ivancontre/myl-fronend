@@ -9,13 +9,13 @@ import update from 'immutability-helper';
 import { ZONE_NAMES } from "../../constants";
 import { RootState } from '../../store';
 import { Card } from '../../store/card/types';
-import { closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
+import { closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
 import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
 import { Dictionary } from '../../store/match/types';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
 
 interface ViewCastleModalProps {
     origin: Dictionary<Card[] | []>;
@@ -52,7 +52,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             modalOpenViewRemoval,
             modalOpenViewCementeryOpponent, 
             modalOpenViewExileOpponent, 
-            modalOpenViewRemovalOpponent
+            modalOpenViewRemovalOpponent,
+            modalOpenViewHandOpponent
     } = useSelector((state: RootState) => state.uiModal);
 
     const [optionSelect, setOptionSelect] = useState('');
@@ -67,6 +68,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         dispatch(closeModalViewCementeryOpponent());
         dispatch(closeModalViewExileOpponent());
         dispatch(closeModalViewRemovalOpponent());
+        dispatch(closeModalViewHandOpponent());
         dispatch(setAmountCardsViewAction(1));
     };
 
@@ -172,12 +174,13 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                 modalOpenViewRemoval ||
                 modalOpenViewCementeryOpponent ||
                 modalOpenViewExileOpponent ||
-                modalOpenViewRemovalOpponent
+                modalOpenViewRemovalOpponent ||
+                modalOpenViewHandOpponent
             } 
             onCancel={ handleCancelModal } 
             onOk={ handleOkModal }
         >
-            <Alert style={{marginBottom: 20}} message="Las cartas que están a la derecha son las primeras en el Castillo" type="info" showIcon/>
+            <Alert style={{marginBottom: 20}} message={`Las cartas que están a la derecha son las primeras en el ${zone}`} type="info" showIcon/>
 
             <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
                 <CardComponentContainer title={ zone } >
@@ -191,7 +194,11 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                             style={{ width: "100%", marginTop: 20, marginBottom: 20 }}
                             onChange={ handleSelect }                      
                         >
-                            <Select.Option key={ HAND_ZONE } value={ HAND_ZONE }>Mi { HAND_ZONE }</Select.Option>      
+                            <Select.Option key={ HAND_ZONE } value={ HAND_ZONE }>{ HAND_ZONE }</Select.Option>
+                            <Select.Option key={ DEFENSE_ZONE } value={ DEFENSE_ZONE }>{ DEFENSE_ZONE }</Select.Option>
+                            <Select.Option key={ ATTACK_ZONE } value={ ATTACK_ZONE }>{ ATTACK_ZONE }</Select.Option>
+                            <Select.Option key={ GOLDS_PAID_ZONE } value={ GOLDS_PAID_ZONE }>{ GOLDS_PAID_ZONE }</Select.Option>  
+                            <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>  
                                 
                         </Select>
                     )

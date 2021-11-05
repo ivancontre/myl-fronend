@@ -24,9 +24,10 @@ export interface CardProps {
     zone: string;
     isOpponent?: boolean;
     card: Card;
+    withPopover?: boolean;
 };
 
-const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, card }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, card, withPopover }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -156,6 +157,12 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     case CASTLE_ZONE:
                         changeCardZone(item, CASTLE_ZONE);
                         break;
+                    case GOLDS_PAID_ZONE:
+                        changeCardZone(item, GOLDS_PAID_ZONE);
+                        break;
+                    case UNPAID_GOLD_ZONE:
+                        changeCardZone(item, UNPAID_GOLD_ZONE);
+                        break;
                     default:
                         break;
                 }
@@ -231,8 +238,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         dispatch(openModalViewRemovalOpponent());
         handleVisibleChangePopever(false);
     };
-    
-    
 
     const content = (
         <div>
@@ -349,35 +354,70 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     };
 
     return (
+        <>
 
-            <Popover 
-                placement="right" 
-                trigger="click"
-                content={ content }
-                visible={ visiblePopover }
-                onVisibleChange={ handleVisibleChangePopever }
-            >
-                
-                <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
-                    { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
-                        <img
-                            width={ 50 }
-                            height={ 75 }
-                            alt={ card.name }
-                            src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
-                            className={isOpponent ? 'img-180-deg' : ''}
-                        />
-                        : 
-                        <Image
-                            width={ 50 }
-                            height={ 75 }
-                            src={ card.img }
-                            className={isOpponent ? 'img-180-deg' : ''}
-                        />                        
-                    }
-                    
-                </div>
-            </Popover>
+            {
+                (   (zone === CASTLE_ZONE && !isOpponent)|| 
+                    zone === CEMETERY_ZONE || 
+                    zone === EXILE_ZONE || 
+                    zone === REMOVAL_ZONE || 
+                    (isOpponent && zone === DEFENSE_ZONE) || 
+                    (isOpponent && zone === ATTACK_ZONE)    
+                ) ? (
+                    <Popover 
+                        placement="right" 
+                        trigger="click"
+                        content={ content }
+                        visible={ visiblePopover }
+                        onVisibleChange={ handleVisibleChangePopever }
+                    >
+                        
+                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
+                            { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
+                                <img
+                                    width={ 50 }
+                                    height={ 75 }
+                                    alt={ card.name }
+                                    src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
+                                    className={isOpponent ? 'img-180-deg' : ''}
+                                />
+                                : 
+                                <Image
+                                    width={ 50 }
+                                    height={ 75 }
+                                    src={ card.img }
+                                    className={isOpponent ? 'img-180-deg' : ''}
+                                />                        
+                            }
+                            
+                        </div>
+                    </Popover>
+                ) : (
+                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } >
+                        { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
+                            <img
+                                width={ 50 }
+                                height={ 75 }
+                                alt={ card.name }
+                                src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
+                                className={isOpponent ? 'img-180-deg' : ''}
+                            />
+                            : 
+                            <Image
+                                width={ 50 }
+                                height={ 75 }
+                                src={ card.img }
+                                className={isOpponent ? 'img-180-deg' : ''}
+                            />                        
+                        }
+                        
+                    </div>
+                ) 
+            }
+
+        </>
+
+            
         
     )
 }

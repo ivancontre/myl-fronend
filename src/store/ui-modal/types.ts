@@ -27,6 +27,9 @@ export const uiCloseModalViewExileOpponent = '[ui-modal] Close modal ViewExile O
 export const uiOpenModalViewRemovalOpponent = '[ui-modal] Open modal ViewRemoval Opponent';
 export const uiCloseModalViewRemovalOpponent = '[ui-modal] Close modal ViewRemoval Opponent';
 
+export const uiOpenModalViewHandOpponent = '[ui-modal] Open modal ViewHand Opponent';
+export const uiCloseModalViewHandOpponent = '[ui-modal] Close modal ViewHand Opponent';
+
 
 export type UiModalState = {
     modalOpenThrowXcards: boolean;
@@ -43,6 +46,7 @@ export type UiModalState = {
     modalOpenViewExileOpponent: boolean;
     modalOpenViewRemovalOpponent: boolean;
 
+    modalOpenViewHandOpponent: boolean;
 };
 
 type ModalThrowXcardsOpenAction = {
@@ -135,6 +139,15 @@ type ModalViewRemovalOpponentCloseAction = {
     type: typeof uiCloseModalViewRemovalOpponent;
 };
 
+
+type ModalViewHandOpponentOpenAction = {
+    type: typeof uiOpenModalViewHandOpponent;
+};
+
+type ModalViewHandOpponentCloseAction = {
+    type: typeof uiCloseModalViewHandOpponent;
+};
+
 export type ModalActionTypes = 
 ModalThrowXcardsOpenAction | 
 ModalThrowXcardsCloseAction | 
@@ -157,4 +170,6 @@ ModalViewCementeryOpponentCloseAction |
 ModalViewExileOpponentOpenAction |
 ModalViewExileOpponentCloseAction |
 ModalViewRemovalOpponentOpenAction |
-ModalViewRemovalOpponentCloseAction;
+ModalViewRemovalOpponentCloseAction |
+ModalViewHandOpponentOpenAction |
+ModalViewHandOpponentCloseAction;

@@ -1,27 +1,43 @@
-import { Tooltip } from 'antd';
-import React, { FC, ReactNode } from 'react';
+import { Button, message, Popover, Tooltip } from 'antd';
+import React, { FC, ReactNode, useContext, useState } from 'react';
 import { useDrop } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
 import { ZONE_NAMES } from '../../constants';
+import { SocketContext } from '../../context/SocketContext';
+import { RootState } from '../../store';
+import { changeMatch } from '../../store/match/action';
 import { DragCard  } from '../../store/match/types';
 
 interface ZoneProps {
     children: ReactNode;
     className: string;
     title: string;
+    isOpponent?: boolean;
+    withPopover?: boolean
 };
 
-const Zone: FC<ZoneProps> = ({ children, className, title }) => {
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
+
+
+const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopover }) => {
+
+    const [visiblePopover, setVisiblePopover] = useState(false);
+
+    const { match, opponentId } = useSelector((state: RootState) => state.match);
+
+    const { socket } = useContext(SocketContext);
+
+    const dispatch = useDispatch();
 
     const [{isOver, canDrop}, drop] = useDrop({
         accept: 'card',
-        drop: () => ({ name: title }),
+        drop: () => ({ name: title.split(":")[0] }),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
         // Override monitor.canDrop() function
         canDrop: (item: DragCard) => {
-            const { DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
             const { zone: currentZone } = item;
 
             return true
@@ -90,7 +106,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
             return 'rgb(0,0,0)';
         }
 
-        return 'rgb(46,44,44)';
+        return 'rgb(51, 0, 0)';
         
     };
 
@@ -107,16 +123,116 @@ const Zone: FC<ZoneProps> = ({ children, className, title }) => {
         return 'animate__animated animate__pulse';
     }
 
+    const handleVisibleChangePopever = (visible: boolean) => {
+        if (!visible) setVisiblePopover(visible);        
+    };
+
+    const detail = (event: any) => {
+        event.preventDefault();
+        setVisiblePopover(true);
+    };
+
+    const sendToZone = (origin: string, destiny: string) => {
+        const newMatch = { ...match };        
+        if (!newMatch[origin].length) {
+            message.warn(`No hay cartas en la zona de ${origin}` );
+            setVisiblePopover(false);
+            return;
+        }
+
+        newMatch[destiny] = [...newMatch[destiny], ...newMatch[origin]];
+        newMatch[origin] = [];
+        dispatch(changeMatch(newMatch));
+        setVisiblePopover(false);
+    };
+
+    const showHandToOpponent = () => {
+        if (!match[HAND_ZONE].length) {
+            message.warn(`No hay cartas en la ${HAND_ZONE}` );
+            setVisiblePopover(false);
+            return;
+        }
+
+        socket?.emit('show-hand-to-opponent', {
+            opponentId
+        });
+        setVisiblePopover(false);
+    };
+
+    const content = (
+        <div>
+            {/* Acciones en mi arena */}
+            {(title === HAND_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ showHandToOpponent }>Mostrar mano</Button><br/></div>
+            )}
+            {(title === HAND_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button><br/></div>
+            )}
+            {(title === ATTACK_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE) }>Enviar todos a la defensa</Button><br/></div>
+            )}
+            {(title === DEFENSE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE) }>Enviar todos al ataque</Button><br/></div>
+            )}
+
+            {(title === UNPAID_GOLD_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE) }>Pagar todos los oros</Button><br/></div>
+            )}
+
+            {(title === GOLDS_PAID_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE ) }>Reagrupar todos los oros</Button><br/></div>
+            )}
+        </div>
+        
+    );
+
 
     return (
         <>
-            <Tooltip title={ title }>
-                <div ref={ drop } className={ className + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } }>
-                    
-                    { children }
+            {
+                withPopover ? (
+                    <Popover
+                        placement="right" 
+                        trigger="click"
+                        content={ content }
+                        visible={ visiblePopover }
+                        onVisibleChange={ handleVisibleChangePopever }
+                    >
+                        <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } onContextMenu={ detail }>
+                            
+                            <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
+                                { title }
+                            </div>
 
-                </div>
-            </Tooltip>
+                            <div className={className}>
+                                { children }
+                            </div>
+                            
+                            
+
+                        </div>
+
+
+                    </Popover>
+
+                ):(
+                        
+                    <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } >
+                        
+                            <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
+                                { title }
+                            </div>
+
+                            <div className={className}>
+                                { children }
+                            </div>
+                            
+                    </div>
+
+                )
+            }
+            
+            
             
         </>
     )

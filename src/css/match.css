@@ -1,19 +1,62 @@
 .zone {
-  height: 83px;
-  width: 100vh;
+  height: 105px;
+  width: 100%;
   margin: 5px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.zone-flex {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;  
+  overflow-y: auto;
+}
+
+.title-zone {
+  text-align: center;
+  background-color: #780F0F;
+}
+
+.title-zone-opponent {
+  text-align: center;
+  background-color: #191313;
+}
+
+.content-match {
+  background-image: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1636077498/pexels-pixabay-235985_awktjo.jpg");
+}
+
+.scroll {
+  overflow-y: auto;
+  white-space: nowrap;
 }
   
 .movable-item {
   border-radius: 10px;
   /* position: absolute; */
   background-color: #fff3f3;
-  height: 75px;
+  height: 70px;
   width: 50px;
   margin: 5px auto;
   display: flex;
@@ -51,11 +94,10 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .view-moda-origin {
-  height: 300px;
+  height: 75px;
   margin: 5px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;  
+  overflow-y: auto;
 }

@@ -1,4 +1,32 @@
-import { ModalActionTypes, UiModalState, uiCloseModalThrowXcards, uiOpenModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiOpenModalViewXCastle, uiCloseModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiCloseModalViewCastleOpponent, uiOpenModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiOpenModalViewCementeryOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent } from "./types";
+import { 
+    ModalActionTypes, 
+    UiModalState, 
+    uiCloseModalThrowXcards, 
+    uiOpenModalThrowXcards, 
+    uiOpenModalViewCastle, 
+    uiCloseModalViewCastle, 
+    uiOpenModalViewXCastle, 
+    uiCloseModalViewXCastle, 
+    uiOpenModalSelectXCastle, 
+    uiCloseModalSelectXCastle, 
+    uiCloseModalViewCastleOpponent, 
+    uiOpenModalViewCastleOpponent, 
+    uiOpenModalViewCementery, 
+    uiCloseModalViewCementery, 
+    uiOpenModalViewExile, 
+    uiCloseModalViewExile, 
+    uiOpenModalViewRemoval, 
+    uiCloseModalViewRemoval, 
+    uiCloseModalViewCementeryOpponent, 
+    uiOpenModalViewExileOpponent, 
+    uiOpenModalViewCementeryOpponent, 
+    uiCloseModalViewExileOpponent, 
+    uiOpenModalViewRemovalOpponent, 
+    uiCloseModalViewRemovalOpponent,
+    uiOpenModalViewHandOpponent,
+    uiCloseModalViewHandOpponent
+} from "./types";
+
 
 const initialState: UiModalState = {
     modalOpenThrowXcards: false,
@@ -13,7 +41,9 @@ const initialState: UiModalState = {
 
     modalOpenViewCementeryOpponent: false,
     modalOpenViewExileOpponent: false,
-    modalOpenViewRemovalOpponent: false
+    modalOpenViewRemovalOpponent: false,
+
+    modalOpenViewHandOpponent: false
 };
 
 export const uiModalReducer = (state: typeof initialState = initialState, action: ModalActionTypes): UiModalState => {
@@ -152,6 +182,18 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenViewRemovalOpponent: false
+            };
+
+        case uiOpenModalViewHandOpponent:        
+            return {
+                ...state,
+                modalOpenViewHandOpponent: true
+            };
+        
+        case uiCloseModalViewHandOpponent:        
+            return {
+                ...state,
+                modalOpenViewHandOpponent: false
             };
 
         default:

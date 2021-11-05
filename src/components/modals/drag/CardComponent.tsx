@@ -24,7 +24,7 @@ interface DragCard extends Card {
     zone: string;
 };
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
 
 const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, isOrigin, onlyRead }) => {   
 
@@ -140,6 +140,18 @@ const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, 
                         break;
                     case HAND_ZONE:
                         changeCardZone(item, HAND_ZONE);                        
+                        break;
+                    case DEFENSE_ZONE:
+                        changeCardZone(item, DEFENSE_ZONE);                        
+                        break;
+                    case ATTACK_ZONE:
+                        changeCardZone(item, ATTACK_ZONE);                        
+                        break;
+                    case GOLDS_PAID_ZONE:
+                        changeCardZone(item, GOLDS_PAID_ZONE);                        
+                        break;
+                    case UNPAID_GOLD_ZONE:
+                        changeCardZone(item, UNPAID_GOLD_ZONE);                        
                         break;
                     default:
                         break;

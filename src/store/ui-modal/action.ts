@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -129,5 +129,17 @@ export const openModalViewRemovalOpponent = (): ModalActionTypes => {
 export const closeModalViewRemovalOpponent = (): ModalActionTypes => {
     return {
         type: uiCloseModalViewRemovalOpponent
+    }
+};
+
+export const openModalViewHandOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewHandOpponent
+    }
+};
+
+export const closeModalViewHandOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewHandOpponent
     }
 };

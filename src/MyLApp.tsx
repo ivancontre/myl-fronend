@@ -9,9 +9,9 @@ import { RootState } from './store';
 import 'animate.css';
 
 const MyLApp: FC = () => {
+    //document.addEventListener('contextmenu', event => event.preventDefault());
 
     const { show, text } = useSelector((state: RootState) => state.spin);
-
 
     return (
         <Spin tip={ text } spinning={ show }>
