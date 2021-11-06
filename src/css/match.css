@@ -1,31 +1,9 @@
 .zone {
-  height: 105px;
+  height: 82px;
   width: 100%;
   margin: 5px;
   border-radius: 2px;
-  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-  
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 7px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);  
 }
 
 .zone-flex {
@@ -36,11 +14,13 @@
 .title-zone {
   text-align: center;
   background-color: #780F0F;
+  font-size: 12px;
 }
 
 .title-zone-opponent {
   text-align: center;
   background-color: #191313;
+  font-size: 12px;
 }
 
 .content-match {
@@ -56,13 +36,23 @@
   border-radius: 10px;
   /* position: absolute; */
   background-color: #fff3f3;
-  height: 70px;
-  width: 50px;
+  height: 50px;
+  width: 33px;
   margin: 5px auto;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+span.icon-arm {
+  color: white;
+  position: absolute;
+  right: 0;
+  z-index: 3;
+  background-color: black;
+  bottom: 00;
 }
   
 .stack {
@@ -71,7 +61,9 @@
 
 .stack > .movable-item  {
   position: absolute;
-  
+  margin: 5px auto;
+  right: 0;
+  left: 0;  
 }
 
 .actions {
@@ -100,4 +92,25 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
   display: flex;
   overflow-y: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

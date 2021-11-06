@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -141,5 +141,18 @@ export const openModalViewHandOpponent = (): ModalActionTypes => {
 export const closeModalViewHandOpponent = (): ModalActionTypes => {
     return {
         type: uiCloseModalViewHandOpponent
+    }
+};
+
+
+export const openModalTakeControlOpponentCard = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalTakeControlOpponentCard
+    }
+};
+
+export const closeModalTakeControlOpponentCard = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalTakeControlOpponentCard
     }
 };

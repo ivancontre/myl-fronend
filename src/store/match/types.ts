@@ -11,6 +11,8 @@ export const setCardsOrigin = '[match] set view cards origin';
 export const setCardsDestiny = '[match] set view cards destiny';
 export const setAmountCardsView = '[match] set x cards view';
 
+export const setTakeControlOpponentCard = '[match] set control opponent card';
+
 export type MatchState = {
     matchId: string | null;
     match: Dictionary<Card[] | []>;
@@ -20,6 +22,8 @@ export type MatchState = {
     viewCardsOrigin: Card[];
     viewCardsDestiny: Card[];
     amountCardsView: number;
+    takeControlOpponentCardIndex: number;
+    takeControlOpponentCardZone: string;
 };
 
 export type Dictionary<TValue> = {
@@ -31,17 +35,15 @@ export type DragCard = Partial<Card> & {
     zone: string;
 };
 
-
 type ChangeAction = {
     type: typeof change;
     payload: Dictionary<Card[] | []>;
 };
 
-type ChangeOpponentAction = {
+type MatchChangeOpponentAction = {
     type: typeof changeOpponent;
     payload: Dictionary<Card[] | []>;
 };
-
 
 type MatchSetActiveUsers = {
     type: typeof setActiveUsers;
@@ -62,20 +64,34 @@ type MatchReset = {
     type: typeof resetMatchValues
 };
 
-type ViewCardsOrigin = {    
+type MatchViewCardsOrigin = {    
     type: typeof setCardsOrigin,
     payload: Card[]
 };
 
-type ViewCardsDestiny = {    
+type MatchViewCardsDestiny = {    
     type: typeof setCardsDestiny,
     payload: Card[]
 };
 
-type AmountCardsView = {
+type MatchAmountCardsView = {
     type: typeof setAmountCardsView,
     payload: number
-}
+};
 
+type MatchControlOpponentCard = {
+    type: typeof setTakeControlOpponentCard,
+    payload: any
+};
 
-export type MatchActionTypes = ChangeAction | MatchSetActiveUsers | MatchSetId | MatchReset | MatchSetOpponentId | ChangeOpponentAction | ViewCardsOrigin | ViewCardsDestiny | AmountCardsView;
+export type MatchActionTypes = 
+ChangeAction | 
+MatchSetActiveUsers | 
+MatchSetId | 
+MatchReset | 
+MatchSetOpponentId | 
+MatchChangeOpponentAction | 
+MatchViewCardsOrigin | 
+MatchViewCardsDestiny | 
+MatchAmountCardsView |
+MatchControlOpponentCard;

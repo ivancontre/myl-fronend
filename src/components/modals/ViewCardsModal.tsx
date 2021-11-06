@@ -12,7 +12,7 @@ import { Card } from '../../store/card/types';
 import { closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
 import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
-import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
 import { Dictionary } from '../../store/match/types';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
@@ -22,11 +22,12 @@ interface ViewCastleModalProps {
     zone: string;
     amount?: number;
     onlyRead?: boolean;
+    isOpponent?: boolean;
 };
 
-const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRead }) => {
+const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRead, isOpponent }) => {
 
-    const { viewCardsOrigin, viewCardsDestiny } = useSelector((state: RootState) => state.match);
+    const { viewCardsOrigin, viewCardsDestiny, match, opponentMatch } = useSelector((state: RootState) => state.match);
 
     const dispatch = useDispatch();
 
@@ -83,17 +84,20 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             return;
         }
 
+
+        // si isOpponent en true, entonces al opponentMatch se le quita 
+
         const newMatch = { ...origin };
 
         newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];
         
         if (optionSelect && viewCardsDestiny.length) {
             newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
-        }    
+        } 
 
         dispatch(changeMatch(newMatch));
         resetModal();
-    }
+    };
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string, isOrigin: boolean) => {

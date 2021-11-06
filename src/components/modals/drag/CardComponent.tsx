@@ -40,10 +40,11 @@ const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, 
         if (item.zone === zoneName) {
             return;
         }
-
+        
         if (isOrigin) {
 
             const card = viewCardsOrigin.find((card: Card, index2: number) => index2 === index) as Card;
+            card.isOpponent = true;
             const newOrigin = viewCardsOrigin.filter((card: Card, index2: number) => index2 !== index);
             const newDestiny = [...viewCardsDestiny, card];
 

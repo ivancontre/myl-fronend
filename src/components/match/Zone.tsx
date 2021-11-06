@@ -39,8 +39,12 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
         // Override monitor.canDrop() function
         canDrop: (item: DragCard) => {
             const { zone: currentZone } = item;
+            
+            if (isOpponent) {
+                return false;
+            }
 
-            return true
+            return true;
             
                 /*(currentZone === title) ||
 
@@ -103,7 +107,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
         }
 
         if (!canDrop) {
-            return 'rgb(0,0,0)';
+            return 'rgb(255, 0, 0)';
         }
 
         return 'rgb(51, 0, 0)';
@@ -168,18 +172,18 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
             {(title === HAND_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button><br/></div>
             )}
-            {(title === ATTACK_ZONE && !isOpponent) && (
+            {/* {(title === ATTACK_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE) }>Enviar todos a la defensa</Button><br/></div>
             )}
             {(title === DEFENSE_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE) }>Enviar todos al ataque</Button><br/></div>
-            )}
+            )} */}
 
-            {(title === UNPAID_GOLD_ZONE && !isOpponent) && (
+            {(title.split(':')[0] === UNPAID_GOLD_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE) }>Pagar todos los oros</Button><br/></div>
             )}
 
-            {(title === GOLDS_PAID_ZONE && !isOpponent) && (
+            {(title.split(':')[0] === GOLDS_PAID_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE ) }>Reagrupar todos los oros</Button><br/></div>
             )}
         </div>
@@ -207,11 +211,8 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
                             <div className={className}>
                                 { children }
                             </div>
-                            
-                            
-
+                        
                         </div>
-
 
                     </Popover>
 
@@ -230,9 +231,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
                     </div>
 
                 )
-            }
-            
-            
+            }        
             
         </>
     )

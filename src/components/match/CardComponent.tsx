@@ -5,12 +5,14 @@ import { XYCoord } from 'dnd-core';
 import { Card } from '../../store/card/types';
 import { DragCard  } from '../../store/match/types';
 
+import { ToolOutlined, PlusOutlined } from '@ant-design/icons';
+
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { changeMatch } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalSelectXcards, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
+import { openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
@@ -35,7 +37,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
     const { socket } = useContext(SocketContext);
 
-    const { match, opponentId } = useSelector((state: RootState) => state.match);
+    const { match, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
 
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
@@ -52,10 +54,39 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
         newCards[item.zone] = match[item.zone].filter((card: Card, index2: number) => index2 !== index);
 
-        newCards[zoneName] = [...match[zoneName], card];
+        if (card.isOpponent) {
 
-       dispatch(changeMatch(newCards));
+            if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
 
+                const newCardsOpponent = { ...opponentMatch };
+                delete card.isOpponent;
+                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], card];
+                dispatch(changOpponenteMatch(newCardsOpponent));
+                dispatch(changeMatch(newCards));
+
+                socket?.emit('update-match-opponent', {
+                    match: newCardsOpponent,
+                    opponentId
+                });
+
+            } else {
+
+                newCards[zoneName] = [...match[zoneName], card];
+                dispatch(changeMatch(newCards));
+
+            }
+
+        } else {
+
+            newCards[zoneName] = [...match[zoneName], card];
+            dispatch(changeMatch(newCards));
+
+            if (zoneName === SUPPORT_ZONE) {
+                // Abrir modal para elegir el portador
+            }
+            
+
+        }
     };
 
     const [{ handlerId }, drop] = useDrop({
@@ -130,6 +161,10 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             
             if (dropResult) {
                 const { name } = dropResult;
+
+                if(isOpponent){
+                    return;
+                }
                 
                 
                 switch (name) {
@@ -171,9 +206,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     });
 
     const opacity = isDragging ? 0.4 : 1;
-    drag(drop(ref));    
-    
-    
+    drag(drop(ref));
 
     const shuffleCaslte = () => {
 
@@ -187,7 +220,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         setTimeout(() => {
             setAnimated(false);
         }, 500);
-    }
+    };
 
     const getHand = (ammunt: number) => {
         if (!match[CASTLE_ZONE].length) {
@@ -236,6 +269,12 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
     const viewRemovalOpponent = () => {
         dispatch(openModalViewRemovalOpponent());
+        handleVisibleChangePopever(false);
+    };
+
+    const takeControlOpponentCard = (zone: string) => {
+        dispatch(setTakeControlOpponentCardAction(index, zone));
+        dispatch(openModalTakeControlOpponentCard());
         handleVisibleChangePopever(false);
     };
 
@@ -308,17 +347,26 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             
             {/* Acciones sobre oros, aliados, armas y totems oponentes */}
 
-            {((zone === DEFENSE_ZONE || zone === ATTACK_ZONE) && isOpponent) && (
-                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Aliado</Button> <br/></div>
+            {(zone === DEFENSE_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button> <br/></div>
+            )}
+
+            {(zone === ATTACK_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button> <br/></div>
             )}
 
             {(zone === SUPPORT_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Tótem</Button> <br/></div>
+                <div><Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Tótem</Button> <br/></div>
             )} 
 
-            {((zone === GOLDS_PAID_ZONE || zone === UNPAID_GOLD_ZONE) && isOpponent) && (
-                <div><Button type="link" onClick={ viewCementeryOpponent }>Tomar control de Oro</Button> <br/></div>
+            {(zone === GOLDS_PAID_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button> <br/></div>
             )}
+
+            {(zone === UNPAID_GOLD_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button> <br/></div>
+            )}
+
 
             
         </div>
@@ -362,7 +410,10 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     zone === EXILE_ZONE || 
                     zone === REMOVAL_ZONE || 
                     (isOpponent && zone === DEFENSE_ZONE) || 
-                    (isOpponent && zone === ATTACK_ZONE)    
+                    (isOpponent && zone === ATTACK_ZONE) ||
+                    (isOpponent && zone === SUPPORT_ZONE) ||
+                    (isOpponent && zone === GOLDS_PAID_ZONE) ||
+                    (isOpponent && zone === UNPAID_GOLD_ZONE)
                 ) ? (
                     <Popover 
                         placement="right" 
@@ -375,16 +426,16 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                         <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
                             { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                                 <img
-                                    width={ 50 }
-                                    height={ 75 }
+                                    width={ 33 }
+                                    height={ 50 }
                                     alt={ card.name }
                                     src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
                                     className={isOpponent ? 'img-180-deg' : ''}
                                 />
                                 : 
                                 <Image
-                                    width={ 50 }
-                                    height={ 75 }
+                                    width={ 33 }
+                                    height={ 50 }
                                     src={ card.img }
                                     className={isOpponent ? 'img-180-deg' : ''}
                                 />                        
@@ -396,19 +447,24 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } >
                         { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                             <img
-                                width={ 50 }
-                                height={ 75 }
+                                width={ 33 }
+                                height={ 50 }
                                 alt={ card.name }
                                 src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
                                 className={isOpponent ? 'img-180-deg' : ''}
                             />
                             : 
-                            <Image
-                                width={ 50 }
-                                height={ 75 }
-                                src={ card.img }
-                                className={isOpponent ? 'img-180-deg' : ''}
-                            />                        
+                            <>
+                                {card.isMachinery && <ToolOutlined className="icon-arm" height={10} width={10} style={{color: 'black'}} />}
+
+                                <Image
+                                    width={ 33 }
+                                    height={ 50 }
+                                    src={ card.img }
+                                    className={isOpponent ? 'img-180-deg' : ''}
+                                />
+                            </>
+                                                    
                         }
                         
                     </div>

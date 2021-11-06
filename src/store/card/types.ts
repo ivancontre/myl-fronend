@@ -24,6 +24,7 @@ export type Card = {
     isMachinery: boolean;
     img: string;
     isUnique: boolean;
+    isOpponent?: boolean;
 };
 
 export type CardState = {

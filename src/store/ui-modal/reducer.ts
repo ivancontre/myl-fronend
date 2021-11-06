@@ -24,7 +24,9 @@ import {
     uiOpenModalViewRemovalOpponent, 
     uiCloseModalViewRemovalOpponent,
     uiOpenModalViewHandOpponent,
-    uiCloseModalViewHandOpponent
+    uiCloseModalViewHandOpponent,
+    uiOpenModalTakeControlOpponentCard,
+    uiCloseModalTakeControlOpponentCard
 } from "./types";
 
 
@@ -43,7 +45,9 @@ const initialState: UiModalState = {
     modalOpenViewExileOpponent: false,
     modalOpenViewRemovalOpponent: false,
 
-    modalOpenViewHandOpponent: false
+    modalOpenViewHandOpponent: false,
+
+    modalOpenTakeControlOpponentCard: false
 };
 
 export const uiModalReducer = (state: typeof initialState = initialState, action: ModalActionTypes): UiModalState => {
@@ -194,6 +198,19 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenViewHandOpponent: false
+            };
+
+
+        case uiOpenModalTakeControlOpponentCard:        
+            return {
+                ...state,
+                modalOpenTakeControlOpponentCard: true
+            };
+        
+        case uiCloseModalTakeControlOpponentCard:        
+            return {
+                ...state,
+                modalOpenTakeControlOpponentCard: false
             };
 
         default:

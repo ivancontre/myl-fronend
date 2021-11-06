@@ -30,6 +30,9 @@ export const uiCloseModalViewRemovalOpponent = '[ui-modal] Close modal ViewRemov
 export const uiOpenModalViewHandOpponent = '[ui-modal] Open modal ViewHand Opponent';
 export const uiCloseModalViewHandOpponent = '[ui-modal] Close modal ViewHand Opponent';
 
+export const uiOpenModalTakeControlOpponentCard = '[ui-modal] Open modal Take Control Opponent Card';
+export const uiCloseModalTakeControlOpponentCard = '[ui-modal] Close modal Take Control Opponent Card';
+
 
 export type UiModalState = {
     modalOpenThrowXcards: boolean;
@@ -47,6 +50,8 @@ export type UiModalState = {
     modalOpenViewRemovalOpponent: boolean;
 
     modalOpenViewHandOpponent: boolean;
+
+    modalOpenTakeControlOpponentCard: boolean;
 };
 
 type ModalThrowXcardsOpenAction = {
@@ -148,6 +153,14 @@ type ModalViewHandOpponentCloseAction = {
     type: typeof uiCloseModalViewHandOpponent;
 };
 
+type ModalTakeControlOpponentCardOpenAction = {
+    type: typeof uiOpenModalTakeControlOpponentCard
+};
+
+type ModalTakeControlOpponentCardCloseAction = {
+    type: typeof uiCloseModalTakeControlOpponentCard
+};
+
 export type ModalActionTypes = 
 ModalThrowXcardsOpenAction | 
 ModalThrowXcardsCloseAction | 
@@ -172,4 +185,6 @@ ModalViewExileOpponentCloseAction |
 ModalViewRemovalOpponentOpenAction |
 ModalViewRemovalOpponentCloseAction |
 ModalViewHandOpponentOpenAction |
-ModalViewHandOpponentCloseAction;
+ModalViewHandOpponentCloseAction |
+ModalTakeControlOpponentCardOpenAction |
+ModalTakeControlOpponentCardCloseAction;

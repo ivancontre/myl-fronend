@@ -1,6 +1,6 @@
 import { User } from "../auth/types";
 import { Card } from "../card/types";
-import { change, MatchActionTypes, setActiveUsers, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView } from "./types";
+import { change, MatchActionTypes, setActiveUsers, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard } from "./types";
 
 export const changeMatch = (match: Dictionary<Card[] | []>): MatchActionTypes => {
     return {
@@ -61,5 +61,15 @@ export const setAmountCardsViewAction = (amount: number) => {
     return {
         type: setAmountCardsView,
         payload: amount
+    }
+};
+
+export const setTakeControlOpponentCardAction = (index: number, zone: string) => {
+    return {
+        type: setTakeControlOpponentCard,
+        payload: {
+            index,
+            zone
+        }
     }
 };

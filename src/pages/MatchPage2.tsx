@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Button, Col, Divider, Row, Steps } from 'antd';
+import { Button, Col, Row, Steps } from 'antd';
 
 
 import CardComponent from '../components/match/CardComponent';
@@ -23,6 +23,7 @@ import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
 import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
+import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
@@ -37,7 +38,7 @@ const MatchPage2: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, matchId, opponentMatch, opponentId, amountCardsView } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const { 
             modalOpenThrowXcards, 
@@ -51,7 +52,8 @@ const MatchPage2: FC = () => {
             modalOpenViewCementeryOpponent, 
             modalOpenViewExileOpponent, 
             modalOpenViewRemovalOpponent,
-            modalOpenViewHandOpponent
+            modalOpenViewHandOpponent,
+            modalOpenTakeControlOpponentCard
     } = useSelector((state: RootState) => state.uiModal);
 
     const { online, socket } = useContext(SocketContext);
@@ -155,6 +157,15 @@ const MatchPage2: FC = () => {
         });
         
     }, [socket, dispatch]);
+
+    useEffect(() => {
+        
+        socket?.on('updating-match-opponent', (data) => {
+            console.log('updating-match-opponent');
+            dispatch(changeMatch(data));
+        });
+        
+    }, [socket, dispatch]);
     
 
     useEffect(() => {
@@ -232,17 +243,19 @@ const MatchPage2: FC = () => {
             { modalOpenSelectXcards && <SelectXcardsModal /> }
             { modalOpenViewXcards && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
 
-            { modalOpenViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } /> }
+            { modalOpenViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } onlyRead /> }
             
-            { modalOpenViewCementery && <ViewCardsModal origin={ match } zone={ CEMETERY_ZONE } />}
-            { modalOpenViewExile && <ViewCardsModal origin={ match } zone={ EXILE_ZONE } />}
-            { modalOpenViewRemoval && <ViewCardsModal origin={ match } zone={ REMOVAL_ZONE } />}
+            { modalOpenViewCementery && <ViewCardsModal origin={ match } zone={ CEMETERY_ZONE } /> }
+            { modalOpenViewExile && <ViewCardsModal origin={ match } zone={ EXILE_ZONE } /> }
+            { modalOpenViewRemoval && <ViewCardsModal origin={ match } zone={ REMOVAL_ZONE } /> }
 
-            { modalOpenViewCementeryOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CEMETERY_ZONE } onlyRead />}
-            { modalOpenViewExileOpponent && <ViewCardsModal origin={ opponentMatch } zone={ EXILE_ZONE } onlyRead />}
-            { modalOpenViewRemovalOpponent && <ViewCardsModal origin={ opponentMatch } zone={ REMOVAL_ZONE } onlyRead />}
+            { modalOpenViewCementeryOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CEMETERY_ZONE } onlyRead /> }
+            { modalOpenViewExileOpponent && <ViewCardsModal origin={ opponentMatch } zone={ EXILE_ZONE } onlyRead /> }
+            { modalOpenViewRemovalOpponent && <ViewCardsModal origin={ opponentMatch } zone={ REMOVAL_ZONE } onlyRead /> }
 
             { modalOpenViewHandOpponent && <ViewCardsModal origin={ opponentMatch } zone={ HAND_ZONE } />}
+
+            { modalOpenTakeControlOpponentCard && <TakeControlOpponentCardModal zone={ takeControlOpponentCardZone } index={ takeControlOpponentCardIndex } /> }
 
             <div className="content-match">
                 <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >
@@ -315,7 +328,7 @@ const MatchPage2: FC = () => {
                                     </Col>
                                 </Row>
 
-                                <Row gutter={[8, 8]} style={{padding: 10}}>
+                                {/* <Row gutter={[8, 8]} style={{padding: 10}}>
                                     <Col span={ 22 } style={{backgroundColor: '#330000', padding: 20, borderRadius: 5}}>
                                         <Steps current={current} size="small">
                                             {steps.map(item => (
@@ -328,7 +341,7 @@ const MatchPage2: FC = () => {
                                             Next
                                         </Button>
                                     </Col>
-                                </Row>
+                                </Row> */}
 
                                 <Row gutter={[8, 8]}>
 
@@ -345,7 +358,7 @@ const MatchPage2: FC = () => {
                                     </Col>
 
                                     <Col span={ 20 }> 
-                                        <Zone title={ ATTACK_ZONE } className='zone-flex' withPopover>
+                                        <Zone title={ ATTACK_ZONE } className='zone-flex'>
                                             { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE) }
                                         </Zone> 
                                     </Col>
@@ -367,7 +380,7 @@ const MatchPage2: FC = () => {
                                     </Col>
 
                                     <Col span={ 20 }> 
-                                        <Zone title={ DEFENSE_ZONE } className='zone-flex' withPopover>
+                                        <Zone title={ DEFENSE_ZONE } className='zone-flex'>
                                             { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE) }
                                         </Zone>
                                     </Col>
