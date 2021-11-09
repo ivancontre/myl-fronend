@@ -1,4 +1,4 @@
-import { FC, useContext, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 
@@ -17,7 +17,7 @@ import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
 export interface CardProps {
     id?: string;
@@ -29,7 +29,7 @@ export interface CardProps {
     withPopover?: boolean;
 };
 
-const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, card, withPopover }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPopover }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -38,6 +38,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
     const { socket } = useContext(SocketContext);
 
     const { match, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
+    const { id: myUserId} = useSelector((state: RootState) => state.auth);
+
+    const isOpponent = card.user !== myUserId
 
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
@@ -48,13 +51,42 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             return;
         }
 
+        console.log('Action:', `Enviando "${item.name}" de "${item.zone}" a "${zoneName}`)
+
         const card = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
         const newCards = { ...match };
 
         newCards[item.zone] = match[item.zone].filter((card: Card, index2: number) => index2 !== index);
 
-        if (card.isOpponent) {
+        if (card.user === myUserId) { // Moviendo mis propias cartas
+
+            newCards[zoneName] = [...match[zoneName], card];
+            dispatch(changeMatch(newCards));
+
+        } else if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
+
+            const newCardsOpponent = { ...opponentMatch };
+            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], card];
+            dispatch(changOpponenteMatch(newCardsOpponent));
+            dispatch(changeMatch(newCards));
+
+            socket?.emit('update-match-opponent', {
+                match: newCardsOpponent,
+                opponentId
+            });
+
+        } else {
+
+            console.log('moviendo cartas robadas...')
+            newCards[zoneName] = [...match[zoneName], card];
+            dispatch(changeMatch(newCards));
+
+        }
+
+        return;
+
+        /*if (card.isOpponent) {
 
             if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
 
@@ -86,7 +118,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             }
             
 
-        }
+        }*/
     };
 
     const [{ handlerId }, drop] = useDrop({
@@ -162,10 +194,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
             if (dropResult) {
                 const { name } = dropResult;
 
-                if(isOpponent){
+                /*if(isOpponent){
                     return;
-                }
-                
+                }*/            
                 
                 switch (name) {
                     case DEFENSE_ZONE:
@@ -197,6 +228,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                         break;
                     case UNPAID_GOLD_ZONE:
                         changeCardZone(item, UNPAID_GOLD_ZONE);
+                        break;
+                    case AUXILIARY_ZONE:
+                        changeCardZone(item, AUXILIARY_ZONE);
                         break;
                     default:
                         break;
@@ -278,46 +312,67 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
         handleVisibleChangePopever(false);
     };
 
+    const sendToCastle = (zoneName: string) => {
+        
+        console.log('Action:', `Enviando y barajando "${card.name}" de "${zoneName}" a "${CASTLE_ZONE}`)
+
+        const dragCard: DragCard =  {
+            ...card,
+            zone: zoneName, 
+            index: index
+        };     
+
+        const cardToDelete = match[dragCard.zone].find((card: Card, index2: number) => index2 === index) as Card;
+
+        delete cardToDelete.bearerId;
+        delete cardToDelete.armsId;
+
+        const newCards = { ...match };
+
+        newCards[dragCard.zone] = match[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
+
+        if (card.user === myUserId) { // Moviendo mis propias cartas
+
+            newCards[CASTLE_ZONE] = [...match[CASTLE_ZONE], card];
+            const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
+            dispatch(changeMatch(newMatch));
+
+        } else {
+            const newCardsOpponent = { ...opponentMatch };
+            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], card];
+            const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
+            dispatch(changOpponenteMatch(newMatchOpponent));
+            dispatch(changeMatch(newCards));
+
+            socket?.emit('update-match-opponent', {
+                match: newCardsOpponent,
+                opponentId
+            });
+        }
+
+        handleVisibleChangePopever(false);
+    };
+
     const content = (
-        <div>
-            {/* Acciones en mi castillo */}
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/></div>
-            )}
-
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => getHand(8) }>Robar mano</Button><br/></div>
-            )}
-
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/></div>
-            )}
-
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/></div>
-            )}
-
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/></div>
-            )}          
+        <div>            
             
+            {/* ACCIONES EN MI ZONA */}
 
+            {/* Castillo */}
             {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/></div>
-            )}        
+                <div>
+                    <Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/>
+                    <Button type="link" onClick={ () => getHand(8) }>Robar mano</Button><br/>
+                    <Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/>
+                    <Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/>
+                    <Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/>
+                    <Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/>
+                    <Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/>
+                    <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button>
+                </div>
+            )}
 
-
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/></div>
-            )}  
-            
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/></div>
-            )}  
-
-
-            {/* Acciones en mi cementerio, destierro y remoción */}
-
+            {/* Cementerio, destierro y remoción */}
             {(zone === CEMETERY_ZONE && !isOpponent) && (
                 <div><Button type="link" onClick={ viewMyCementery }>Ver Cementerio</Button> <br/></div>
             )}  
@@ -330,8 +385,116 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                 <div><Button type="link" onClick={ viewMyRemoval }>Ver Remoción</Button> <br/></div>
             )}
 
+            {/* Oros, aliados, armas y totems */}
+            {(zone === DEFENSE_ZONE && (
+                match[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo..</Button> <br/>
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Identificar Armas</Button> }
+                </div>
+            )}
 
-            {/* Acciones en cementerio, destierro y remoción oponentes */}
+            {(zone === ATTACK_ZONE && (
+                match[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Identificar armas</Button> }             
+                </div>
+            )}
+
+            {(zone === SUPPORT_ZONE && (
+                match[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Asignar Portador</Button> <br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Conocer Portador</Button> <br/>
+                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+            {(zone === GOLDS_PAID_ZONE && (
+                match[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+            {(zone === UNPAID_GOLD_ZONE && (
+                match[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(UNPAID_GOLD_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+
+            {/* ACCIONES EN ZONA OPONENTE*/}
+
+            {/* Oros, aliados, armas y totems */}
+            {(zone === DEFENSE_ZONE && (
+                (
+                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button>
+                </div>
+            )}
+
+            {(zone === ATTACK_ZONE && (
+                (
+                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button>
+                </div>
+            )}
+
+            {(zone === SUPPORT_ZONE && (
+                (
+                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button>
+                </div>
+            )}
+
+            {(zone === GOLDS_PAID_ZONE && (
+                (
+                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button>
+                </div>
+            )}
+
+            {(zone === UNPAID_GOLD_ZONE && (
+                (
+                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button>
+                </div>
+            )}
+
+            {/* Cementerio, destierro y remoción oponentes */}
 
             {(zone === CEMETERY_ZONE && isOpponent) && (
                 <div><Button type="link" onClick={ viewCementeryOpponent }>Ver Cementerio</Button> <br/></div>
@@ -343,32 +506,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
 
             {(zone === REMOVAL_ZONE && isOpponent) && (
                 <div><Button type="link" onClick={ viewRemovalOpponent }>Ver Remoción</Button> <br/></div>
-            )}   
-            
-            {/* Acciones sobre oros, aliados, armas y totems oponentes */}
+            )}    
 
-            {(zone === DEFENSE_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button> <br/></div>
-            )}
-
-            {(zone === ATTACK_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button> <br/></div>
-            )}
-
-            {(zone === SUPPORT_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Tótem</Button> <br/></div>
-            )} 
-
-            {(zone === GOLDS_PAID_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button> <br/></div>
-            )}
-
-            {(zone === UNPAID_GOLD_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button> <br/></div>
-            )}
-
-
-            
         </div>
     );
 
@@ -409,11 +548,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, isOpponent, c
                     zone === CEMETERY_ZONE || 
                     zone === EXILE_ZONE || 
                     zone === REMOVAL_ZONE || 
-                    (isOpponent && zone === DEFENSE_ZONE) || 
-                    (isOpponent && zone === ATTACK_ZONE) ||
-                    (isOpponent && zone === SUPPORT_ZONE) ||
-                    (isOpponent && zone === GOLDS_PAID_ZONE) ||
-                    (isOpponent && zone === UNPAID_GOLD_ZONE)
+                    (zone === DEFENSE_ZONE) || 
+                    (zone === ATTACK_ZONE) ||
+                    (zone === SUPPORT_ZONE) ||
+                    (zone === GOLDS_PAID_ZONE) ||
+                    (zone === UNPAID_GOLD_ZONE)
                 ) ? (
                     <Popover 
                         placement="right" 

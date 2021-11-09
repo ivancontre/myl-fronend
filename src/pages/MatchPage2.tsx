@@ -25,7 +25,7 @@ import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
 const { Step } = Steps;
 
@@ -122,6 +122,7 @@ const MatchPage2: FC = () => {
         myCards[SUPPORT_ZONE] = [];
         myCards[GOLDS_PAID_ZONE] = [];
         myCards[UNPAID_GOLD_ZONE] = [];
+        myCards[AUXILIARY_ZONE] = [];
         dispatch(changeMatch(myCards));        
     }, [dispatch, deckDefault?.cards]);
 
@@ -137,7 +138,8 @@ const MatchPage2: FC = () => {
                 (match[EXILE_ZONE] && match[EXILE_ZONE].length) ||
                 (match[REMOVAL_ZONE] && match[REMOVAL_ZONE].length) ||
                 (match[GOLDS_PAID_ZONE] && match[GOLDS_PAID_ZONE].length) ||
-                (match[UNPAID_GOLD_ZONE] && match[UNPAID_GOLD_ZONE].length)
+                (match[UNPAID_GOLD_ZONE] && match[UNPAID_GOLD_ZONE].length) ||
+                (match[AUXILIARY_ZONE] && match[AUXILIARY_ZONE].length)
             ) {
                 console.log('changing');
                 socket?.emit('changing', {
@@ -262,12 +264,17 @@ const MatchPage2: FC = () => {
                     <Row gutter={[8, 8]}>
                         <Col span={ 20 }>
                                 <Row gutter={[8, 8]}>
-                                    <Col span={ 8 }> 
+                                    <Col span={ 10 }> 
                                         <Zone title={ GOLDS_PAID_ZONE + ': ' + (opponentMatch[GOLDS_PAID_ZONE] ? opponentMatch[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' isOpponent>
                                             { opponentMatch[GOLDS_PAID_ZONE] && returnItemsForZoneOpponent(GOLDS_PAID_ZONE) }
                                         </Zone>
                                     </Col>
-                                    <Col span={ 16 }>
+                                    <Col span={ 2 }>
+                                        <Zone title={ AUXILIARY_ZONE } className='zone-flex' isOpponent >
+                                            { opponentMatch[AUXILIARY_ZONE] && returnItemsForZoneOpponent(AUXILIARY_ZONE) }
+                                        </Zone>
+                                    </Col>
+                                    <Col span={ 12 }>
                                         <Zone title={ HAND_ZONE } className='zone-flex' isOpponent >
                                             { opponentMatch[HAND_ZONE] && returnItemsForZoneOpponent(HAND_ZONE) }
                                         </Zone>
@@ -275,13 +282,13 @@ const MatchPage2: FC = () => {
                                 </Row> 
 
                                 <Row gutter={[8, 8]}>
-                                    <Col span={ 8 }> 
+                                    <Col span={ 10 }> 
                                         <Zone title={ UNPAID_GOLD_ZONE + ': ' + (opponentMatch[UNPAID_GOLD_ZONE] ? opponentMatch[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex ' isOpponent>
                                             { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZoneOpponent(UNPAID_GOLD_ZONE) }
                                         </Zone>
                                     </Col>
 
-                                    <Col span={ 16 }> 
+                                    <Col span={ 14 }> 
                                         <Zone title={ SUPPORT_ZONE } className='zone-flex' isOpponent >
                                             { opponentMatch[SUPPORT_ZONE] && returnItemsForZoneOpponent(SUPPORT_ZONE) }
                                         </Zone>
@@ -390,7 +397,7 @@ const MatchPage2: FC = () => {
                                 <Row gutter={[8, 8]}>
 
                                     <Col span={ 10 }> 
-                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (match[UNPAID_GOLD_ZONE] ? match[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex' withPopover>
+                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (match[UNPAID_GOLD_ZONE] ? match[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex' >
                                             { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE) }
                                         </Zone>
                                     </Col>
@@ -404,11 +411,16 @@ const MatchPage2: FC = () => {
 
                                 <Row gutter={[8, 8]}>
                                     <Col span={ 10 }> 
-                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (match[GOLDS_PAID_ZONE] ? match[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' withPopover>
+                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (match[GOLDS_PAID_ZONE] ? match[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' >
                                             { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE) }
                                         </Zone>
                                     </Col>
-                                    <Col span={ 14 }>
+                                    <Col span={ 2 }>
+                                        <Zone title={ AUXILIARY_ZONE } className='stack'>
+                                            { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE) }
+                                        </Zone>
+                                    </Col>
+                                    <Col span={ 12 }>
                                         <Zone title={ HAND_ZONE } className='zone-flex' withPopover >
                                             { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE) }
                                         </Zone>

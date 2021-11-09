@@ -8,5 +8,6 @@ export const ZONE_NAMES = {
     HAND_ZONE: 'Mano',
     CASTLE_ZONE: 'Castillo',
     GOLDS_PAID_ZONE: 'Oros pagados',
-    UNPAID_GOLD_ZONE: 'Oros sin pagar'
+    UNPAID_GOLD_ZONE: 'Oros sin pagar',
+    AUXILIARY_ZONE: 'Auxiliar'
 };
