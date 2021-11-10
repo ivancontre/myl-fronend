@@ -22,7 +22,7 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
     const [optionSelect, setOptionSelect] = useState('');
     const dispatch = useDispatch();
 
-    const { online, socket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
 
     const handleOkModal = () => {
 

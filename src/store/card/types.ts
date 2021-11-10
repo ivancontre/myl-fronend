@@ -11,6 +11,7 @@ export const cardsResetMySelection = '[card] Reset my selection';
 
 export type Card = {
     id?: string;
+    idx?: string;
     num: number;
     name: string;
     ability?: string;

@@ -13,6 +13,8 @@ export const setAmountCardsView = '[match] set x cards view';
 
 export const setTakeControlOpponentCard = '[match] set control opponent card';
 
+export const setWeapon = '[match] set weapon';
+
 export type MatchState = {
     matchId: string | null;
     match: Dictionary<Card[] | []>;
@@ -24,6 +26,7 @@ export type MatchState = {
     amountCardsView: number;
     takeControlOpponentCardIndex: number;
     takeControlOpponentCardZone: string;
+    selectedWeapon: any;
 };
 
 export type Dictionary<TValue> = {
@@ -84,6 +87,11 @@ type MatchControlOpponentCard = {
     payload: any
 };
 
+type MatchSetWeapon = {
+    type: typeof setWeapon,
+    payload: any
+};
+
 export type MatchActionTypes = 
 ChangeAction | 
 MatchSetActiveUsers | 
@@ -94,4 +102,5 @@ MatchChangeOpponentAction |
 MatchViewCardsOrigin | 
 MatchViewCardsDestiny | 
 MatchAmountCardsView |
-MatchControlOpponentCard;
+MatchControlOpponentCard |
+MatchSetWeapon;

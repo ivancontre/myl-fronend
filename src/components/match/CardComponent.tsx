@@ -10,7 +10,7 @@ import { ToolOutlined, PlusOutlined } from '@ant-design/icons';
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
 import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
@@ -281,7 +281,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
 
         if ((match && (!match[DEFENSE_ZONE].length && !match[ATTACK_ZONE].length)) && (opponentMatch && (!opponentMatch[DEFENSE_ZONE].length && !opponentMatch[ATTACK_ZONE].length)) ) {
             message.warn(`Deben existir aliados en la línea de ${DEFENSE_ZONE} o ${ATTACK_ZONE} para asignarle una Arma`);
-        } else {
+        } else {            
+            dispatch(setWeaponAction({
+                index, 
+                id: card.id as string
+            }));
             dispatch(openModalAssignWeapon());
         }
         
