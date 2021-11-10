@@ -24,6 +24,7 @@ import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
+import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -53,7 +54,8 @@ const MatchPage2: FC = () => {
             modalOpenViewExileOpponent, 
             modalOpenViewRemovalOpponent,
             modalOpenViewHandOpponent,
-            modalOpenTakeControlOpponentCard
+            modalOpenTakeControlOpponentCard,
+            modalOpenAssignWeapon
     } = useSelector((state: RootState) => state.uiModal);
 
     const { online, socket } = useContext(SocketContext);
@@ -255,9 +257,11 @@ const MatchPage2: FC = () => {
             { modalOpenViewExileOpponent && <ViewCardsModal origin={ opponentMatch } zone={ EXILE_ZONE } onlyRead /> }
             { modalOpenViewRemovalOpponent && <ViewCardsModal origin={ opponentMatch } zone={ REMOVAL_ZONE } onlyRead /> }
 
-            { modalOpenViewHandOpponent && <ViewCardsModal origin={ opponentMatch } zone={ HAND_ZONE } />}
+            { modalOpenViewHandOpponent && <ViewCardsModal origin={ opponentMatch } zone={ HAND_ZONE } onlyRead />}
 
             { modalOpenTakeControlOpponentCard && <TakeControlOpponentCardModal zone={ takeControlOpponentCardZone } index={ takeControlOpponentCardIndex } /> }
+
+            { modalOpenAssignWeapon && <AssingWeaponModal /> }
 
             <div className="content-match">
                 <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >

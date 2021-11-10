@@ -26,7 +26,9 @@ import {
     uiOpenModalViewHandOpponent,
     uiCloseModalViewHandOpponent,
     uiOpenModalTakeControlOpponentCard,
-    uiCloseModalTakeControlOpponentCard
+    uiCloseModalTakeControlOpponentCard,
+    uiOpenModalAssignModal,
+    uiCloseModalAssignModal
 } from "./types";
 
 
@@ -47,7 +49,9 @@ const initialState: UiModalState = {
 
     modalOpenViewHandOpponent: false,
 
-    modalOpenTakeControlOpponentCard: false
+    modalOpenTakeControlOpponentCard: false,
+
+    modalOpenAssignWeapon: false
 };
 
 export const uiModalReducer = (state: typeof initialState = initialState, action: ModalActionTypes): UiModalState => {
@@ -211,6 +215,18 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenTakeControlOpponentCard: false
+            };
+
+        case uiOpenModalAssignModal:
+            return {
+                ...state,
+                modalOpenAssignWeapon: true
+            };
+
+        case uiCloseModalAssignModal:
+            return {
+                ...state,
+                modalOpenAssignWeapon: false
             };
 
         default:

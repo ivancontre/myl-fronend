@@ -2,6 +2,10 @@ import { Button, message, Popover, Tooltip } from 'antd';
 import React, { FC, ReactNode, useContext, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { CaretDownOutlined, CaretUpOutlined, MoreOutlined } from '@ant-design/icons';
+
+
 import { ZONE_NAMES } from '../../constants';
 import { SocketContext } from '../../context/SocketContext';
 import { RootState } from '../../store';
@@ -128,12 +132,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
     }
 
     const handleVisibleChangePopever = (visible: boolean) => {
-        if (!visible) setVisiblePopover(visible);        
-    };
-
-    const detail = (event: any) => {
-        event.preventDefault();
-        setVisiblePopover(true);
+        setVisiblePopover(visible); 
     };
 
     const sendToZone = (origin: string, destiny: string) => {
@@ -165,73 +164,64 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
 
     const content = (
         <div>
-            {/* Acciones en mi arena */}
-            {(title === HAND_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ showHandToOpponent }>Mostrar mano</Button><br/></div>
-            )}
-            {(title === HAND_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button><br/></div>
-            )}
-            {/* {(title === ATTACK_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE) }>Enviar todos a la defensa</Button><br/></div>
-            )}
-            {(title === DEFENSE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE) }>Enviar todos al ataque</Button><br/></div>
-            )} */}
-
-            {(title.split(':')[0] === UNPAID_GOLD_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE) }>Pagar todos los oros</Button><br/></div>
-            )}
-
-            {(title.split(':')[0] === GOLDS_PAID_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE ) }>Reagrupar todos los oros</Button><br/></div>
-            )}
-        </div>
-        
+            <Button type="link" onClick={ showHandToOpponent }>Mostrar mano</Button><br/>
+            <Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button>
+        </div>        
     );
-
 
     return (
         <>
-            {
-                withPopover ? (
-                    <Popover
-                        placement="right" 
-                        trigger="click"
-                        content={ content }
-                        visible={ visiblePopover }
-                        onVisibleChange={ handleVisibleChangePopever }
-                    >
-                        <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } onContextMenu={ detail }>
-                            
-                            <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
-                                { title }
-                            </div>
-
-                            <div className={className}>
-                                { children }
-                            </div>
+            <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } >
                         
-                        </div>
+                    <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
+                        <span>{ title }</span>
 
-                    </Popover>
+                        {
+                            (!isOpponent && title.split(":")[0] === UNPAID_GOLD_ZONE) && (
+                                <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                            )
+                        }
 
-                ):(
+                        {
+                            (!isOpponent && title.split(":")[0] === GOLDS_PAID_ZONE) && (
+                                <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white',height: 15, width: 15, float: 'right' }} />
+                            )
+                        }
+
+                        {
+                            (!isOpponent && title === ATTACK_ZONE) && (
+                                <Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                            )
+                        }
+
+                        {
+                            (!isOpponent && title === DEFENSE_ZONE) && (
+                                <Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                            )
+                        }
+
+                        {
+                            (!isOpponent && title === HAND_ZONE) && (
+                                <Popover 
+                                    placement="right" 
+                                    trigger="click"
+                                    content={ content }
+                                    visible={ visiblePopover }
+                                    onVisibleChange={ handleVisibleChangePopever }
+                                >
+                                    <Button type="link" icon={<MoreOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                </Popover>
+                                
+                            )
+                        }
                         
-                    <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } >
-                        
-                            <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
-                                { title }
-                            </div>
-
-                            <div className={className}>
-                                { children }
-                            </div>
-                            
                     </div>
 
-                )
-            }        
+                    <div className={className}>
+                        { children }
+                    </div>
+                    
+            </div>      
             
         </>
     )

@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard, uiOpenModalAssignModal, uiCloseModalAssignModal } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -154,5 +154,18 @@ export const openModalTakeControlOpponentCard = (): ModalActionTypes => {
 export const closeModalTakeControlOpponentCard = (): ModalActionTypes => {
     return {
         type: uiCloseModalTakeControlOpponentCard
+    }
+};
+
+
+export const openModalAssignWeapon = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalAssignModal
+    }
+};
+
+export const closeModalAssignWeapon = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalAssignModal
     }
 };

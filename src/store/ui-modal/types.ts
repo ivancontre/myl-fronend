@@ -33,6 +33,8 @@ export const uiCloseModalViewHandOpponent = '[ui-modal] Close modal ViewHand Opp
 export const uiOpenModalTakeControlOpponentCard = '[ui-modal] Open modal Take Control Opponent Card';
 export const uiCloseModalTakeControlOpponentCard = '[ui-modal] Close modal Take Control Opponent Card';
 
+export const uiOpenModalAssignModal = '[ui-modal] Open modal Assign Weapon';
+export const uiCloseModalAssignModal = '[ui-modal] Close modal Assign Weapon';
 
 export type UiModalState = {
     modalOpenThrowXcards: boolean;
@@ -52,6 +54,8 @@ export type UiModalState = {
     modalOpenViewHandOpponent: boolean;
 
     modalOpenTakeControlOpponentCard: boolean;
+
+    modalOpenAssignWeapon: boolean;
 };
 
 type ModalThrowXcardsOpenAction = {
@@ -161,6 +165,14 @@ type ModalTakeControlOpponentCardCloseAction = {
     type: typeof uiCloseModalTakeControlOpponentCard
 };
 
+type ModalAssignWeaponOpenAction = {
+    type: typeof uiOpenModalAssignModal
+};
+
+type ModalAssignWeaponCloseAction = {
+    type: typeof uiCloseModalAssignModal
+};
+
 export type ModalActionTypes = 
 ModalThrowXcardsOpenAction | 
 ModalThrowXcardsCloseAction | 
@@ -187,4 +199,6 @@ ModalViewRemovalOpponentCloseAction |
 ModalViewHandOpponentOpenAction |
 ModalViewHandOpponentCloseAction |
 ModalTakeControlOpponentCardOpenAction |
-ModalTakeControlOpponentCardCloseAction;
+ModalTakeControlOpponentCardCloseAction |
+ModalAssignWeaponOpenAction |
+ModalAssignWeaponCloseAction;

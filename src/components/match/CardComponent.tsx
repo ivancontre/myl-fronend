@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
+import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
@@ -29,7 +29,7 @@ export interface CardProps {
     withPopover?: boolean;
 };
 
-const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPopover }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPopover, isOpponent }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -40,14 +40,21 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
     const { match, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
     const { id: myUserId} = useSelector((state: RootState) => state.auth);
 
-    const isOpponent = card.user !== myUserId
-
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
 
+
+    //const isStolenByOpponent = opponentMatch[zone].find(c => c.user === myUserId) ? true : false;
+
+    //const isStolenByMe = match[zone].find(c => c.user === opponentId) ? true : false;
+
+    //const isInMyZone = match[zone].find((c, index2) =>  index2 === index) ? true : false;
+
     const changeCardZone = (item: DragCard, zoneName: string) => {
+
         
-        if (item.zone === zoneName) {
+        
+        if (item.zone === zoneName || isOpponent) {
             return;
         }
 
@@ -83,42 +90,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             dispatch(changeMatch(newCards));
 
         }
-
-        return;
-
-        /*if (card.isOpponent) {
-
-            if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
-
-                const newCardsOpponent = { ...opponentMatch };
-                delete card.isOpponent;
-                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], card];
-                dispatch(changOpponenteMatch(newCardsOpponent));
-                dispatch(changeMatch(newCards));
-
-                socket?.emit('update-match-opponent', {
-                    match: newCardsOpponent,
-                    opponentId
-                });
-
-            } else {
-
-                newCards[zoneName] = [...match[zoneName], card];
-                dispatch(changeMatch(newCards));
-
-            }
-
-        } else {
-
-            newCards[zoneName] = [...match[zoneName], card];
-            dispatch(changeMatch(newCards));
-
-            if (zoneName === SUPPORT_ZONE) {
-                // Abrir modal para elegir el portador
-            }
-            
-
-        }*/
     };
 
     const [{ handlerId }, drop] = useDrop({
@@ -306,6 +277,17 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
         handleVisibleChangePopever(false);
     };
 
+    const viewModalAssignWeapon = () => {
+
+        if ((match && (!match[DEFENSE_ZONE].length && !match[ATTACK_ZONE].length)) && (opponentMatch && (!opponentMatch[DEFENSE_ZONE].length && !opponentMatch[ATTACK_ZONE].length)) ) {
+            message.warn(`Deben existir aliados en la línea de ${DEFENSE_ZONE} o ${ATTACK_ZONE} para asignarle una Arma`);
+        } else {
+            dispatch(openModalAssignWeapon());
+        }
+        
+        handleVisibleChangePopever(false);
+    };
+
     const takeControlOpponentCard = (zone: string) => {
         dispatch(setTakeControlOpponentCardAction(index, zone));
         dispatch(openModalTakeControlOpponentCard());
@@ -386,45 +368,35 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             )}
 
             {/* Oros, aliados, armas y totems */}
-            {(zone === DEFENSE_ZONE && (
-                match[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
-            )) && (
+            {(zone === DEFENSE_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
-                    <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo..</Button> <br/>
+                    <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo</Button> <br/>
                     { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Identificar Armas</Button> }
                 </div>
             )}
 
-            {(zone === ATTACK_ZONE && (
-                match[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
-            )) && (
+            {(zone === ATTACK_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
                     { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Identificar armas</Button> }             
                 </div>
             )}
 
-            {(zone === SUPPORT_ZONE && (
-                match[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
-            )) && (
+            {(zone === SUPPORT_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Asignar Portador</Button> <br/>
+                    <Button type="link" onClick={ viewModalAssignWeapon }>Asignar Portador</Button> <br/>
                     <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Conocer Portador</Button> <br/>
                     <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
                 </div>
             )}
 
-            {(zone === GOLDS_PAID_ZONE && (
-                match[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
-            )) && (
+            {(zone === GOLDS_PAID_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
                 </div>
             )}
 
-            {(zone === UNPAID_GOLD_ZONE && (
-                match[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id ))
-            )) && (
+            {(zone === UNPAID_GOLD_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(UNPAID_GOLD_ZONE) }>Barajar el Castillo</Button>
                 </div>
