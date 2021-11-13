@@ -13,7 +13,7 @@ interface TakeControlOpponentCardModalProps {
     index: number;
 };
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
+const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
 
 const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zone, index}) => {
 
@@ -34,11 +34,19 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
         const newOpponentMatch = { ...opponentMatch };
         const newMatch = { ...match };
 
-        const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;
-        //card.isOpponent = true;
+        const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;        
 
         newOpponentMatch[zone] = newOpponentMatch[zone].filter((card: Card, index2: number) => index2 !== index);
         newMatch[optionSelect] = [...newMatch[optionSelect], card];
+
+        if (card.armsId?.length) {
+
+            for (const armId of card.armsId as string[]) {
+                const armCardInMyZone = newOpponentMatch[SUPPORT_ZONE].find((card: Card) => card.idx === armId) as Card;
+                newOpponentMatch[SUPPORT_ZONE] = newOpponentMatch[SUPPORT_ZONE].filter((card: Card) =>  card.idx !== armId);
+                newMatch[SUPPORT_ZONE] = [...newMatch[SUPPORT_ZONE], armCardInMyZone];
+            }
+        }
 
         dispatch(changeMatch(newMatch));
         dispatch(changOpponenteMatch(newOpponentMatch));

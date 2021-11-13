@@ -26,10 +26,9 @@ export interface CardProps {
     zone: string;
     isOpponent?: boolean;
     card: Card;
-    withPopover?: boolean;
 };
 
-const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPopover, isOpponent }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOpponent }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -43,51 +42,216 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
 
-
-    //const isStolenByOpponent = opponentMatch[zone].find(c => c.user === myUserId) ? true : false;
-
-    //const isStolenByMe = match[zone].find(c => c.user === opponentId) ? true : false;
-
-    //const isInMyZone = match[zone].find((c, index2) =>  index2 === index) ? true : false;
-
     const changeCardZone = (item: DragCard, zoneName: string) => {
         
         if (item.zone === zoneName || isOpponent) {
             return;
-        }
+        }        
 
-        console.log('Action:', `Enviando "${item.name}" de "${item.zone}" a "${zoneName}`)
-
-        const card = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
+        const cardToMove = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
         const newCards = { ...match };
-
-        newCards[item.zone] = match[item.zone].filter((card: Card, index2: number) => index2 !== index);
+        const newCardsOpponent = { ...opponentMatch };
 
         if (card.user === myUserId) { // Moviendo mis propias cartas
 
-            newCards[zoneName] = [...match[zoneName], card];
-            dispatch(changeMatch(newCards));
+            console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
 
-        } else if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
+            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {                
 
-            const newCardsOpponent = { ...opponentMatch };
-            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], card];
-            dispatch(changOpponenteMatch(newCardsOpponent));
-            dispatch(changeMatch(newCards));
+                for (const armId of cardToMove.armsId as string[]) {
 
-            socket?.emit('update-match-opponent', {
-                match: newCardsOpponent,
-                opponentId
-            });
+                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
 
-        } else {
+                    if (armCardInMyZone) {
 
-            console.log('moviendo cartas robadas...')
-            newCards[zoneName] = [...match[zoneName], card];
-            dispatch(changeMatch(newCards));
+                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
 
+                        delete armCardInMyZone.bearerId;
+
+                        if (armCardInMyZone.user === myUserId) {
+                            
+                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
+
+                        } else {
+
+                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
+
+                        }
+
+                    }
+
+                }
+
+                delete cardToMove.armsId;
+            }
+
+            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+                // Al portador se le debe quitar esta arma
+                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                if (bearerInMyDefenseZone) {
+                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                        if (card.idx === bearerInMyDefenseZone.idx) {
+                            return {
+                                ...card,
+                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                            }
+                        }
+
+                        return card;
+                    });
+                } else {
+
+                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                    if (bearerInMyAttackZone) {
+                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyAttackZone.idx) {
+                                return {
+                                    ...card,
+                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                                }
+                            }
+    
+                            return card;
+                        });
+                    }
+                }
+
+                delete cardToMove.bearerId;
+            }
+
+            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+            newCards[zoneName] = [...newCards[zoneName], cardToMove];
+
+            if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
+
+                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
+                dispatch(changeMatch(newMatch));
+                const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
+                dispatch(changOpponenteMatch(newMatchOpponent));
+                socket?.emit('update-match-opponent', {
+                    match: newMatchOpponent,
+                    opponentId
+                });
+
+            } else {
+
+                dispatch(changeMatch(newCards));
+                dispatch(changOpponenteMatch(newCardsOpponent));
+                socket?.emit('update-match-opponent', {
+                    match: newCardsOpponent,
+                    opponentId
+                });
+
+            }
+
+        } else { // ------------------- Enviando cartas robadas -------------------------------------
+            
+            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+
+                for (const armId of cardToMove.armsId as string[]) {
+
+                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
+                    
+                    if (armCardInMyZone) {
+
+                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
+
+                        delete armCardInMyZone.bearerId;
+
+                        if (armCardInMyZone.user === myUserId) {
+                            
+                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
+
+                        } else {
+
+                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
+
+                        }
+
+                    }
+
+                }
+
+                delete cardToMove.armsId;
+
+            }
+
+            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+                // Al portador se le debe quitar esta arma
+                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                if (bearerInMyDefenseZone) {
+                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                        if (card.idx === bearerInMyDefenseZone.idx) {
+                            return {
+                                ...card,
+                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                            }
+                        }
+
+                        return card;
+                    })
+                } else {
+
+                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                    if (bearerInMyAttackZone) {
+                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyAttackZone.idx) {
+                                return {
+                                    ...card,
+                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                                }
+                            }
+    
+                            return card;
+                        })
+                    }
+
+                }
+
+                delete cardToMove.bearerId;
+            }
+
+            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+
+            if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
+                console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}" oponente`);
+                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], cardToMove];
+            } else {
+                console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
+                newCards[zoneName] = [...newCards[zoneName], cardToMove];
+            }            
+
+            if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
+
+                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
+                dispatch(changeMatch(newMatch));
+                const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
+                dispatch(changOpponenteMatch(newMatchOpponent));
+
+                socket?.emit('update-match-opponent', {
+                    match: newMatchOpponent,
+                    opponentId
+                });
+
+            } else {
+                
+                dispatch(changeMatch(newCards));
+                dispatch(changOpponenteMatch(newCardsOpponent));
+
+                socket?.emit('update-match-opponent', {
+                    match: newCardsOpponent,
+                    opponentId
+                });
+
+            }
+            
         }
+
     };
 
     const [{ handlerId }, drop] = useDrop({
@@ -213,6 +377,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
 
     const shuffleCaslte = () => {
 
+        console.log('Action:', `Barajando Castillo`);
+
         setAnimated(true);
 
         const newMatch = shuffle(match, CASTLE_ZONE); 
@@ -232,6 +398,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             return;
         }
 
+        console.log('Action:', `Obteniendo mano`);
+
         const newMatch = throwXcards(ammunt, match, CASTLE_ZONE, HAND_ZONE);
 
         dispatch(changeMatch(newMatch));
@@ -239,6 +407,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
     };
 
     const showToOpponent = () => {
+        console.log('Action:', `Mostrando Castillo al oponente`);
+
         socket?.emit('show-clastle-to-opponent', {
             opponentId
         });
@@ -298,7 +468,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
 
     const sendToCastle = (zoneName: string) => {
         
-        console.log('Action:', `Enviando y barajando "${card.name}" de "${zoneName}" a "${CASTLE_ZONE}`)
+        console.log('Action:', `Enviando y barajando "${card.name}" de "${zoneName}" a "${CASTLE_ZONE}"`);
 
         const dragCard: DragCard =  {
             ...card,
@@ -309,13 +479,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
         const cardToDelete = match[dragCard.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
         const newCards = { ...match };
-        const newCardsOpponent = { ...opponentMatch };
+        const newCardsOpponent = { ...opponentMatch };        
 
-        newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
-
-        if (card.user === myUserId) { // Enviando mis propias cartas
-
-            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], card];
+        if (cardToDelete.user === myUserId) { // Enviando mis propias cartas            
             
             if (cardToDelete.armsId) {
 
@@ -360,30 +526,118 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                         }
 
                         return card;
-                    })
+                    });
+                } else {
+
+                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
+
+                    if (bearerInMyAttackZone) {
+                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyAttackZone.idx) {
+                                return {
+                                    ...card,
+                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
+                                }
+                            }
+    
+                            return card;
+                        });
+                    }
                 }
 
                 delete cardToDelete.bearerId;
             }
+
+            newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
+            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], cardToDelete];
 
             const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
             dispatch(changeMatch(newMatch));
             const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
             dispatch(changOpponenteMatch(newMatchOpponent));
             socket?.emit('update-match-opponent', {
-                match: newCardsOpponent,
+                match: newMatchOpponent,
                 opponentId
             });
 
-        } else { // Enviando cartas robadas
-            
-            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], card];
+        } else { // ------------------- Enviando cartas robadas -------------------------------------
+
+            if (cardToDelete.armsId) {
+
+                for (const armId of cardToDelete.armsId as string[]) {
+
+                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
+                    
+                    if (armCardInMyZone) {
+
+                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
+
+                        delete armCardInMyZone.bearerId;
+
+                        if (armCardInMyZone.user === myUserId) {
+                            
+                            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
+
+                        } else {
+
+                            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
+
+                        }
+
+                    }
+
+                }
+
+                delete cardToDelete.armsId;
+            }
+
+            if (cardToDelete.bearerId) {
+                // Al portador se le debe quitar esta arma
+                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
+
+                if (bearerInMyDefenseZone) {
+                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                        if (card.idx === bearerInMyDefenseZone.idx) {
+                            return {
+                                ...card,
+                                armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
+                            }
+                        }
+
+                        return card;
+                    })
+                } else {
+
+                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
+
+                    if (bearerInMyAttackZone) {
+                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyAttackZone.idx) {
+                                return {
+                                    ...card,
+                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
+                                }
+                            }
+    
+                            return card;
+                        })
+                    }
+
+                }
+
+                delete cardToDelete.bearerId;
+            }
+
+            newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
+            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], cardToDelete];
+
+            const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
+            dispatch(changeMatch(newMatch));
             const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
             dispatch(changOpponenteMatch(newMatchOpponent));
-            dispatch(changeMatch(newCards));
 
             socket?.emit('update-match-opponent', {
-                match: newCardsOpponent,
+                match: newMatchOpponent,
                 opponentId
             });
         }
@@ -427,14 +681,14 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             {(zone === DEFENSE_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Conocer Armas</Button> }
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer Armas</Button> }
                 </div>
             )}
 
             {(zone === ATTACK_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Conocer armas</Button> }             
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer armas</Button> }             
                 </div>
             )}
 
@@ -471,7 +725,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             )) && (
                 <div>
                     <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Conocer armas</Button> }  
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }  
                 </div>
             )}
 
@@ -484,7 +738,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             )) && (
                 <div>
                     <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Conocer armas</Button> }    
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }    
                 </div>
             )}
 
@@ -553,6 +807,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
     };
 
     const throwOneCard = () => {
+        console.log('Action:', `Botando carta del ${CASTLE_ZONE} al ${CEMETERY_ZONE}`);
         const newMatch = throwXcards(1, match, CASTLE_ZONE, CEMETERY_ZONE);
         dispatch(changeMatch(newMatch));
     };
@@ -661,6 +916,72 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
 
     };
 
+    const setVibrateArmCard = (isMyMatch: boolean, vibrate: boolean) => {
+
+        if (isMyMatch) {
+            const newMatch = { ...match };
+            newMatch[SUPPORT_ZONE] = newMatch[SUPPORT_ZONE].map((c: Card, index: number) => {
+                if (card.armsId?.includes(c.idx as string)) {
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                }
+
+                return c;
+            });
+
+            dispatch(changeMatch(newMatch, false));
+
+        } else {
+            const newOpponentMatch = { ...opponentMatch };
+            newOpponentMatch[SUPPORT_ZONE] = newOpponentMatch[SUPPORT_ZONE].map((c: Card, index: number) => {
+                if (card.armsId?.includes(c.idx as string)) {
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                }
+
+                return c;
+            });
+
+            dispatch(changOpponenteMatch(newOpponentMatch));
+        }
+    };
+
+    const viewArms = (isMyMatch: boolean) => {
+
+        setVibrateArmCard(isMyMatch, true);
+
+        setTimeout(() => {
+            setVibrateArmCard(isMyMatch, false);
+        }, 500);
+
+        handleVisibleChangePopever(false);
+
+    };
+
+    const getClassName = () => {
+        if (animated) {
+            return 'animate__animated animate__shakeY';
+        }
+
+        if (card.vibrate) {
+            return 'animate__animated animate__flash';
+        }
+    }
+
     return (
         <>
 
@@ -673,7 +994,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                     (zone === ATTACK_ZONE) ||
                     (zone === SUPPORT_ZONE) ||
                     (zone === GOLDS_PAID_ZONE) ||
-                    (zone === UNPAID_GOLD_ZONE)
+                    (zone === UNPAID_GOLD_ZONE) ||
+                    (zone === AUXILIARY_ZONE)
                 ) ? (
                     <Popover 
                         placement="right" 
@@ -683,7 +1005,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                         onVisibleChange={ handleVisibleChangePopever }
                     >
                         {/* animate__flash */}
-                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={(animated || card.vibrate) ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
+                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={`${getClassName()} movable-item`} data-handler-id={ handlerId } onContextMenu={ detail } >
                             { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                                 <img
                                     width={ 33 }
@@ -697,6 +1019,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                                 <>
                                     {card.armsId && card.armsId.length > 0 && <ToolOutlined className="icon-arm" height={ 10 } width={ 10 } />}
                                     {card.bearerId && <UserOutlined className="icon-arm" height={ 10 } width={ 10 } />}
+                                    
                                     <Image
                                         width={ 33 }
                                         height={ 50 }

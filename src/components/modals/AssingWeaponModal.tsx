@@ -1,4 +1,4 @@
-import { Divider, Image, Modal, Radio, Space, Typography } from 'antd';
+import { Image, Modal, Radio, Space, Typography } from 'antd';
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';

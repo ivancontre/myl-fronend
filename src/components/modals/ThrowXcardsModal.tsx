@@ -7,7 +7,7 @@ import { throwXcards } from '../../helpers/throwsCards';
 import { changeMatch } from '../../store/match/action';
 import { closeModalThrowXcards } from '../../store/ui-modal/action';
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, CEMETERY_ZONE } = ZONE_NAMES;
 
 const ThrowXcardsModal: FC = () => {
 
@@ -20,6 +20,7 @@ const ThrowXcardsModal: FC = () => {
     const dispatch = useDispatch();
 
     const handleOkModal = () => {
+        console.log('Action:', `Botando ${amountThrowXcards} carta(s) del ${CASTLE_ZONE} a ${CEMETERY_ZONE}`);
         const newMatch = throwXcards(amountThrowXcards, match, CASTLE_ZONE, CEMETERY_ZONE);
         dispatch(changeMatch(newMatch));
         dispatch(closeModalThrowXcards());

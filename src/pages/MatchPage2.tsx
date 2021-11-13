@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Button, Col, Row, Steps } from 'antd';
+import { Col, Row } from 'antd';
 
 
 import CardComponent from '../components/match/CardComponent';
@@ -27,8 +27,6 @@ import TakeControlOpponentCardModal from '../components/modals/TakeControlOppone
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
-
-const { Step } = Steps;
 
 const MatchPage2: FC = () => {
 
@@ -72,44 +70,7 @@ const MatchPage2: FC = () => {
     opponentCards[GOLDS_PAID_ZONE] = [];
     opponentCards[UNPAID_GOLD_ZONE] = [];
 
-    const steps = [
-        {
-          title: 'Agrupación',
-          content: 'First-content',
-        },
-        {
-          title: 'Vigilia',
-          content: 'Second-content',
-        },
-        {
-          title: 'Batalla Mitológica',
-          content: 'Last-content',
-        },
-        {
-          title: 'Ataque',
-          content: 'Last-content',
-        },
-        {
-          title: 'Fase Final',
-          content: 'Last-content',
-        },
-        {
-          title: 'Fin del Turno',
-          content: 'Last-content',
-        },
-    ];
-
-    const [current, setCurrent] = React.useState(0);
-
     const isMobile = window.innerWidth < 600;
-
-    const next = () => {
-        setCurrent(current + 1);
-    };
-
-    const prev = () => {
-        setCurrent(current - 1);
-    };
 
     useEffect(() => {
         console.log('changeMatch');
@@ -151,7 +112,7 @@ const MatchPage2: FC = () => {
             }
         }        
 
-    }, [socket, match, matchId, opponentId]);
+    }, [socket, match, matchId, opponentId, emmitChange]);
 
     useEffect(() => {
         

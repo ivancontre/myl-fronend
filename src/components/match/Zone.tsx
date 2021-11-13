@@ -20,10 +20,10 @@ interface ZoneProps {
     withPopover?: boolean
 };
 
-const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
+const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
 
-const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopover }) => {
+const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
 
     const [visiblePopover, setVisiblePopover] = useState(false);
 
@@ -42,7 +42,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
         }),
         // Override monitor.canDrop() function
         canDrop: (item: DragCard) => {
-            const { zone: currentZone } = item;
+            //const { zone: currentZone } = item;
             
             if (isOpponent) {
                 return false;
@@ -171,7 +171,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withPopov
 
     return (
         <>
-            <div ref={ drop } className={ 'zone' + ' ' + getClassAnimated()} style={ { backgroundColor: getBackgroundColor() } } >
+            <div ref={ drop } className={ `zone ${getClassAnimated()}`} style={ { backgroundColor: getBackgroundColor() } } >
                         
                     <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
                         <span>{ title }</span>
