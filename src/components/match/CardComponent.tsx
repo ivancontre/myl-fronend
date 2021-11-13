@@ -1,11 +1,11 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 
 import { Card } from '../../store/card/types';
 import { DragCard  } from '../../store/match/types';
 
-import { ToolOutlined, PlusOutlined } from '@ant-design/icons';
+import { ToolOutlined, UserOutlined } from '@ant-design/icons';
 
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,8 +51,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
     //const isInMyZone = match[zone].find((c, index2) =>  index2 === index) ? true : false;
 
     const changeCardZone = (item: DragCard, zoneName: string) => {
-
-        
         
         if (item.zone === zoneName || isOpponent) {
             return;
@@ -284,7 +282,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
         } else {            
             dispatch(setWeaponAction({
                 index, 
-                id: card.id as string
+                idx: card.idx as string
             }));
             dispatch(openModalAssignWeapon());
         }
@@ -310,21 +308,75 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
 
         const cardToDelete = match[dragCard.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
-        delete cardToDelete.bearerId;
-        delete cardToDelete.armsId;
-
         const newCards = { ...match };
+        const newCardsOpponent = { ...opponentMatch };
 
-        newCards[dragCard.zone] = match[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
+        newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
 
-        if (card.user === myUserId) { // Moviendo mis propias cartas
+        if (card.user === myUserId) { // Enviando mis propias cartas
 
-            newCards[CASTLE_ZONE] = [...match[CASTLE_ZONE], card];
+            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], card];
+            
+            if (cardToDelete.armsId) {
+
+                for (const armId of cardToDelete.armsId as string[]) {
+
+                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
+
+                    if (armCardInMyZone) {
+
+                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
+
+                        delete armCardInMyZone.bearerId;
+
+                        if (armCardInMyZone.user === myUserId) {
+                            
+                            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
+
+                        } else {
+
+                            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
+
+                        }
+
+                    }
+
+                }
+
+                delete cardToDelete.armsId;
+            }
+
+            if (cardToDelete.bearerId) {
+                // Al portador se le debe quitar esta arma
+                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
+
+                if (bearerInMyDefenseZone) {
+                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                        if (card.idx === bearerInMyDefenseZone.idx) {
+                            return {
+                                ...card,
+                                armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
+                            }
+                        }
+
+                        return card;
+                    })
+                }
+
+                delete cardToDelete.bearerId;
+            }
+
             const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
             dispatch(changeMatch(newMatch));
+            const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
+            dispatch(changOpponenteMatch(newMatchOpponent));
+            socket?.emit('update-match-opponent', {
+                match: newCardsOpponent,
+                opponentId
+            });
 
-        } else {
-            const newCardsOpponent = { ...opponentMatch };
+        } else { // Enviando cartas robadas
+            
             newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], card];
             const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
             dispatch(changOpponenteMatch(newMatchOpponent));
@@ -375,21 +427,21 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
             {(zone === DEFENSE_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Identificar Armas</Button> }
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Conocer Armas</Button> }
                 </div>
             )}
 
             {(zone === ATTACK_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Identificar armas</Button> }             
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Conocer armas</Button> }             
                 </div>
             )}
 
             {(zone === SUPPORT_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
                 <div>
                     <Button type="link" onClick={ viewModalAssignWeapon }>Asignar Portador</Button> <br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Conocer Portador</Button> <br/>
+                    { card.bearerId && <div><Button type="link" onClick={ () => viewBearer(true) }>Conocer Portador</Button> <br/></div> }
                     <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
                 </div>
             )}
@@ -418,7 +470,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                 opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Conocer armas</Button> }  
                 </div>
             )}
 
@@ -430,7 +483,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                 opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
+                    { card.armsId && <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Conocer armas</Button> }    
                 </div>
             )}
 
@@ -442,7 +496,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                 opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button><br/>
+                    { card.bearerId && <Button type="link" onClick={ () => viewBearer(false) }>Conocer Portador</Button> }
                 </div>
             )}
 
@@ -516,6 +571,96 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
         setVisiblePopover(true);
     };
 
+    const setVibrateCard = (isMyMatch: boolean, vibrate: boolean) => {
+        if (isMyMatch) {
+            const newMatch = { ...match };
+            newMatch[DEFENSE_ZONE] = newMatch[DEFENSE_ZONE].map((c: Card, index: number) => {
+                if (card.bearerId === c.idx) {
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                }
+
+                return c;
+            });
+
+            newMatch[ATTACK_ZONE] = newMatch[ATTACK_ZONE].map((c: Card, index: number) => {
+                if (card.bearerId === c.idx) {
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                }
+
+                return c;
+            });
+
+            dispatch(changeMatch(newMatch, false));
+
+        } else {
+
+            const newOpponentMatch = { ...opponentMatch };
+            newOpponentMatch[DEFENSE_ZONE] = newOpponentMatch[DEFENSE_ZONE].map((c: Card, index: number) => {
+                if (card.bearerId === c.idx) {
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                }
+
+                return c;
+            });
+
+            newOpponentMatch[ATTACK_ZONE] = newOpponentMatch[ATTACK_ZONE].map((c: Card, index: number) => {
+                if (card.bearerId === c.idx) {
+
+                    if (vibrate) {
+                        return {
+                            ...c,
+                            vibrate
+                        }
+                    }
+
+                    delete c.vibrate;
+                    return c;
+                    
+                }
+
+                return c;
+            });
+
+            dispatch(changOpponenteMatch(newOpponentMatch));
+        }
+    }
+
+    const viewBearer = (isMyMatch: boolean) => {
+        
+        setVibrateCard(isMyMatch, true);
+
+        setTimeout(() => {
+            setVibrateCard(isMyMatch, false);
+        }, 500);
+
+        handleVisibleChangePopever(false);
+
+    };
+
     return (
         <>
 
@@ -537,8 +682,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                         visible={ visiblePopover }
                         onVisibleChange={ handleVisibleChangePopever }
                     >
-                        
-                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
+                        {/* animate__flash */}
+                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={(animated || card.vibrate) ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } onContextMenu={ detail } >
                             { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                                 <img
                                     width={ 33 }
@@ -548,12 +693,17 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                                     className={isOpponent ? 'img-180-deg' : ''}
                                 />
                                 : 
-                                <Image
-                                    width={ 33 }
-                                    height={ 50 }
-                                    src={ card.img }
-                                    className={isOpponent ? 'img-180-deg' : ''}
-                                />                        
+
+                                <>
+                                    {card.armsId && card.armsId.length > 0 && <ToolOutlined className="icon-arm" height={ 10 } width={ 10 } />}
+                                    {card.bearerId && <UserOutlined className="icon-arm" height={ 10 } width={ 10 } />}
+                                    <Image
+                                        width={ 33 }
+                                        height={ 50 }
+                                        src={ card.img }
+                                        className={isOpponent ? 'img-180-deg' : ''}
+                                    />   
+                                </>                     
                             }
                             
                         </div>
@@ -569,16 +719,12 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, withPop
                                 className={isOpponent ? 'img-180-deg' : ''}
                             />
                             : 
-                            <>
-                                {card.isMachinery && <ToolOutlined className="icon-arm" height={10} width={10} style={{color: 'black'}} />}
-
-                                <Image
-                                    width={ 33 }
-                                    height={ 50 }
-                                    src={ card.img }
-                                    className={isOpponent ? 'img-180-deg' : ''}
-                                />
-                            </>
+                            <Image
+                                width={ 33 }
+                                height={ 50 }
+                                src={ card.img }
+                                className={isOpponent ? 'img-180-deg' : ''}
+                            />
                                                     
                         }
                         

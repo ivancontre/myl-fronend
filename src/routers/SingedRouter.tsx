@@ -19,7 +19,7 @@ import NewCard from '../components/signed/admin/NewCard';
 //import { useSelector } from 'react-redux';
 //import { RootState } from '../store';
 import Users from '../components/signed/admin/Users';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import '../css/signed.css'
 import { useDispatch } from 'react-redux';
 import { startLogout } from '../store/auth/action';
@@ -37,6 +37,10 @@ export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
+
+    const { pathname } = useLocation();
+    const path = pathname.replace('/', '');
+    console.log(path)
 
     const dispatch = useDispatch();
 
@@ -167,7 +171,7 @@ export const SingedRouter: FC = () => {
                 <Layout className="site-layout" style={{ marginLeft: !hiddenMenu ? 200 : 0 }} >
 
                     <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >
-                        <div className="site-layout-background" style={{ padding: 24 }} >
+                        <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 24 }} >
                             <Switch>
 
                                 <Route exact path="/match" component={ MatchPage2 } />

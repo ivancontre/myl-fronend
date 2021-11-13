@@ -18,6 +18,7 @@ export const setWeapon = '[match] set weapon';
 export type MatchState = {
     matchId: string | null;
     match: Dictionary<Card[] | []>;
+    emmitChange: boolean;
     opponentMatch: Dictionary<Card[] | []>;
     opponentId: string | null;
     activeUsers: User[];
@@ -40,7 +41,7 @@ export type DragCard = Partial<Card> & {
 
 type ChangeAction = {
     type: typeof change;
-    payload: Dictionary<Card[] | []>;
+    payload: any;
 };
 
 type MatchChangeOpponentAction = {

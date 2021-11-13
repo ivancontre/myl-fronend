@@ -39,7 +39,7 @@ const MatchPage2: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
+    const { match, emmitChange, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const { 
             modalOpenThrowXcards, 
@@ -130,7 +130,7 @@ const MatchPage2: FC = () => {
 
     useEffect(() => {
         
-        if (match) {
+        if (match && emmitChange) {
             if (
                 (match[CASTLE_ZONE] && match[CASTLE_ZONE].length) ||
                 (match[DEFENSE_ZONE] && match[DEFENSE_ZONE].length) ||
@@ -143,7 +143,7 @@ const MatchPage2: FC = () => {
                 (match[UNPAID_GOLD_ZONE] && match[UNPAID_GOLD_ZONE].length) ||
                 (match[AUXILIARY_ZONE] && match[AUXILIARY_ZONE].length)
             ) {
-                console.log('changing');
+                console.log('changing...');
                 socket?.emit('changing', {
                     match,
                     opponentId

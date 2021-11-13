@@ -1,4 +1,4 @@
-import { Button, message, Popover, Tooltip } from 'antd';
+import { Button, message, Popover } from 'antd';
 import React, { FC, ReactNode, useContext, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';

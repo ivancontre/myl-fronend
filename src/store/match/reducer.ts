@@ -3,6 +3,7 @@ import { MatchState, MatchActionTypes, change, setActiveUsers, setMatchId, reset
 const initialState: MatchState = {
     matchId: null,
     match: {},
+    emmitChange: true,
     opponentMatch: {},
     opponentId: null,
     activeUsers: [],
@@ -21,7 +22,8 @@ export const matchReducer = (state: typeof initialState = initialState, action: 
         case change:
             return {
                 ...state,
-                match: {...action.payload}
+                match: action.payload.match,
+                emmitChange: action.payload.emmitChange
 
             };
 

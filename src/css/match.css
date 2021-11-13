@@ -31,7 +31,7 @@
   overflow-y: auto;
   white-space: nowrap;
 }
-  
+
 .movable-item {
   border-radius: 10px;
   /* position: absolute; */
@@ -47,7 +47,7 @@
 }
 
 span.icon-arm {
-  color: white;
+  color: chartreuse;
   position: absolute;
   right: 0;
   z-index: 3;

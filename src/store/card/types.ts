@@ -30,6 +30,7 @@ export type Card = {
     isOpponent?: boolean;    
     armsId?: string[];
     bearerId?: string;
+    vibrate?: boolean;
 };
 
 export type CardState = {

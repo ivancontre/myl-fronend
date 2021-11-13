@@ -35,7 +35,7 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
         const newMatch = { ...match };
 
         const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;
-        card.isOpponent = true;
+        //card.isOpponent = true;
 
         newOpponentMatch[zone] = newOpponentMatch[zone].filter((card: Card, index2: number) => index2 !== index);
         newMatch[optionSelect] = [...newMatch[optionSelect], card];
