@@ -18,7 +18,7 @@ const AssingWeaponModal: FC = () => {
     const dispatch = useDispatch();
 
     const { modalOpenAssignWeapon } = useSelector((state: RootState) => state.uiModal);
-    const { match, opponentMatch, opponentId, selectedWeapon } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentMatch, opponentId, selectedWeapon } = useSelector((state: RootState) => state.match);
     const { id } = useSelector((state: RootState) => state.auth);
     const { socket } = useContext(SocketContext);
 
@@ -183,7 +183,7 @@ const AssingWeaponModal: FC = () => {
 
         socket?.emit('update-match-opponent', {
             match: newOpponentMatch,
-            opponentId
+            matchId
         });
     };
 

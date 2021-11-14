@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Row } from 'antd';
+import { Button, Col, message, Row } from 'antd';
 
 
 import CardComponent from '../components/match/CardComponent';
@@ -25,6 +25,7 @@ import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
+import { shuffle } from '../helpers/shuffle';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -38,7 +39,9 @@ const MatchPage2: FC = () => {
     const dispatch = useDispatch();
 
     const { match, emmitChange, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
+    const { id: myUserId } = useSelector((state: RootState) => state.auth);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
+
     const { 
             modalOpenThrowXcards, 
             modalOpenViewCastle, 
@@ -58,6 +61,14 @@ const MatchPage2: FC = () => {
 
     const { online, socket } = useContext(SocketContext);
 
+    const leaveMatch = () => {
+        socket?.emit('leave-match', {
+            matchId,
+            winningUserId: opponentId,
+            losingUserId: myUserId
+        });
+    };
+
     const opponentCards: Dictionary<Card[] | []> = {};
     opponentCards[CASTLE_ZONE] = [];
     opponentCards[HAND_ZONE] = [];
@@ -73,6 +84,7 @@ const MatchPage2: FC = () => {
     const isMobile = window.innerWidth < 600;
 
     useEffect(() => {
+
         console.log('changeMatch');
         const myCards: Dictionary<Card[] | []> = {};
         myCards[CASTLE_ZONE] = deckDefault?.cards as Card[];
@@ -85,8 +97,10 @@ const MatchPage2: FC = () => {
         myCards[SUPPORT_ZONE] = [];
         myCards[GOLDS_PAID_ZONE] = [];
         myCards[UNPAID_GOLD_ZONE] = [];
-        myCards[AUXILIARY_ZONE] = [];
-        dispatch(changeMatch(myCards));        
+        myCards[AUXILIARY_ZONE] = [];    
+
+        dispatch(changeMatch(myCards));   
+
     }, [dispatch, deckDefault?.cards]);
 
     useEffect(() => {
@@ -107,12 +121,12 @@ const MatchPage2: FC = () => {
                 console.log('changing...');
                 socket?.emit('changing', {
                     match,
-                    opponentId
+                    matchId
                 });
             }
         }        
 
-    }, [socket, match, matchId, opponentId, emmitChange]);
+    }, [socket, match, matchId,  emmitChange]);
 
     useEffect(() => {
         
@@ -131,7 +145,6 @@ const MatchPage2: FC = () => {
         });
         
     }, [socket, dispatch]);
-    
 
     useEffect(() => {
 
@@ -147,7 +160,23 @@ const MatchPage2: FC = () => {
             dispatch(openModalViewHandOpponent());
         });
 
-    }, [socket, dispatch]);    
+    }, [socket, dispatch]);
+
+    useEffect(() => {
+
+        socket?.on('opponent-leave-match', () => {
+            console.log('Oponente abandonó la partida');
+            message.success('Tu oponente abandonó la partida, eres el ganador!')
+        });
+
+    }, [socket])
+
+    useEffect(() => {
+        if (match && match[CASTLE_ZONE] && match[CASTLE_ZONE].length === 0) {
+            console.log('Perdiste');
+            // Emitir al otro jugador que ganó
+        }
+    }, [match]);
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
@@ -394,7 +423,7 @@ const MatchPage2: FC = () => {
                             
                         </Col>
                         <Col span={4}>
-
+                            <Button type="default" onClick={ leaveMatch }>Salir</Button>
                         </Col>
                     </Row>
                 </DndProvider>

@@ -26,7 +26,7 @@ import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
-import { matchSetOpponentId, resetMatch } from '../store/match/action';
+import { matchSetMatchId, matchSetOpponentId, resetMatch } from '../store/match/action';
 import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
@@ -69,15 +69,17 @@ export const SingedRouter: FC = () => {
     };
 
     const acceptInvitation = useCallback((key: string, opponentId: string) => {
+
         socket?.emit('create-match', {
             opponentId
         });
 
         notification.close(key);
+
     }, [socket]);
 
-    const openNotification = useCallback( (username: string, id: string) => {
-        const key = `open${Date.now()}`;
+    const openNotification = useCallback( (key: string, username: string, id: string) => {
+        
         const btn = (
             <Button type="primary" size="small" onClick={() => {
                 acceptInvitation(key, id);            
@@ -96,19 +98,28 @@ export const SingedRouter: FC = () => {
             duration: 10,
             className: 'centered',
         });
+
     }, [acceptInvitation]);
     
     useEffect(() => {
         socket?.on('send-notification', (payload: any) => {
-            openNotification(payload.from, payload.id);
+            openNotification(payload.key, payload.from, payload.id);
+        });
+    }, [socket, openNotification]);
+
+    useEffect(() => {
+        socket?.on('cancele-notification', (payload: any) => {
+            notification.close(payload.key)
         });
     }, [socket, openNotification]);
 
     useEffect(() => {
         socket?.on('go-match', (payload: any) => {
+
             dispatch(matchSetOpponentId(payload.opponentId));
-            // destruir modal
-            history.replace('/match')
+            dispatch(matchSetMatchId(payload.matchId));
+            history.replace('/match');
+
         });
     }, [socket, openNotification, dispatch, history]);
 

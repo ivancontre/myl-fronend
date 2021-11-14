@@ -36,7 +36,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const { socket } = useContext(SocketContext);
 
-    const { match, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
+    const { match,matchId, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
     const { id: myUserId} = useSelector((state: RootState) => state.auth);
 
     const [visiblePopover, setVisiblePopover] = useState(false);
@@ -133,7 +133,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 dispatch(changOpponenteMatch(newMatchOpponent));
                 socket?.emit('update-match-opponent', {
                     match: newMatchOpponent,
-                    opponentId
+                    matchId
                 });
 
             } else {
@@ -142,7 +142,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 dispatch(changOpponenteMatch(newCardsOpponent));
                 socket?.emit('update-match-opponent', {
                     match: newCardsOpponent,
-                    opponentId
+                    matchId
                 });
 
             }
@@ -235,7 +235,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                 socket?.emit('update-match-opponent', {
                     match: newMatchOpponent,
-                    opponentId
+                    matchId
                 });
 
             } else {
@@ -245,7 +245,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                 socket?.emit('update-match-opponent', {
                     match: newCardsOpponent,
-                    opponentId
+                    matchId
                 });
 
             }
@@ -410,7 +410,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         console.log('Action:', `Mostrando Castillo al oponente`);
 
         socket?.emit('show-clastle-to-opponent', {
-            opponentId
+            matchId
         });
         handleVisibleChangePopever(false);   
     };
@@ -557,7 +557,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             dispatch(changOpponenteMatch(newMatchOpponent));
             socket?.emit('update-match-opponent', {
                 match: newMatchOpponent,
-                opponentId
+                matchId
             });
 
         } else { // ------------------- Enviando cartas robadas -------------------------------------
@@ -638,7 +638,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
             socket?.emit('update-match-opponent', {
                 match: newMatchOpponent,
-                opponentId
+                matchId
             });
         }
 

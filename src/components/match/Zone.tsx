@@ -27,7 +27,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
 
     const [visiblePopover, setVisiblePopover] = useState(false);
 
-    const { match, opponentId } = useSelector((state: RootState) => state.match);
+    const { match, matchId } = useSelector((state: RootState) => state.match);
 
     const { socket } = useContext(SocketContext);
 
@@ -157,7 +157,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
         }
 
         socket?.emit('show-hand-to-opponent', {
-            opponentId
+            matchId
         });
         setVisiblePopover(false);
     };

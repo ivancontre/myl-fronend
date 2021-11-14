@@ -13,11 +13,11 @@ interface TakeControlOpponentCardModalProps {
     index: number;
 };
 
-const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE } = ZONE_NAMES;
+const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, EXILE_ZONE } = ZONE_NAMES;
 
 const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zone, index}) => {
 
-    const { match, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
+    const { match, opponentMatch, opponentId, matchId } = useSelector((state: RootState) => state.match);
     const { modalOpenTakeControlOpponentCard } = useSelector((state: RootState) => state.uiModal);
     const [optionSelect, setOptionSelect] = useState('');
     const dispatch = useDispatch();
@@ -54,7 +54,7 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
 
         socket?.emit('update-match-opponent', {
             match: newOpponentMatch,
-            opponentId
+            matchId
         });
 
     };
@@ -81,7 +81,8 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
                 <Select.Option key={ DEFENSE_ZONE } value={ DEFENSE_ZONE }>{ DEFENSE_ZONE }</Select.Option>
                 <Select.Option key={ ATTACK_ZONE } value={ ATTACK_ZONE }>{ ATTACK_ZONE }</Select.Option>
                 <Select.Option key={ GOLDS_PAID_ZONE } value={ GOLDS_PAID_ZONE }>{ GOLDS_PAID_ZONE }</Select.Option>  
-                <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>  
+                <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>
+                <Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option> 
                     
             </Select>
         </Modal>

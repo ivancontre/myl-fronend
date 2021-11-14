@@ -1,5 +1,6 @@
 import { Alert, Button, Input, Modal, Space, Table, Tag } from 'antd';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react'
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
 import { useLocation } from 'react-router';
@@ -39,6 +40,7 @@ const Play: FC = () => {
     }, [dispatch]);
 
     useEffect(() => {
+
         if (decks.length === 0) { 
             dispatch(startLoadDeck());
         }
@@ -117,20 +119,32 @@ const Play: FC = () => {
         ),
     });
 
+    const cancelInvitation = (opponentId: string, key: string) => {
+        clearInterval(timer);
+
+        socket?.emit('cancele-invitation', {
+            opponentId,
+            key
+        });
+    };
+
     let timer: any;
     
-    const countDown = (username: string) => {
+    const countDown = (username: string, opponentId: string, key: string) => {
         let secondsToGo = 10;
         const modal = Modal.info({
             title: 'Esperando confirmación',
             content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
             okButtonProps: { hidden: true },
+            closable: false,
+            onCancel: () => cancelInvitation(opponentId, key)
         });
         
         timer = setInterval(() => {
             secondsToGo -= 1;
             modal.update({
                 content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
+                closable: false
             });
         }, 1000);
 
@@ -146,7 +160,6 @@ const Play: FC = () => {
     useEffect(() => {
         socket?.on('go-match', (payload: any) => {
             Modal.destroyAll();
-            // destruir modal
         });
 
         return () => {
@@ -156,13 +169,14 @@ const Play: FC = () => {
     }, [socket, timer]);
 
     const invite = (opponentId: string, username: string) => {
-
+        const key = uuid();
 
         socket?.emit('invite', {
-            opponentId
+            opponentId,
+            key
         });
         
-        countDown(username);
+        countDown(username, opponentId, key);
     };
 
     const columns: ColumnsType<User> = [
