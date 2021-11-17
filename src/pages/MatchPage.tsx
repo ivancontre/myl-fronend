@@ -85,11 +85,6 @@ const MatchPage2: FC = () => {
             okText: 'Sí',
             cancelText: 'No',
             onOk() {
-                /*socket?.emit('leave-match', {
-                    matchId,
-                    opponentId
-                });*/ 
-                
                 window.location.replace(window.location.origin + '/play');
             },
             onCancel() {
@@ -140,9 +135,7 @@ const MatchPage2: FC = () => {
 
     const leaveMutualMatch = () => {
         socket?.emit('request-leave-mutual-match', {
-            matchId,
-            winningUserId: opponentId,
-            losingUserId: myUserId
+            matchId
         });
 
         setVisiblePopover(false);

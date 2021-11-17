@@ -10,7 +10,6 @@ import {
 } from '@ant-design/icons';
 
 import Play from '../components/signed/user/Play';
-//import MatchPage from '../pages/MatchPage';
 
 import '../css/signed.css'
 import Cards from '../components/signed/admin/Cards';
@@ -30,7 +29,7 @@ import { matchSetMatchId, matchSetOpponentId, resetMatch } from '../store/match/
 import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
-import MatchPage2 from '../pages/MatchPage2';
+import MatchPage from '../pages/MatchPage';
 import { RootState } from '../store';
 const { Content, Sider } = Layout;
 
@@ -92,7 +91,7 @@ export const SingedRouter: FC = () => {
         notification.open({
             message: 'Nueva invitación',
             description:
-              `El usuario ${username.toUpperCase()} te está invitando a jugar`,
+              `El usuario ${username} te está invitando a jugar`,
             btn,
             key,
             onClose: close,
@@ -192,7 +191,7 @@ export const SingedRouter: FC = () => {
                         <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 24 }} >
                             <Switch>
 
-                                <Route exact path="/match" component={ MatchPage2 } />
+                                <Route exact path="/match" component={ MatchPage } />
 
                                 <Route exact path="/play" component={ Play } />
 
