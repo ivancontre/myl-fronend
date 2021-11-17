@@ -14,6 +14,7 @@ import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
 
 const Play: FC = () => {
+    
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
@@ -22,7 +23,7 @@ const Play: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { activeUsers } = useSelector((state: RootState) => state.match);
+    const { activeUsers } = useSelector((state: RootState) => state.play);
     const { decks } = useSelector((state: RootState) => state.decks);   
 
     const [searchText, setSearchText] = useState('');
@@ -136,15 +137,13 @@ const Play: FC = () => {
             title: 'Esperando confirmación',
             content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
             okButtonProps: { hidden: true },
-            closable: false,
-            onCancel: () => cancelInvitation(opponentId, key)
+            onCancel: () => cancelInvitation(opponentId, key),
         });
         
         timer = setInterval(() => {
             secondsToGo -= 1;
             modal.update({
                 content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
-                closable: false
             });
         }, 1000);
 

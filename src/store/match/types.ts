@@ -3,7 +3,6 @@ import { Card } from '../card/types';
 
 export const change = '[match] change';
 export const changeOpponent = '[match] change opponent';
-export const setActiveUsers = '[match] set active users';
 export const setMatchId = '[match] set matchId';
 export const setOpponentId = '[match] set opponentId';
 export const resetMatchValues = '[match] reset match';
@@ -21,7 +20,6 @@ export type MatchState = {
     emmitChange: boolean;
     opponentMatch: Dictionary<Card[] | []>;
     opponentId: string | null;
-    activeUsers: User[];
     viewCardsOrigin: Card[];
     viewCardsDestiny: Card[];
     amountCardsView: number;
@@ -47,11 +45,6 @@ type ChangeAction = {
 type MatchChangeOpponentAction = {
     type: typeof changeOpponent;
     payload: Dictionary<Card[] | []>;
-};
-
-type MatchSetActiveUsers = {
-    type: typeof setActiveUsers;
-    payload: User[]
 };
 
 type MatchSetId = {
@@ -95,7 +88,6 @@ type MatchSetWeapon = {
 
 export type MatchActionTypes = 
 ChangeAction | 
-MatchSetActiveUsers | 
 MatchSetId | 
 MatchReset | 
 MatchSetOpponentId | 

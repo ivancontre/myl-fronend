@@ -18,6 +18,8 @@ import { DeckState } from './deck/types';
 import { deckReducer } from './deck/reducer';
 import { uiModalReducer } from './ui-modal/reducer';
 import { UiModalState } from './ui-modal/types';
+import { PlayState } from './play/types';
+import { playReducer } from './play/reducer';
 
 declare global {
     interface Window {
@@ -29,23 +31,25 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 
 export interface RootState {
     match: MatchState;
-    //socket: SocketState;
+    play: PlayState
     auth: AuthState;
     description: DescriptionState,
     cards: CardState,
     spin: SpinState,
     decks: DeckState,
-    uiModal: UiModalState
+    uiModal: UiModalState,
+    
 }
 
 export const rootReducer = combineReducers({
     match: matchReducer,
+    play: playReducer,
     auth: authReducer,
     description: descriptionReducer,
     cards: cardReducer,
     spin: spinReducer,
     decks: deckReducer,
-    uiModal: uiModalReducer 
+    uiModal: uiModalReducer    
 });
 
 export const store = createStore(

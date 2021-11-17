@@ -21,7 +21,7 @@ import NewCard from '../components/signed/admin/NewCard';
 import Users from '../components/signed/admin/Users';
 import { useHistory, useLocation } from 'react-router';
 import '../css/signed.css'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
@@ -31,16 +31,17 @@ import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
 import MatchPage2 from '../pages/MatchPage2';
+import { RootState } from '../store';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
+    const { matchId, opponentId } = useSelector((state: RootState) => state.match);
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
-    console.log(path)
 
     const dispatch = useDispatch();
 
@@ -102,18 +103,23 @@ export const SingedRouter: FC = () => {
     }, [acceptInvitation]);
     
     useEffect(() => {
+
         socket?.on('send-notification', (payload: any) => {
             openNotification(payload.key, payload.from, payload.id);
         });
+
     }, [socket, openNotification]);
 
     useEffect(() => {
+
         socket?.on('cancele-notification', (payload: any) => {
-            notification.close(payload.key)
+            notification.close(payload.key);
         });
-    }, [socket, openNotification]);
+
+    }, [socket]);
 
     useEffect(() => {
+
         socket?.on('go-match', (payload: any) => {
 
             dispatch(matchSetOpponentId(payload.opponentId));
@@ -121,6 +127,7 @@ export const SingedRouter: FC = () => {
             history.replace('/match');
 
         });
+
     }, [socket, openNotification, dispatch, history]);
 
     return (

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    HashRouter as Router,
+    BrowserRouter as Router,
     Switch,
     Redirect
 } from 'react-router-dom';

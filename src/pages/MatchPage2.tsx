@@ -1,11 +1,13 @@
-import React, { FC, useCallback, useContext, useEffect } from 'react'
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Button, Col, message, Row } from 'antd';
+import { Col, Popover, Modal, Row, Button } from 'antd';
+
+import { MenuOutlined } from '@ant-design/icons';
 
 
 import CardComponent from '../components/match/CardComponent';
@@ -25,7 +27,10 @@ import SelectXcardsModal from '../components/modals/SelectXcardsModal';
 import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
-import { shuffle } from '../helpers/shuffle';
+
+import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+
+const { confirm } = Modal;
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -41,6 +46,17 @@ const MatchPage2: FC = () => {
     const { match, emmitChange, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { id: myUserId } = useSelector((state: RootState) => state.auth);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
+    const history = useHistory();
+   
+    const [visiblePopover, setVisiblePopover] = useState(false);
+    
+    useEffect(() => {
+
+        if (!matchId) {
+            history.replace('/play');
+        }
+
+    }, [matchId, history]);
 
     const { 
             modalOpenThrowXcards, 
@@ -61,13 +77,92 @@ const MatchPage2: FC = () => {
 
     const { online, socket } = useContext(SocketContext);
 
-    const leaveMatch = () => {
-        socket?.emit('leave-match', {
+    const openLeaveMatchModal = () => {
+        confirm({
+            title: '¿Seguro que quieres abandonar la partida?',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Si abandonas la partida perderás y tu oponente será el ganador',
+            okText: 'Sí',
+            cancelText: 'No',
+            onOk() {
+                /*socket?.emit('leave-match', {
+                    matchId,
+                    opponentId
+                });*/ 
+                
+                window.location.replace(window.location.origin + '/play');
+            },
+            onCancel() {
+                setVisiblePopover(false); 
+            },
+        });
+    };
+
+    const leaveMutualMatchModal = useCallback(
+        () => {
+            confirm({
+                title: 'Tu oponente solicita abandono mutuo',
+                icon: <ExclamationCircleOutlined />,
+                content: 'Tu oponente te está solicitando que abandonen mutuamente la partida. Ambos, no sumarán victorias ni derrotas. ',
+                okText: 'Aprobar',
+                cancelText: 'Rechazar',
+                onOk() {
+                    socket?.emit('approve-request-leave-mutual-match', {
+                        matchId,
+                        opponentId
+                    });
+
+                    window.location.replace(window.location.origin + '/play');
+                    
+                },
+                onCancel() {
+                    socket?.emit('reject-request-leave-mutual-match', {
+                        matchId,
+                        opponentId
+                    }); 
+                },
+            });
+        }, [matchId, opponentId, socket],
+    );
+
+    const finishMutualMatchModal = useCallback(
+        (text: string) => {
+
+            confirm({
+                title: text,
+                icon: <ExclamationCircleOutlined />,
+                cancelButtonProps: { hidden: true },
+                okButtonProps: { hidden: true }
+            });
+
+        }, [],
+    );
+
+    const leaveMutualMatch = () => {
+        socket?.emit('request-leave-mutual-match', {
             matchId,
             winningUserId: opponentId,
             losingUserId: myUserId
         });
+
+        setVisiblePopover(false);
     };
+
+    const youWinModal = useCallback(
+        (text: string) => {
+            confirm({
+                title: text,
+                icon: <CheckCircleOutlined />,
+                content: 'Has ganado la partida, felicitaciones!',
+                cancelButtonProps: { hidden: true },
+                okText: 'Aceptar',
+                onOk() {
+                    window.location.replace(window.location.origin + '/play');
+                    
+                },
+            });
+        }, [],
+    );
 
     const opponentCards: Dictionary<Card[] | []> = {};
     opponentCards[CASTLE_ZONE] = [];
@@ -85,27 +180,29 @@ const MatchPage2: FC = () => {
 
     useEffect(() => {
 
-        console.log('changeMatch');
-        const myCards: Dictionary<Card[] | []> = {};
-        myCards[CASTLE_ZONE] = deckDefault?.cards as Card[];
-        myCards[HAND_ZONE] = [];
-        myCards[ATTACK_ZONE] = [];
-        myCards[CEMETERY_ZONE] = [];
-        myCards[EXILE_ZONE] = [];
-        myCards[DEFENSE_ZONE] = [];
-        myCards[REMOVAL_ZONE] = [];    
-        myCards[SUPPORT_ZONE] = [];
-        myCards[GOLDS_PAID_ZONE] = [];
-        myCards[UNPAID_GOLD_ZONE] = [];
-        myCards[AUXILIARY_ZONE] = [];    
+        if (deckDefault?.cards.length) {
+            console.log('changeMatch');
+            const myCards: Dictionary<Card[] | []> = {};
+            myCards[CASTLE_ZONE] = deckDefault?.cards as Card[];
+            myCards[HAND_ZONE] = [];
+            myCards[ATTACK_ZONE] = [];
+            myCards[CEMETERY_ZONE] = [];
+            myCards[EXILE_ZONE] = [];
+            myCards[DEFENSE_ZONE] = [];
+            myCards[REMOVAL_ZONE] = [];    
+            myCards[SUPPORT_ZONE] = [];
+            myCards[GOLDS_PAID_ZONE] = [];
+            myCards[UNPAID_GOLD_ZONE] = [];
+            myCards[AUXILIARY_ZONE] = [];    
 
-        dispatch(changeMatch(myCards));   
+            dispatch(changeMatch(myCards));  
+        }
 
     }, [dispatch, deckDefault?.cards]);
 
     useEffect(() => {
         
-        if (match && emmitChange) {
+        if (match && emmitChange && matchId) {
             if (
                 (match[CASTLE_ZONE] && match[CASTLE_ZONE].length) ||
                 (match[DEFENSE_ZONE] && match[DEFENSE_ZONE].length) ||
@@ -126,12 +223,11 @@ const MatchPage2: FC = () => {
             }
         }        
 
-    }, [socket, match, matchId,  emmitChange]);
+    }, [socket, match, matchId, emmitChange]);
 
     useEffect(() => {
         
         socket?.on('changing-opponent', (data) => {
-            console.log('changing-opponent');
             dispatch(changOpponenteMatch(data));
         });
         
@@ -164,19 +260,71 @@ const MatchPage2: FC = () => {
 
     useEffect(() => {
 
-        socket?.on('opponent-leave-match', () => {
-            console.log('Oponente abandonó la partida');
-            message.success('Tu oponente abandonó la partida, eres el ganador!')
+        socket?.on('opponent-leave-match', () => {                  
+            youWinModal('Tu oponente abandonó la partida');
         });
 
-    }, [socket])
+    }, [socket, youWinModal, dispatch, history]);
+
+    useEffect(() => {
+
+        socket?.on('request-opponent-leave-mutual-match', () => {                  
+            leaveMutualMatchModal();
+        });
+
+    }, [socket, leaveMutualMatchModal]);
+
+    useEffect(() => {
+
+        socket?.on('finish-approve-leave-mutual-match', () => {   
+            
+            finishMutualMatchModal('Tu oponente aprobó el abandono mutuo. Saliendo...');
+
+            setTimeout(() => {
+                window.location.replace(window.location.origin + '/play');
+            }, 2000);            
+            
+        });
+
+    }, [socket, finishMutualMatchModal]);
+
+    useEffect(() => {
+
+        socket?.on('finish-reject-leave-mutual-match', () => {                  
+            finishMutualMatchModal('Tu oponente rechazó el abandono mutuo');
+
+            setTimeout(() => {
+                Modal.destroyAll();
+            }, 2000);
+
+        });
+
+    }, [socket, finishMutualMatchModal]);
 
     useEffect(() => {
         if (match && match[CASTLE_ZONE] && match[CASTLE_ZONE].length === 0) {
-            console.log('Perdiste');
-            // Emitir al otro jugador que ganó
+
+            socket?.emit('i-missed-match', {
+                opponentId,
+                matchId
+            });
+
+            finishMutualMatchModal('Perdiste :(');
+
+            setTimeout(() => {
+                window.location.replace(window.location.origin + '/play');
+            }, 2000);
         }
-    }, [match]);
+    }, [match, socket]);
+
+    useEffect(() => {
+
+        socket?.on('you-win-match', () => {
+            youWinModal('Ganaste :)');
+        });
+
+    }, [socket, finishMutualMatchModal]);
+
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
@@ -226,6 +374,17 @@ const MatchPage2: FC = () => {
                     card={ card }
                 />
             ));
+    };
+
+    const content = (
+        <div>
+            <Button type="link" onClick={ openLeaveMatchModal }>Abandonar</Button><br/>
+            <Button type="link" onClick={ leaveMutualMatch }>Abandono mutuo</Button>
+        </div>        
+    );
+
+    const handleVisibleChangePopever = (visible: boolean) => {
+        setVisiblePopover(visible); 
     };
 
     return (
@@ -423,7 +582,21 @@ const MatchPage2: FC = () => {
                             
                         </Col>
                         <Col span={4}>
-                            <Button type="default" onClick={ leaveMatch }>Salir</Button>
+                            <Row gutter={[8, 8]}>
+                                <Col style={{width: '100%', textAlign: 'right'}} >
+                                    {/* <Dropdown.Button size="small" style={{backgroundColor: 'black', width: '100%'}} overlay={menu}>Menú</Dropdown.Button> */}
+                                    <Popover
+                                        placement="leftTop" 
+                                        trigger="click"
+                                        content={ content }
+                                        visible={ visiblePopover }
+                                        onVisibleChange={ handleVisibleChangePopever }
+                                    >
+                                        <Button  style={{backgroundColor: 'black'}} icon={<MenuOutlined />} />
+                                    </Popover>
+                                </Col> 
+                            </Row>
+                            
                         </Col>
                     </Row>
                 </DndProvider>

@@ -5,7 +5,7 @@ import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
 import useSocket from '../hooks/useSocket';
 import { RootState } from '../store';
 import { User } from '../store/auth/types';
-import { matchSetActiveUsers } from '../store/match/action';
+import { playSetActiveUsers } from '../store/play/action';
 
 // Todo lo que se defina aquí estará disponible en sus hijos
 
@@ -48,7 +48,7 @@ export const SocketProvider = ({ children }: Props) => {
 
             const newUsers = users.filter(user => user.id !== id)
 
-            dispatch(matchSetActiveUsers(newUsers));
+            dispatch(playSetActiveUsers(newUsers));
         });
     }, [socket, dispatch, id])
 
