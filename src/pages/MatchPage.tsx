@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
-import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
@@ -44,7 +43,6 @@ const MatchPage2: FC = () => {
     const dispatch = useDispatch();
 
     const { match, emmitChange, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
-    const { id: myUserId } = useSelector((state: RootState) => state.auth);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const history = useHistory();
    
@@ -75,7 +73,7 @@ const MatchPage2: FC = () => {
             modalOpenAssignWeapon
     } = useSelector((state: RootState) => state.uiModal);
 
-    const { online, socket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
 
     const openLeaveMatchModal = () => {
         confirm({
@@ -308,7 +306,7 @@ const MatchPage2: FC = () => {
                 window.location.replace(window.location.origin + '/play');
             }, 2000);
         }
-    }, [match, socket]);
+    }, [match, socket, matchId, opponentId, finishMutualMatchModal]);
 
     useEffect(() => {
 
@@ -316,30 +314,30 @@ const MatchPage2: FC = () => {
             youWinModal('Ganaste :)');
         });
 
-    }, [socket, finishMutualMatchModal]);
+    }, [socket, finishMutualMatchModal, youWinModal]);
 
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
             return; // para evitar que ordene
-            const dragCard = match[zoneName][dragIndex];
+            // const dragCard = match[zoneName][dragIndex];
 
-            if (!match[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
-                return;
-            }
+            // if (!match[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
+            //     return;
+            // }
 
-            let newCards = {...match};
+            // let newCards = {...match};
 
-            newCards[zoneName] = update(match[zoneName], {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, dragCard],
-                ],
-            });
+            // newCards[zoneName] = update(match[zoneName], {
+            //     $splice: [
+            //         [dragIndex, 1],
+            //         [hoverIndex, 0, dragCard],
+            //     ],
+            // });
 
-            dispatch(changeMatch(newCards));
+            // dispatch(changeMatch(newCards));
         },
-        [match, dispatch],
+        [],
     );
 
     const returnItemsForZone = (zoneName: string) => {

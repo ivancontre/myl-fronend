@@ -17,7 +17,7 @@ const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GO
 
 const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zone, index}) => {
 
-    const { match, opponentMatch, opponentId, matchId } = useSelector((state: RootState) => state.match);
+    const { match, opponentMatch, matchId } = useSelector((state: RootState) => state.match);
     const { modalOpenTakeControlOpponentCard } = useSelector((state: RootState) => state.uiModal);
     const [optionSelect, setOptionSelect] = useState('');
     const dispatch = useDispatch();

@@ -1,4 +1,3 @@
-import { User } from "../auth/types";
 import { Card } from "../card/types";
 import { change, MatchActionTypes, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon } from "./types";
 

@@ -1,4 +1,3 @@
-import { User } from '../auth/types';
 import { Card } from '../card/types';
 
 export const change = '[match] change';
