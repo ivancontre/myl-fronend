@@ -20,7 +20,7 @@ const Users: FC = () => {
 
     }, [dispatch]);
 
-
+    console.log('hola')
     return (
         <div>
             Users

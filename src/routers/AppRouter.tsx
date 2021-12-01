@@ -41,7 +41,7 @@ const AppRouter: FC = () => {
     if (checking) {
         return (
             <Result
-                title="Validando usuario..."
+                title="Validando sesión..."
             />
         )
     }

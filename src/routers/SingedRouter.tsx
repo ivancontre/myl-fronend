@@ -207,7 +207,7 @@ export const SingedRouter: FC = () => {
                         <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 24 }} >
                             <Switch>
 
-                                <Route exact path="/match" component={ MatchPage } />
+                                <Route exact strict path="/match" component={ MatchPage } />
 
                                 <Route exact path="/play" component={ Play } />
 

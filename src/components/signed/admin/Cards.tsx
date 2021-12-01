@@ -126,7 +126,15 @@ const Cards: FC = () => {
             key: 'num',
             width: '5%',
             ...getColumnSearchProps('num', ref0),
-            sorter: (a: any, b: any) => a.num - b.num,
+            sorter: (a: any, b: any) => {
+                let newA = a.num;
+                let newB = b.num;
+
+                if (!a.num) newA = 0;
+                if (!b.num) newB = 0;
+
+                return newA - newB;
+            },
             sortDirections: ['descend', 'ascend'],
         },
         {

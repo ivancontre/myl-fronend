@@ -30,6 +30,7 @@ export type RaceCard = {
 export type EditionCard = {
     id: string;
     name: string;
+    races: RaceCard[];
 };
 
 type TypeLoadAction = {

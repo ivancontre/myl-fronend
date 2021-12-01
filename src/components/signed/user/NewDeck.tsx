@@ -34,6 +34,7 @@ const NewDeck: FC = () => {
     const [typeId, setTypeId] = useState<string>('all');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
     const dispatch = useDispatch();
 
@@ -162,7 +163,7 @@ const NewDeck: FC = () => {
 
     const isMobile = window.innerWidth < 600;
 
-    const handleOnFinish = (values: any) => {
+    const handleOnFinish = async (values: any) => {
 
         if (selectMyCards.length < 50) {
             message.warning('El mazo debe tener 50 cartas')
@@ -174,11 +175,15 @@ const NewDeck: FC = () => {
             cards: selectMyCards.map(card => card.id)
         };
 
+        setLoadingSave(true);
+
         if (!deckUpdating) {
-            dispatch(startAddNewDeck(body));
+            await dispatch(startAddNewDeck(body));
         } else {
-            dispatch(startUpdateDeck(deckUpdating.id as string, body));
-        }   
+            await dispatch(startUpdateDeck(deckUpdating.id as string, body));
+        }
+
+        setLoadingSave(false);
 
     }
 
@@ -296,7 +301,7 @@ const NewDeck: FC = () => {
                                     </Form.Item>
 
                                     <Form.Item >
-                                        <Button htmlType="submit" type="primary">{params.id ? 'Actualizar' : 'Guardar'}</Button>
+                                        <Button loading={ loadingSave } htmlType="submit" type="primary">{params.id ? 'Actualizar' : 'Guardar'}</Button>
                                     </Form.Item>
 
                                 </Form>

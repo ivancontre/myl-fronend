@@ -20,9 +20,10 @@ import useHideMenu from '../../../hooks/useHideMenu';
 import { RootState } from '../../../store';
 import { startAddNewCard, loadCardUpdating, startUpdateCard, startLoadCard } from '../../../store/card/action';
 import { useHistory, useParams } from 'react-router';
-import { hideSpin, showSpin } from '../../../store/spinUI/action';
+
 
 import '../../../css/new-card.css'
+import { RaceCard } from '../../../store/description/types';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -49,8 +50,10 @@ const NewCard = () => {
     const [disableMachinery, setDisableMachinery] = useState<boolean>(true);
     const [fileList, setFileList] = useState<any>();
     const [editionName, setEditionName] = useState<string>('');
+    const [races, setRaces] = useState<RaceCard[]>([]);
+    const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
-    const { types, frecuencies, editions, races } = useSelector((state: RootState) => state.description);    
+    const { types, frecuencies, editions } = useSelector((state: RootState) => state.description);    
 
     const history = useHistory();
 
@@ -142,6 +145,8 @@ const NewCard = () => {
             formData.append('isUnique', 'false');
         }
 
+        setLoadingSave(true)
+
         if (!cardUpdating) {      
             
             if (!fileList) {
@@ -150,9 +155,7 @@ const NewCard = () => {
             }
 
             formData.append('files[]', fileList);
-            dispatch(showSpin('Guardando carta...'));
             await dispatch(startAddNewCard(formData));
-            dispatch(hideSpin());
             history.replace(`/cards`);
 
         } else {
@@ -170,11 +173,11 @@ const NewCard = () => {
     
             }
 
-            dispatch(showSpin('Guardando carta...'));
-            await dispatch(startUpdateCard(cardUpdating?.id as string, formData));          
-            dispatch(hideSpin());
+            await dispatch(startUpdateCard(cardUpdating?.id as string, formData));
               
         }
+
+        setLoadingSave(false);
 
     };
 
@@ -202,11 +205,15 @@ const NewCard = () => {
         for (const edition of editions) {
             if (edition.id === editionId) {
                 setEditionName(edition.name);
+                setRaces(edition.races);
                 break;
             }
         }
 
-        if (cardUpdating) {
+        setFields([{name: 'race', value: ''}])
+
+        /*if (cardUpdating) {
+            console.log(fields)
             setFields((fields) => {
                 return fields.map(item => {
                     if (item.name === 'race') {
@@ -221,17 +228,19 @@ const NewCard = () => {
             });
         } else {
             setFields([{name: 'race', value: ''}])
-        }
+        }*/
+
+        
     };
 
-    const getEditionName = (editionId: string) => {
+    // const getEditionName = (editionId: string) => {
 
-        for (const edition of editions) {
-            if (edition.id === editionId) {
-                return edition.name;
-            }
-        }
-    }
+    //     for (const edition of editions) {
+    //         if (edition.id === editionId) {
+    //             return edition.name;
+    //         }
+    //     }
+    // }
 
     const back = () => {
         if (cardUpdating?.id && !cardUpdating?.img) {
@@ -374,10 +383,9 @@ const NewCard = () => {
                             style={{ width: "100%" }}                        
                         >
                         {
-
-                            races.length > 0 && races.filter(race => getEditionName(race.edition) === editionName).map(race => (
+                            editionName && races.map(race => (
                                 <Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>
-                            ))
+                            ))                            
                         }                    
                         
                     </Select>
@@ -425,7 +433,7 @@ const NewCard = () => {
                 </Form.Item>
             
                 <Form.Item className="label-custom" label="." >
-                    <Button type="primary"  htmlType="submit" className="login-form-button" block>
+                    <Button loading={ loadingSave } type="primary"  htmlType="submit" className="login-form-button" block>
                         {!cardUpdating ? 'Crear' : 'Modificar' }
                     </Button>
                 </Form.Item>
