@@ -32,8 +32,17 @@ export const startLogin = (username: string, password: string) => {
                 }));
 
             } else {
-                message.warn(respJson.msg);
-                console.log(respJson.msg);
+                if (respJson.errors) {
+
+                    for (let [, value] of Object.entries(respJson.errors)) {
+                        message.warn((value as any).msg);
+                        console.log((value as any).msg);
+                    }
+
+                } else {
+                    message.warn(respJson.msg);
+                    console.log(respJson.msg);
+                }
             }
             
         } catch (error) {
