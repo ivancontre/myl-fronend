@@ -44,7 +44,7 @@ const AppRouter: FC = () => {
 
     return (
         
-        <Router basename={process.env.PUBLIC_URL}>
+        <Router>
             <div>
                 <Switch>
                     <PublicRouter isAuthenticated={ logged } component={ AuthRouter } path="/auth" />
