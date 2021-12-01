@@ -1,3 +1,5 @@
+import { Deck } from "../deck/types";
+
 export const authLogin = '[auth] Login';
 export const authStartRegister = '[auth] Start Register';
 export const authChecking = '[auth] Cheking login state';
@@ -17,21 +19,13 @@ export type User = {
     playing?: boolean;
     victories?: number;
     defeats?: number;
+    decks?: Deck[]
 };
 
 export type AuthState = Partial<User> & {
     checking: boolean;
     logged: boolean;
-}
-
-
-/*(User & {
-    checking: boolean;
-    logged: boolean;
-}) | {
-    checking: boolean;
-    logged: boolean;
-};*/
+};
 
 type AuthLogin = {    
     type: typeof authLogin,

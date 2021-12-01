@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { AuthActionTypes,
@@ -6,11 +7,11 @@ import { AuthActionTypes,
         User 
 } from "./types";
 
-export const startLogin = (email: string, password: string) => {
+export const startLogin = (username: string, password: string) => {
     return async (dispatch: Dispatch<AuthActionTypes>) => {
 
         try {
-            const resp = await runFetch('api/auth/login', { email, password }, 'POST');
+            const resp = await runFetch('api/auth/login', { username, password }, 'POST');
             const respJson = await resp.json();
 
             if (resp.status === 200) {
@@ -31,10 +32,12 @@ export const startLogin = (email: string, password: string) => {
                 }));
 
             } else {
-                console.log(respJson.msg)
+                message.warn(respJson.msg);
+                console.log(respJson.msg);
             }
             
         } catch (error) {
+            message.error('Error interno, consulte con el administrador')
             console.log(error);
         }
         
@@ -66,9 +69,21 @@ export const startRegister = (name: string, lastname: string, email: string, use
                 }));
 
             } else {
-                console.log(respJson.msg)
+                if (respJson.errors) {
+
+                    for (let [, value] of Object.entries(respJson.errors)) {
+                        message.warn((value as any).msg);
+                        console.log((value as any).msg);
+                    }
+
+                } else {
+                    message.warn(respJson.msg);
+                    console.log(respJson.msg);
+                }
+                
             }
         } catch (error) {
+            message.error('Error interno, consulte con el administrador')
             console.log(error);
         }
         

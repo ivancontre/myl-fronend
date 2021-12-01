@@ -33,6 +33,7 @@ const NewDeck: FC = () => {
 
     const [typeId, setTypeId] = useState<string>('all');
     const [fields, setFields] = useState<FieldData[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const dispatch = useDispatch();
 
@@ -65,8 +66,10 @@ const NewDeck: FC = () => {
 
     }, [deckUpdating]);
 
-    const handleSelectEdition = (editionId: string) => {
-        dispatch(startLoadCardByEdition(editionId));
+    const handleSelectEdition = async (editionId: string) => {
+        setLoading(true);
+        await dispatch(startLoadCardByEdition(editionId));
+        setLoading(false)
     };
 
     const handleSelectType = (typeId: string) => {
@@ -109,6 +112,20 @@ const NewDeck: FC = () => {
             if (typeId !== 'all') {
                 return cardsByEdition
                     .filter(card => card.type === typeId)
+                    .map((card, index) => {
+                        return (
+                            <NewDeckCard 
+                                key={ index }
+                                id={ card.id }
+                                index={ index }
+                                moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                zone={ zoneName }
+                                card={ card }
+                            />
+                        )                        
+                    });
+            } else {
+                return cardsByEdition
                     .map((card, index) => {
                         return (
                             <NewDeckCard 
@@ -220,7 +237,8 @@ const NewDeck: FC = () => {
                     <Select
                         placeholder="Seleccione un tipo"
                         style={{ width: "100%" }}
-                        onChange={ handleSelectType }                    
+                        onChange={ handleSelectType }
+                        disabled={ !cardsByEdition.length } 
                     >
                         <Select.Option key="0" value="all">Todos</Select.Option>
                         {
@@ -249,11 +267,13 @@ const NewDeck: FC = () => {
                         <Tag color="green">{`Talismanes: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>                        
                         <Tag color="green">{`Tótems: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
                         <Divider />
-                        
-                            <NewDeckCardContainer title="cards" >
-                                { cardsByEdition && returnItemsForZone('cards')}
-                            </NewDeckCardContainer>
-                        
+
+                        {
+                            loading ? (<span>Cargando cartas...</span>) : (<NewDeckCardContainer title="cards" >
+                                { cardsByEdition && returnItemsForZone('cards') }
+                            </NewDeckCardContainer>)
+                        }
+
                     </Col>
 
                     <Col className="container-deck" offset={ 1 } span={ 9 }>

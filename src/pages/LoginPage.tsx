@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Form, Input, Button,  Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -10,11 +10,13 @@ const { Title } = Typography;
 const LoginPage: FC = () => {
 
     const dispatch = useDispatch();
+    const [loading, setloading] = useState(false);
 
-    const onFinish = (values: any) => {
-
+    const onFinish = async (values: any) => {
+        setloading(true);
         const { email, password } = values;
-        dispatch(startLogin(email, password));
+        await dispatch(startLogin(email, password));
+        setloading(false);
 
     };
 
@@ -32,20 +34,17 @@ const LoginPage: FC = () => {
             >
                 <Form.Item
                     name="email"
-                    rules={[{
-                            type: 'email',
-                            message: 'Correo inválido',
-                        },                        
+                    rules={[                
                         { 
                             required: true, 
-                            message: 'Por favor ingresa tu correo' 
+                            message: 'Por favor ingresa tu usuario' 
                         }
                     ]}
                 >
                     <Input 
                         type="text" 
                         prefix={<UserOutlined className="site-form-item-icon" />} 
-                        placeholder="Correo" 
+                        placeholder="Usuario" 
                     />
                 </Form.Item>
         
@@ -57,7 +56,7 @@ const LoginPage: FC = () => {
                         }
                     ]}
                 >
-                    <Input
+                    <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
                         placeholder="Contraseña"
@@ -72,7 +71,7 @@ const LoginPage: FC = () => {
                 </Form.Item> */}
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button" block>
+                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block>
                         Ingresar
                     </Button>
                     O 

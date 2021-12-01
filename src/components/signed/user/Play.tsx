@@ -269,6 +269,7 @@ const Play: FC = () => {
                  columns={ columns } 
                  dataSource={ activeUsers } 
                  style={{ paddingTop: 10 }}
+                 loading={ activeUsers.length > 0 ? false : true }
              />
         </>
     )

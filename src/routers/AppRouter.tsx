@@ -1,3 +1,4 @@
+import { Result } from 'antd';
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -38,7 +39,11 @@ const AppRouter: FC = () => {
 
 
     if (checking) {
-        return (<h1>Espere...</h1>)
+        return (
+            <Result
+                title="Validando usuario..."
+            />
+        )
     }
 
 

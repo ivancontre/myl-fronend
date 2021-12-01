@@ -171,6 +171,7 @@ const Decks: FC = () => {
                 columns={ columns } 
                 dataSource={ decks } 
                 style={{ paddingTop: 10 }}
+                loading={ decks.length > 0 ? false : true }
             />
             
         </>

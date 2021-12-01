@@ -20,7 +20,7 @@ import NewCard from '../components/signed/admin/NewCard';
 import Users from '../components/signed/admin/Users';
 import { useHistory, useLocation } from 'react-router';
 import '../css/signed.css'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
@@ -30,6 +30,7 @@ import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
 import MatchPage from '../pages/MatchPage';
+import { RootState } from '../store';
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
@@ -44,7 +45,7 @@ export const SingedRouter: FC = () => {
 
     const history = useHistory();
 
-    //const { role } = useSelector((state: RootState) => state.auth);
+    const { role } = useSelector((state: RootState) => state.auth);
     
     const handleLogout = () => {
         dispatch(startLogout());
@@ -154,16 +155,27 @@ export const SingedRouter: FC = () => {
                                 Mis Mazos
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="cards" icon={<AppstoreOutlined />}>
-                            <Link to="/cards">
-                                Cartas
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="users" icon={<UserOutlined />}>
-                            <Link to="/users">
-                                Usuarios
-                            </Link>
-                        </Menu.Item>
+
+                        {
+                            role === 'ADMIN_ROLE' && (
+                                <Menu.Item key="cards" icon={<AppstoreOutlined />}>
+                                    <Link to="/cards">
+                                        Cartas
+                                    </Link>
+                                </Menu.Item>
+                            )
+                        }
+
+                        {
+                            role === 'ADMIN_ROLE' && (
+                                <Menu.Item key="users" icon={<UserOutlined />}>
+                                    <Link to="/users">
+                                        Usuarios
+                                    </Link>
+                                </Menu.Item>
+                            )
+                        }
+                        
 
                         <Menu.Item className="btn-logout" key="logout" icon={<LogoutOutlined />}>
 
@@ -193,22 +205,39 @@ export const SingedRouter: FC = () => {
 
                                 <Route exact path="/play" component={ Play } />
 
-
-                                <Route exact path="/cards" component={ Cards } />
-
-                                <Route exact path="/cards/new" component={ NewCard } />
-
-                                <Route exact path="/cards/:id/edit" component={ NewCard } />
-
-
                                 <Route exact path="/decks" component={ Decks } />
-
+                                
                                 <Route exact path="/decks/new" component={ NewDeck } />
+                                
 
                                 <Route exact path="/decks/:id/edit" component={ NewDeck } />
 
+                                {
+                                    role === 'ADMIN_ROLE' && (
+                                        <Route exact path="/cards" component={ Cards } />
+                                        
+                                    )
+                                }
 
-                                <Route exact path="/users" component={ Users } />
+                                {
+                                    role === 'ADMIN_ROLE' && (
+                                        <Route exact path="/cards/new" component={ NewCard } />
+                                        
+                                    )
+                                }
+
+                                {
+                                    role === 'ADMIN_ROLE' && (
+                                        <Route exact path="/cards/:id/edit" component={ NewCard } />
+                                        
+                                    )
+                                }
+
+                                {
+                                    role === 'ADMIN_ROLE' && (
+                                        <Route exact path="/users" component={ Users } />
+                                    )
+                                }
 
                                 <Redirect to="/play" />
 

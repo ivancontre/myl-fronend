@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button,  Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -9,16 +9,14 @@ const { Title } = Typography;
 const RegisterPage = () => {
 
     const dispatch = useDispatch();
+    const [loading, setloading] = useState(false);
 
-    const onFinish = (values: any) => {
-
-        console.log(values)
-        
+    const onFinish = async (values: any) => {
+        setloading(true);
         const { email, password, name, lastname, username } = values;
-
         
-        dispatch(startRegister(name, lastname, email, username, password));
-
+        await dispatch(startRegister(name, lastname, email, username, password));
+        setloading(false);
 
     };
 
@@ -34,6 +32,7 @@ const RegisterPage = () => {
                 autoComplete="off"
             >
                 <Form.Item
+                    
                     name="name"
                     rules={[{
                             required: true,
@@ -50,6 +49,7 @@ const RegisterPage = () => {
                 </Form.Item>
 
                 <Form.Item
+                    
                     name="lastname"
                     rules={[{
                             required: true,
@@ -66,7 +66,7 @@ const RegisterPage = () => {
                 </Form.Item>
 
                 <Form.Item
-
+                    
                     name="email"
                     rules={[{
                             type: 'email',
@@ -85,6 +85,7 @@ const RegisterPage = () => {
                 </Form.Item>
 
                 <Form.Item
+                    
                     name="username"
                     rules={[{
                             required: true,
@@ -103,8 +104,9 @@ const RegisterPage = () => {
                 <Form.Item
                     name="password"
                     rules={[{ required: true, message: 'Por favor ingresa tu contraseña' }]}
+                    hasFeedback
                 >
-                    <Input
+                    <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
                         placeholder="Contraseña"
@@ -113,9 +115,23 @@ const RegisterPage = () => {
 
                 <Form.Item
                     name="password2"
-                    rules={[{ required: true, message: 'Por favor ingresa tu contraseña' }]}
+                    rules={[
+                        {
+                          required: true,
+                          message: 'Por favor confirma tu contraseña!',
+                        },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('Las 2 contraseñas deben ser iguales'));
+                          },
+                        }),
+                    ]}
+                    hasFeedback
                 >
-                    <Input
+                    <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
                         placeholder="Repetir contraseña"
@@ -130,7 +146,7 @@ const RegisterPage = () => {
                 </Form.Item> */}
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button" block>
+                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block>
                         Aceptar
                     </Button>
                     O 

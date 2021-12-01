@@ -224,6 +224,7 @@ const Cards: FC = () => {
                 columns={ columns } 
                 dataSource={ cards } 
                 style={{ paddingTop: 10 }}
+                loading={ cards.length > 0 ? false : true }
             />
         </>
     )
