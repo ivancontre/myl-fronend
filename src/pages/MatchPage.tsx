@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Popover, Modal, Row, Button, Result } from 'antd';
+import { Col, Popover, Modal, Row, Button } from 'antd';
 
 import { MenuOutlined } from '@ant-design/icons';
 
