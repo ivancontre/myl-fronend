@@ -4,6 +4,7 @@ export const change = '[match] change';
 export const changeOpponent = '[match] change opponent';
 export const setMatchId = '[match] set matchId';
 export const setOpponentId = '[match] set opponentId';
+export const setOpponentUsername = '[match] set opponentUsername';
 export const resetMatchValues = '[match] reset match';
 export const setCardsOrigin = '[match] set view cards origin';
 export const setCardsDestiny = '[match] set view cards destiny';
@@ -19,6 +20,7 @@ export type MatchState = {
     emmitChange: boolean;
     opponentMatch: Dictionary<Card[] | []>;
     opponentId: string | null;
+    opponentUsername: string | null;
     viewCardsOrigin: Card[];
     viewCardsDestiny: Card[];
     amountCardsView: number;
@@ -56,6 +58,11 @@ type MatchSetOpponentId = {
     payload: string
 };
 
+type MatchSetOpponentUsername = {
+    type: typeof setOpponentUsername,
+    payload: string
+};
+
 type MatchReset = {
     type: typeof resetMatchValues
 };
@@ -89,7 +96,8 @@ export type MatchActionTypes =
 ChangeAction | 
 MatchSetId | 
 MatchReset | 
-MatchSetOpponentId | 
+MatchSetOpponentId |
+MatchSetOpponentUsername |
 MatchChangeOpponentAction | 
 MatchViewCardsOrigin | 
 MatchViewCardsDestiny | 

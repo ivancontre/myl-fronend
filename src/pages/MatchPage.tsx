@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Popover, Modal, Row, Button } from 'antd';
+import { Col, Popover, Modal, Row, Button, Result } from 'antd';
 
 import { MenuOutlined } from '@ant-design/icons';
 
@@ -42,7 +42,7 @@ const MatchPage2: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, emmitChange, matchId, opponentMatch, opponentId, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
+    const { match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const history = useHistory();
    
@@ -583,7 +583,7 @@ const MatchPage2: FC = () => {
                                         visible={ visiblePopover }
                                         onVisibleChange={ handleVisibleChangePopever }
                                     >
-                                        <Button  style={{backgroundColor: 'black'}} icon={<MenuOutlined />} />
+                                        <Button  style={{backgroundColor: 'black'}} icon={<MenuOutlined />} >{`vs ${opponentUsername}`}</Button>
                                     </Popover>
                                 </Col> 
                             </Row>

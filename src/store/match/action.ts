@@ -1,5 +1,5 @@
 import { Card } from "../card/types";
-import { change, MatchActionTypes, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon } from "./types";
+import { change, MatchActionTypes, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon, setOpponentUsername } from "./types";
 
 export const changeMatch = (match: Dictionary<Card[] | []>, emmitChange: boolean = true): MatchActionTypes => {
     return {
@@ -31,6 +31,14 @@ export const matchSetOpponentId = (id: string) => {
         payload: id
     }
 };
+
+export const matchSetOpponentUsername = (username: string) => {
+    return {
+        type: setOpponentUsername,
+        payload: username
+    }
+};
+
 
 export const resetMatch = () => {
     return {

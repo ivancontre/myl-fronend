@@ -26,7 +26,7 @@ import { startLogout } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
-import { matchSetMatchId, matchSetOpponentId, resetMatch } from '../store/match/action';
+import { matchSetMatchId, matchSetOpponentId, matchSetOpponentUsername, resetMatch } from '../store/match/action';
 import { resetDeckUpdating } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
@@ -122,6 +122,7 @@ export const SingedRouter: FC = () => {
         socket?.on('go-match', (payload: any) => {
 
             dispatch(matchSetOpponentId(payload.opponentId));
+            dispatch(matchSetOpponentUsername(payload.opponentUsername));
             dispatch(matchSetMatchId(payload.matchId));
             history.replace('/match');
 
