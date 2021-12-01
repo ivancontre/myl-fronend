@@ -6,7 +6,8 @@ import {
     UserOutlined,
     PlayCircleOutlined,
     AppstoreOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    TeamOutlined
 } from '@ant-design/icons';
 
 import Play from '../components/signed/user/Play';
@@ -45,7 +46,7 @@ export const SingedRouter: FC = () => {
 
     const history = useHistory();
 
-    const { role } = useSelector((state: RootState) => state.auth);
+    const { role, username } = useSelector((state: RootState) => state.auth);
     
     const handleLogout = () => {
         dispatch(startLogout());
@@ -141,8 +142,12 @@ export const SingedRouter: FC = () => {
                         left: 0,
                     }}
                 >
-                    <div className="logo" />
+                    <div className="logo" > </div>
                     <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
+
+                        <Menu.Item key="play2" icon={<UserOutlined />}>
+                            { `Bienvenido ${username}`}
+                        </Menu.Item>
 
                         <Menu.Item key="play" icon={<PlayCircleOutlined />}>
                             <Link to="/play">
@@ -168,7 +173,7 @@ export const SingedRouter: FC = () => {
 
                         {
                             role === 'ADMIN_ROLE' && (
-                                <Menu.Item key="users" icon={<UserOutlined />}>
+                                <Menu.Item key="users" icon={<TeamOutlined />}>
                                     <Link to="/users">
                                         Usuarios
                                     </Link>
