@@ -100,12 +100,34 @@ export const SingedRouter: FC = () => {
         });
 
     }, [acceptInvitation]);
+
+    const initMatch = useCallback( (payload: any) => {
+            dispatch(matchSetOpponentId(payload.opponentId));
+            dispatch(matchSetOpponentUsername(payload.opponentUsername));
+            dispatch(matchSetMatchId(payload.matchId));
+            history.replace('/match');
+    }, [dispatch, history]);
+
+    useEffect(() => {
+        socket?.on('go-match', (payload: any) => {
+            initMatch(payload);
+        });
+
+        return () => {
+            socket?.off('go-match');
+        }
+
+    }, [socket, initMatch]);
     
     useEffect(() => {
 
         socket?.on('send-notification', (payload: any) => {
             openNotification(payload.key, payload.from, payload.id);
         });
+
+        return () => {
+            socket?.off('send-notification');
+        }
 
     }, [socket, openNotification]);
 
@@ -115,20 +137,11 @@ export const SingedRouter: FC = () => {
             notification.close(payload.key);
         });
 
+        return () => {
+            socket?.off('cancele-notification');
+        }
+
     }, [socket]);
-
-    useEffect(() => {
-
-        socket?.on('go-match', (payload: any) => {
-
-            dispatch(matchSetOpponentId(payload.opponentId));
-            dispatch(matchSetOpponentUsername(payload.opponentUsername));
-            dispatch(matchSetMatchId(payload.matchId));
-            history.replace('/match');
-
-        });
-
-    }, [socket, openNotification, dispatch, history]);
 
     return (
             <Layout  style={{ height: '100vh' }}>

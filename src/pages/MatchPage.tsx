@@ -15,7 +15,7 @@ import { SocketContext } from '../context/SocketContext';
 import useHideMenu from '../hooks/useHideMenu';
 import { RootState } from '../store';
 import { Card } from '../store/card/types';
-import { changeMatch, changOpponenteMatch } from '../store/match/action';
+import { changeMatch, changOpponenteMatch, resetMatch } from '../store/match/action';
 import Zone from '../components/match/Zone';
 import { Dictionary } from '../store/match/types';
 
@@ -75,6 +75,15 @@ const MatchPage2: FC = () => {
 
     const { socket } = useContext(SocketContext);
 
+    const finishMatch = useCallback(() => {
+
+        Modal.destroyAll();
+        dispatch(resetMatch());
+        history.replace('/play');
+
+        }, [history, dispatch],
+    );
+
     const openLeaveMatchModal = () => {
         confirm({
             title: '¿Seguro que quieres abandonar la partida?',
@@ -83,13 +92,19 @@ const MatchPage2: FC = () => {
             okText: 'Sí',
             cancelText: 'No',
             onOk() {
-                window.location.replace(window.location.origin + '/play');
+                socket?.emit('close-match', {
+                    matchId,
+                    opponentId
+                });
+                finishMatch();
             },
             onCancel() {
                 setVisiblePopover(false); 
             },
         });
     };
+
+    
 
     const leaveMutualMatchModal = useCallback(
         () => {
@@ -104,8 +119,7 @@ const MatchPage2: FC = () => {
                         matchId,
                         opponentId
                     });
-
-                    window.location.replace(window.location.origin + '/play');
+                    finishMatch();
                     
                 },
                 onCancel() {
@@ -115,7 +129,7 @@ const MatchPage2: FC = () => {
                     }); 
                 },
             });
-        }, [matchId, opponentId, socket],
+        }, [matchId, opponentId, socket, finishMatch],
     );
 
     const finishMutualMatchModal = useCallback(
@@ -148,11 +162,11 @@ const MatchPage2: FC = () => {
                 cancelButtonProps: { hidden: true },
                 okText: 'Aceptar',
                 onOk() {
-                    window.location.replace(window.location.origin + '/play');
+                    finishMatch();
                     
                 },
             });
-        }, [],
+        }, [finishMatch],
     );
 
     const opponentCards: Dictionary<Card[] | []> = {};
@@ -221,6 +235,10 @@ const MatchPage2: FC = () => {
         socket?.on('changing-opponent', (data) => {
             dispatch(changOpponenteMatch(data));
         });
+
+        return () => {
+            socket?.off('changing-opponent');
+        }
         
     }, [socket, dispatch]);
 
@@ -230,6 +248,10 @@ const MatchPage2: FC = () => {
             console.log('updating-match-opponent');
             dispatch(changeMatch(data));
         });
+
+        return () => {
+            socket?.off('updating-match-opponent');
+        }
         
     }, [socket, dispatch]);
 
@@ -239,6 +261,10 @@ const MatchPage2: FC = () => {
             dispatch(openModalViewCastleOpponent());
         });
 
+        return () => {
+            socket?.off('showing-clastle-to-opponent');
+        }
+
     }, [socket, dispatch]);
 
     useEffect(() => {
@@ -246,6 +272,10 @@ const MatchPage2: FC = () => {
         socket?.on('showing-hand-to-opponent', () => {
             dispatch(openModalViewHandOpponent());
         });
+
+        return () => {
+            socket?.off('showing-hand-to-opponent');
+        }
 
     }, [socket, dispatch]);
 
@@ -255,6 +285,10 @@ const MatchPage2: FC = () => {
             youWinModal('Tu oponente abandonó la partida');
         });
 
+        return () => {
+            socket?.off('opponent-leave-match');
+        }
+
     }, [socket, youWinModal, dispatch, history]);
 
     useEffect(() => {
@@ -262,6 +296,10 @@ const MatchPage2: FC = () => {
         socket?.on('request-opponent-leave-mutual-match', () => {                  
             leaveMutualMatchModal();
         });
+
+        return () => {
+            socket?.off('request-opponent-leave-mutual-match');
+        }
 
     }, [socket, leaveMutualMatchModal]);
 
@@ -272,12 +310,16 @@ const MatchPage2: FC = () => {
             finishMutualMatchModal('Tu oponente aprobó el abandono mutuo. Saliendo...');
 
             setTimeout(() => {
-                window.location.replace(window.location.origin + '/play');
+                finishMatch();
             }, 2000);            
             
         });
 
-    }, [socket, finishMutualMatchModal]);
+        return () => {
+            socket?.off('finish-approve-leave-mutual-match');
+        }
+
+    }, [socket, finishMutualMatchModal, finishMatch]);
 
     useEffect(() => {
 
@@ -289,6 +331,10 @@ const MatchPage2: FC = () => {
             }, 2000);
 
         });
+
+        return () => {
+            socket?.off('finish-reject-leave-mutual-match');
+        }
 
     }, [socket, finishMutualMatchModal]);
 
@@ -303,16 +349,20 @@ const MatchPage2: FC = () => {
             finishMutualMatchModal('Perdiste :(');
 
             setTimeout(() => {
-                window.location.replace(window.location.origin + '/play');
+                finishMatch();
             }, 2000);
         }
-    }, [match, socket, matchId, opponentId, finishMutualMatchModal]);
+    }, [match, socket, matchId, opponentId, finishMutualMatchModal, finishMatch]);
 
     useEffect(() => {
 
         socket?.on('you-win-match', () => {
             youWinModal('Ganaste :)');
         });
+
+        return () => {
+            socket?.off('you-win-match');
+        }
 
     }, [socket, finishMutualMatchModal, youWinModal]);
 

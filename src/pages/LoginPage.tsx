@@ -17,9 +17,7 @@ const LoginPage: FC = () => {
         const { email, password } = values;
         await dispatch(startLogin(email, password));
         setloading(false);
-
     };
-
 
     return (
         <>
