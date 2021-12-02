@@ -161,7 +161,11 @@ const NewDeck: FC = () => {
         return type?.name;
     };
 
-    const isMobile = window.innerWidth < 600;
+    const isTouchDevice = () => {
+        return (('ontouchstart' in window) ||
+           (navigator.maxTouchPoints > 0) ||
+           ((navigator as any).msMaxTouchPoints > 0));
+    };
 
     const handleOnFinish = async (values: any) => {
 
@@ -263,7 +267,7 @@ const NewDeck: FC = () => {
 
                        
             <Row style={{ paddingTop: 10 }}>
-                <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+                <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
                     <Col className="container-deck" span={ 14 } >
                     <Tag color="gold">{`Total: ${cardsByEdition.length}`}</Tag>
                         <Tag color="green">{`Aliados: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>

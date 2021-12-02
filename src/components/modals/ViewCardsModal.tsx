@@ -127,7 +127,11 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         [viewCardsOrigin, viewCardsDestiny, dispatch],
     );
 
-    const isMobile = window.innerWidth < 600;
+    const isTouchDevice = () => {
+        return (('ontouchstart' in window) ||
+           (navigator.maxTouchPoints > 0) ||
+           ((navigator as any).msMaxTouchPoints > 0));
+    };
 
     const returnItemsForZoneOrigin = (zoneName: string, isOrigin: boolean) => {
         return viewCardsOrigin
@@ -186,7 +190,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         >
             <Alert style={{marginBottom: 20}} message={`Las cartas que están a la derecha son las primeras en el ${zone}`} type="info" showIcon/>
 
-            <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+            <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
                 <CardComponentContainer title={ zone } >
                     { viewCardsOrigin && returnItemsForZoneOrigin(zone, true)}
                 </CardComponentContainer>
