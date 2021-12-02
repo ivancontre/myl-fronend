@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message, Input, Form, Popconfirm } from 'antd';
 import { useHistory, useParams } from 'react-router';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -15,6 +15,8 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import '../../../css/new-deck.css';
 import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
 import { Card } from '../../../store/card/types';
+import useHideMenu from '../../../hooks/useHideMenu';
+import { MenuContext } from '../../../context/MenuContext';
 
 interface FieldData {
     name: string | number | (string | number)[];
@@ -26,6 +28,9 @@ const NewDeck: FC = () => {
     const history = useHistory();
 
     const params: any = useParams();
+
+    const { collapsedMenu } = useContext(MenuContext);
+    useHideMenu(false, 'decks', collapsedMenu);
 
     const { cardsByEdition, selectMyCards } = useSelector((state: RootState) => state.cards);
     const { types, editions } = useSelector((state: RootState) => state.description); 

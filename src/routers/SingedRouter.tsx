@@ -36,7 +36,7 @@ const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
 
-    const { hiddenMenu, selectedOption } = useContext(MenuContext);
+    const { hiddenMenu, selectedOption, collapsedOn, collapsedOff, collapsedMenu } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
 
     const { pathname } = useLocation();
@@ -143,12 +143,27 @@ export const SingedRouter: FC = () => {
 
     }, [socket]);
 
+    const onCollapse = (collapsed: boolean) => {
+        collapsed ? collapsedOn(): collapsedOff();
+    };
+
+    const getWidthContent = () => {
+
+        if (hiddenMenu) return 0;
+
+        if (collapsedMenu) return 85;
+
+        return 200;
+    };
+
     return (
             <Layout  style={{ height: '100vh' }}>
                 <Sider
                     hidden={ hiddenMenu }
-                    collapsedWidth="0" 
-                    breakpoint="md"
+                    collapsible
+                    collapsed={ collapsedMenu }
+                    onCollapse={ onCollapse }
+                    breakpoint="xs"
                     style={{
                         overflow: 'auto',
                         height: '100vh',
@@ -156,10 +171,10 @@ export const SingedRouter: FC = () => {
                         left: 0,
                     }}
                 >
-                    <div className="logo" > </div>
+
                     <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="play2" icon={<UserOutlined />}>
+                        <Menu.Item key="profile" icon={<UserOutlined />}>
                             { `Bienvenido ${username}`}
                         </Menu.Item>
 
@@ -214,10 +229,10 @@ export const SingedRouter: FC = () => {
                     
                 </Sider>
                 
-                <Layout className="site-layout" style={{ marginLeft: !hiddenMenu ? 200 : 0 }} >
+                <Layout className="site-layout" style={{ marginLeft: getWidthContent() }} >
 
-                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >
-                        <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 24 }} >
+                    <Content style={{ margin: '20px', overflow: 'initial' }} >
+                        <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 20 }} >
                             <Switch>
 
                                 <Route exact strict path="/match" component={ MatchPage } />

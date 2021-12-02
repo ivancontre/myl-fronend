@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useContext, useEffect, useRef, useState } from 'react'
 import { Button, Input, Popconfirm, Space, Tooltip, Table } from 'antd';
 
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -12,6 +12,7 @@ import { Card } from '../../../store/card/types';
 import { RootState } from '../../../store';
 import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
 import { Link } from 'react-router-dom';
+import { MenuContext } from '../../../context/MenuContext';
 
 const Cards: FC = () => {
 
@@ -20,7 +21,9 @@ const Cards: FC = () => {
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
-    useHideMenu(false, path);
+    const { collapsedMenu } = useContext(MenuContext);
+
+    useHideMenu(false, path, collapsedMenu);
 
     const dispatch = useDispatch();
 

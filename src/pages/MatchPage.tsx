@@ -184,7 +184,7 @@ const MatchPage2: FC = () => {
         return (('ontouchstart' in window) ||
            (navigator.maxTouchPoints > 0) ||
            ((navigator as any).msMaxTouchPoints > 0));
-    }
+    };
 
     useEffect(() => {
 
@@ -364,6 +364,11 @@ const MatchPage2: FC = () => {
 
         socket?.on('you-win-match', () => {
             youWinModal('Ganaste :)');
+
+            setTimeout(() => {
+                finishMatch();
+            }, 2000);
+            
         });
 
         return () => {

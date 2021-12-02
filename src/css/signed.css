@@ -11,8 +11,16 @@
 ul.menu-myl{
     height: 100vh;
     position: relative;
- }
- ul.menu-myl > :last-child{
-    position: absolute;
-    bottom: 0;
+    overflow-y: hidden;
+}
+
+
+.logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.3);
+}
+  
+.ant-layout {
+    transition: all 0.2s;
 }

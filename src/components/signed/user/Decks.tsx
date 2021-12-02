@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Button, Input, Popconfirm, Space, Tooltip, Table, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
@@ -11,13 +11,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { resetDeckUpdating, startDeleteDeck, startLoadDeck, startSetDefaultDeck } from '../../../store/deck/action';
 import { resetCardUpdating } from '../../../store/card/action';
+import { MenuContext } from '../../../context/MenuContext';
 
 const Decks: FC = () => {
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
-    useHideMenu(false, path);
+    const { collapsedMenu } = useContext(MenuContext);
+
+    useHideMenu(false, path, collapsedMenu);
 
     const history = useHistory();
 

@@ -12,6 +12,7 @@ import { User } from '../../../store/auth/types';
 import { ColumnsType } from 'antd/lib/table';
 import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
+import { MenuContext } from '../../../context/MenuContext';
 
 const Play: FC = () => {
     
@@ -19,7 +20,9 @@ const Play: FC = () => {
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
-    useHideMenu(false, path);
+    const { collapsedMenu } = useContext(MenuContext);
+
+    useHideMenu(false, path, collapsedMenu);
 
     const dispatch = useDispatch();
 
