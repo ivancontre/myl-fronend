@@ -1,5 +1,5 @@
 .zone {
-  height: 82px;
+  height: 85px;
   width: 100%;
   margin: 5px;
   border-radius: 2px;
@@ -14,13 +14,13 @@
 .title-zone {
   text-align: center;
   background-color: #780F0F;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .title-zone-opponent {
   text-align: center;
   background-color: #191313;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .content-match {
@@ -73,8 +73,7 @@ span.icon-arm {
 .button-logout {
   position: fixed;
   bottom: 0;    
-}
-  
+}  
 
 .img-180-deg {
   transform: rotate(180deg);
@@ -86,7 +85,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .view-moda-origin {
-  height: 75px;
+  height: 90px;
   margin: 5px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
@@ -97,7 +96,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
-  height: 7px;
+  height: 9px;
 }
 
 /* Track */
