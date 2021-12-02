@@ -160,13 +160,10 @@ const MatchPage2: FC = () => {
                 icon: <CheckCircleOutlined />,
                 content: 'Has ganado la partida, felicitaciones!',
                 cancelButtonProps: { hidden: true },
-                okText: 'Aceptar',
-                onOk() {
-                    finishMatch();
-                    
-                },
+                okButtonProps: { hidden: true }
+                
             });
-        }, [finishMatch],
+        }, [],
     );
 
     const opponentCards: Dictionary<Card[] | []> = {};
@@ -181,7 +178,13 @@ const MatchPage2: FC = () => {
     opponentCards[GOLDS_PAID_ZONE] = [];
     opponentCards[UNPAID_GOLD_ZONE] = [];
 
-    const isMobile = window.innerWidth < 600;
+    //const isMobile = window.innerWidth < 600;
+
+    const isTouchDevice = () => {
+        return (('ontouchstart' in window) ||
+           (navigator.maxTouchPoints > 0) ||
+           ((navigator as any).msMaxTouchPoints > 0));
+    }
 
     useEffect(() => {
 
@@ -283,13 +286,16 @@ const MatchPage2: FC = () => {
 
         socket?.on('opponent-leave-match', () => {                  
             youWinModal('Tu oponente abandonó la partida');
+            setTimeout(() => {
+                finishMatch();
+            }, 2000);
         });
 
         return () => {
             socket?.off('opponent-leave-match');
         }
 
-    }, [socket, youWinModal, dispatch, history]);
+    }, [socket, youWinModal, dispatch, history, finishMatch]);
 
     useEffect(() => {
 
@@ -454,7 +460,7 @@ const MatchPage2: FC = () => {
             { modalOpenAssignWeapon && <AssingWeaponModal /> }
 
             <div className="content-match">
-                <DndProvider backend={ isMobile ? TouchBackend : HTML5Backend } >
+                <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
                     <Row gutter={[8, 8]}>
                         <Col span={ 20 }>
                                 <Row gutter={[8, 8]}>
