@@ -368,14 +368,14 @@ const MatchPage2: FC = () => {
             setTimeout(() => {
                 finishMatch();
             }, 2000);
-            
+
         });
 
         return () => {
             socket?.off('you-win-match');
         }
 
-    }, [socket, finishMutualMatchModal, youWinModal]);
+    }, [socket, finishMutualMatchModal, youWinModal, finishMatch]);
 
 
     const moveCard = useCallback(
