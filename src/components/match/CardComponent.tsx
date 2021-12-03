@@ -16,6 +16,9 @@ import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOppon
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
+import { Message } from '../../store/chat/types';
+import { addMessageAction } from '../../store/chat/action';
+import { scrollToBottom } from '../../helpers/scrollToBottom';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -37,7 +40,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     const { socket } = useContext(SocketContext);
 
     const { match,matchId, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
-    const { id: myUserId} = useSelector((state: RootState) => state.auth);
+    const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
@@ -55,7 +58,21 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
         if (card.user === myUserId) { // Moviendo mis propias cartas
 
-            console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
+            const newMessage: Message = {
+                id: myUserId as string,
+                username: username as string,
+                text: `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`,
+                isAction: true
+            };
+
+            socket?.emit( 'personal-message', {
+                matchId,
+                message: newMessage
+            }, (data: any) => {
+                newMessage.date = data;
+                dispatch(addMessageAction(newMessage));
+                scrollToBottom('messages');
+            });
 
             if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {                
 
@@ -377,7 +394,21 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const shuffleCaslte = () => {
 
-        console.log('Action:', `Barajando Castillo`);
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Barajando Castillo`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
 
         setAnimated(true);
 
@@ -398,7 +429,21 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             return;
         }
 
-        console.log('Action:', `Obteniendo mano`);
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Robando "${ammunt}" carta(s)`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
 
         const newMatch = throwXcards(ammunt, match, CASTLE_ZONE, HAND_ZONE);
 
@@ -802,12 +847,44 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     }; 
 
     const openViewCastleModal = () => {
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo Castillo`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
         handleVisibleChangePopever(false);
         dispatch(openModalViewCastle());
     };
 
     const throwOneCard = () => {
-        console.log('Action:', `Botando carta del ${CASTLE_ZONE} al ${CEMETERY_ZONE}`);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Botando carta del ${CASTLE_ZONE} al ${CEMETERY_ZONE}`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
         const newMatch = throwXcards(1, match, CASTLE_ZONE, CEMETERY_ZONE);
         dispatch(changeMatch(newMatch));
     };

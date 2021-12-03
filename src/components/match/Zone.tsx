@@ -11,6 +11,9 @@ import { SocketContext } from '../../context/SocketContext';
 import { RootState } from '../../store';
 import { changeMatch } from '../../store/match/action';
 import { DragCard  } from '../../store/match/types';
+import { addMessageAction } from '../../store/chat/action';
+import { scrollToBottom } from '../../helpers/scrollToBottom';
+import { Message } from '../../store/chat/types';
 
 interface ZoneProps {
     children: ReactNode;
@@ -28,6 +31,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
     const [visiblePopover, setVisiblePopover] = useState(false);
 
     const { match, matchId } = useSelector((state: RootState) => state.match);
+    const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const { socket } = useContext(SocketContext);
 
@@ -136,6 +140,24 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
     };
 
     const sendToZone = (origin: string, destiny: string) => {
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Moviendo todas las cartas de "${origin}" a "${destiny}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
+
         const newMatch = { ...match };        
         if (!newMatch[origin].length) {
             message.warn(`No hay cartas en la zona de ${origin}` );
