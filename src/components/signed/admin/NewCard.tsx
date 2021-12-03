@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Form,
     Input,
@@ -24,6 +24,7 @@ import { useHistory, useParams } from 'react-router';
 
 import '../../../css/new-card.css'
 import { RaceCard } from '../../../store/description/types';
+import { MenuContext } from '../../../context/MenuContext';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -35,7 +36,9 @@ interface FieldData {
 
 const NewCard = () => {
 
-    useHideMenu(false, 'cards');
+    const { collapsedMenu } = useContext(MenuContext);
+
+    useHideMenu(false, 'cards', collapsedMenu);
 
     const params: any = useParams();
 
