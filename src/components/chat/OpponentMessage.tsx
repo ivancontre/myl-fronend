@@ -9,7 +9,7 @@ export interface OpponentMessageProps {
 const OpponentMessage: FC<OpponentMessageProps> = ({ message }) => {
 
     return (
-        <div className="content-text">
+        <div className="content-text" style={{backgroundColor: 'lemonchiffon'}}>
             <p className="message-text">
                 <span className="opponent-username">
                     { message.username + ': ' } 

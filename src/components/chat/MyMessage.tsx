@@ -9,7 +9,7 @@ export interface MyMessageProps {
 const MyMessage: FC<MyMessageProps>  = ({ message }) => {
 
     return (
-        <div className="content-text">
+        <div className="content-text" style={{backgroundColor: 'cyan'}}>
             <p className="message-text">
                 <span className="my-username">
                    { `Yo: ` }
