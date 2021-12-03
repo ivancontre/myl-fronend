@@ -17,6 +17,7 @@ import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } fro
 import { Card } from '../../../store/card/types';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { MenuContext } from '../../../context/MenuContext';
+import { isTouchDevice } from '../../../helpers/touch';
 
 interface FieldData {
     name: string | number | (string | number)[];
@@ -164,12 +165,6 @@ const NewDeck: FC = () => {
     const getNameType = (id: string) => {
         const type = types.find(card => card.id === id);
         return type?.name;
-    };
-
-    const isTouchDevice = () => {
-        return (('ontouchstart' in window) ||
-           (navigator.maxTouchPoints > 0) ||
-           ((navigator as any).msMaxTouchPoints > 0));
     };
 
     const handleOnFinish = async (values: any) => {

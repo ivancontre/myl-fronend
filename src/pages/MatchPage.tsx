@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Popover, Modal, Row, Button } from 'antd';
+import { Col, Popover, Modal, Row, Button, Divider } from 'antd';
 
 import { MenuOutlined } from '@ant-design/icons';
 
@@ -28,12 +28,15 @@ import TakeControlOpponentCardModal from '../components/modals/TakeControlOppone
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
 import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { isTouchDevice } from '../helpers/touch';
+import Chat from '../components/chat/Chat';
+import { resetChatAction } from '../store/chat/action';
 
 const { confirm } = Modal;
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
-const MatchPage2: FC = () => {
+const MatchPage: FC = () => {
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
@@ -79,6 +82,7 @@ const MatchPage2: FC = () => {
 
         Modal.destroyAll();
         dispatch(resetMatch());
+        dispatch(resetChatAction());
         history.replace('/play');
 
         }, [history, dispatch],
@@ -179,12 +183,6 @@ const MatchPage2: FC = () => {
     opponentCards[UNPAID_GOLD_ZONE] = [];
 
     //const isMobile = window.innerWidth < 600;
-
-    const isTouchDevice = () => {
-        return (('ontouchstart' in window) ||
-           (navigator.maxTouchPoints > 0) ||
-           ((navigator as any).msMaxTouchPoints > 0));
-    };
 
     useEffect(() => {
 
@@ -633,10 +631,9 @@ const MatchPage2: FC = () => {
                                 </Row>
                             
                         </Col>
-                        <Col span={4}>
-                            <Row gutter={[8, 8]}>
-                                <Col style={{width: '100%', textAlign: 'right'}} >
-                                    {/* <Dropdown.Button size="small" style={{backgroundColor: 'black', width: '100%'}} overlay={menu}>Menú</Dropdown.Button> */}
+                        <Col span={4} className="content-actions">
+                            <Row gutter={[16, 8]} justify="end">
+                                <Col>
                                     <Popover
                                         placement="leftTop" 
                                         trigger="click"
@@ -648,6 +645,24 @@ const MatchPage2: FC = () => {
                                     </Popover>
                                 </Col> 
                             </Row>
+
+                            <Divider/>
+
+                            <Row gutter={[8, 8]} justify="end" align="bottom">
+                                <Col>
+                                    Stop, Lanzar dado
+                                </Col>
+                            </Row>
+                            
+                            <Divider/>
+                            
+                            <Row gutter={[8, 8]}>
+                                <Col span={24} style={{width: '100%'}} >
+                                    <Chat />
+                                </Col>
+                            </Row>
+
+                            
                             
                         </Col>
                     </Row>
@@ -658,4 +673,4 @@ const MatchPage2: FC = () => {
     )
 }
 
-export default MatchPage2;
+export default MatchPage;

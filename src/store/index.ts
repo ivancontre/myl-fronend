@@ -20,6 +20,8 @@ import { uiModalReducer } from './ui-modal/reducer';
 import { UiModalState } from './ui-modal/types';
 import { PlayState } from './play/types';
 import { playReducer } from './play/reducer';
+import { ChatState } from './chat/types';
+import { chatReducer } from './chat/reducer';
 
 declare global {
     interface Window {
@@ -38,6 +40,7 @@ export interface RootState {
     spin: SpinState,
     decks: DeckState,
     uiModal: UiModalState,
+    chats: ChatState
     
 }
 
@@ -49,7 +52,8 @@ export const rootReducer = combineReducers({
     cards: cardReducer,
     spin: spinReducer,
     decks: deckReducer,
-    uiModal: uiModalReducer    
+    uiModal: uiModalReducer,
+    chats: chatReducer  
 });
 
 export const store = createStore(

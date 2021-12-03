@@ -14,6 +14,7 @@ import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
 import { Dictionary } from '../../store/match/types';
+import { isTouchDevice } from '../../helpers/touch';
 
 const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -126,12 +127,6 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         },
         [viewCardsOrigin, viewCardsDestiny, dispatch],
     );
-
-    const isTouchDevice = () => {
-        return (('ontouchstart' in window) ||
-           (navigator.maxTouchPoints > 0) ||
-           ((navigator as any).msMaxTouchPoints > 0));
-    };
 
     const returnItemsForZoneOrigin = (zoneName: string, isOrigin: boolean) => {
         return viewCardsOrigin

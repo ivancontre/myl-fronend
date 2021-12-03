@@ -7,7 +7,7 @@ import 'animate.css';
 
 const MyLApp: FC = () => {
     
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    //document.addEventListener('contextmenu', event => event.preventDefault());
 
     return (
             <SocketProvider>

@@ -1,0 +1,48 @@
+.form-chat {
+    position: absolute;
+    bottom: 0;
+}
+
+.messages {
+    border-radius: 2px;
+    height: 50vh;
+    overflow-y: scroll;
+    margin-bottom: 5px;
+    background-color: #d0f3d2;
+    font-size: 11px;
+    color: black;
+}
+
+/* .button-send {
+    position: absolute;
+    bottom: 0;
+} */
+
+.message-text {
+    word-wrap: break-word;
+    color: #780F0F;
+    margin-bottom: 0;
+    
+}
+
+.content-text {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.my-username {
+    font-weight: bold;
+    color: #780F0F;
+    font-size: 12px;
+}
+
+.opponent-username {
+    font-weight: bold;
+    color: black;
+    font-size: 12px;
+}
+
+.message-date {
+    font-size: 9px;
+    text-align: right;
+}
