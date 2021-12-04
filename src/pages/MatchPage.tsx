@@ -31,6 +31,7 @@ import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icon
 import { isTouchDevice } from '../helpers/touch';
 import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
+import Buttons from '../components/buttons/Buttons';
 
 const { confirm } = Modal;
 
@@ -658,7 +659,7 @@ const MatchPage: FC = () => {
 
                             <Row gutter={[8, 8]} justify="end" align="bottom">
                                 <Col>
-                                    Stop, Lanzar dado
+                                    <Buttons />
                                 </Col>
                             </Row>
                             
