@@ -28,7 +28,7 @@ const ThrowXcardsModal: FC = () => {
     const dispatch = useDispatch();
 
     const handleOkModal = () => {
-        console.log('Action:', `Botando ${amountThrowXcards} carta(s) del ${CASTLE_ZONE} a ${CEMETERY_ZONE}`);
+        
         const newMatch = throwXcards(amountThrowXcards, match, CASTLE_ZONE, CEMETERY_ZONE);
         dispatch(changeMatch(newMatch));
         dispatch(closeModalThrowXcards());
@@ -36,7 +36,7 @@ const ThrowXcardsModal: FC = () => {
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Botando ${amountThrowXcards} carta(s) del ${CASTLE_ZONE} a ${CEMETERY_ZONE}`,
+            text: `Botando "${amountThrowXcards}" carta(s) del "${CASTLE_ZONE}" a "${CEMETERY_ZONE}"`,
             isAction: true
         };
 

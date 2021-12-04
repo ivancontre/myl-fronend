@@ -467,11 +467,14 @@ const MatchPage: FC = () => {
                     <Row gutter={[8, 8]}>
                         <Col span={ 20 }>
                                 <Row gutter={[8, 8]}>
+
                                     <Col span={ 10 }> 
-                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (opponentMatch[GOLDS_PAID_ZONE] ? opponentMatch[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' isOpponent>
-                                            { opponentMatch[GOLDS_PAID_ZONE] && returnItemsForZoneOpponent(GOLDS_PAID_ZONE) }
+                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (opponentMatch[UNPAID_GOLD_ZONE] ? opponentMatch[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex ' isOpponent>
+                                            { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZoneOpponent(UNPAID_GOLD_ZONE) }
                                         </Zone>
                                     </Col>
+
+                                    
                                     <Col span={ 2 }>
                                         <Zone title={ AUXILIARY_ZONE } className='zone-flex' isOpponent >
                                             { opponentMatch[AUXILIARY_ZONE] && returnItemsForZoneOpponent(AUXILIARY_ZONE) }
@@ -485,9 +488,10 @@ const MatchPage: FC = () => {
                                 </Row> 
 
                                 <Row gutter={[8, 8]}>
+                                    
                                     <Col span={ 10 }> 
-                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (opponentMatch[UNPAID_GOLD_ZONE] ? opponentMatch[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex ' isOpponent>
-                                            { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZoneOpponent(UNPAID_GOLD_ZONE) }
+                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (opponentMatch[GOLDS_PAID_ZONE] ? opponentMatch[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' isOpponent>
+                                            { opponentMatch[GOLDS_PAID_ZONE] && returnItemsForZoneOpponent(GOLDS_PAID_ZONE) }
                                         </Zone>
                                     </Col>
 
@@ -599,11 +603,13 @@ const MatchPage: FC = () => {
 
                                 <Row gutter={[8, 8]}>
 
-                                    <Col span={ 10 }> 
-                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (match[UNPAID_GOLD_ZONE] ? match[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex' >
-                                            { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE) }
+                                <Col span={ 10 }> 
+                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (match[GOLDS_PAID_ZONE] ? match[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' >
+                                            { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE) }
                                         </Zone>
                                     </Col>
+
+                                    
                                     <Col span={ 14 }> 
                                         <Zone title={ SUPPORT_ZONE } className='zone-flex'>
                                             { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE) }
@@ -613,11 +619,13 @@ const MatchPage: FC = () => {
                                 </Row>  
 
                                 <Row gutter={[8, 8]}>
+
                                     <Col span={ 10 }> 
-                                        <Zone title={ GOLDS_PAID_ZONE + ': ' + (match[GOLDS_PAID_ZONE] ? match[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' >
-                                            { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE) }
+                                        <Zone title={ UNPAID_GOLD_ZONE + ': ' + (match[UNPAID_GOLD_ZONE] ? match[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex' >
+                                            { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE) }
                                         </Zone>
                                     </Col>
+                                    
                                     <Col span={ 2 }>
                                         <Zone title={ AUXILIARY_ZONE } className='stack'>
                                             { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE) }

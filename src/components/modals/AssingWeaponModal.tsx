@@ -7,6 +7,9 @@ import { ZONE_NAMES } from "../../constants";
 import { Card } from '../../store/card/types';
 import { changeMatch, changOpponenteMatch, setWeaponAction } from '../../store/match/action';
 import { SocketContext } from '../../context/SocketContext';
+import { addMessageAction } from '../../store/chat/action';
+import { scrollToBottom } from '../../helpers/scrollToBottom';
+import { Message } from '../../store/chat/types';
 
 const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE } = ZONE_NAMES;
 
@@ -20,6 +23,8 @@ const AssingWeaponModal: FC = () => {
     const { modalOpenAssignWeapon } = useSelector((state: RootState) => state.uiModal);
     const { match, matchId, opponentMatch, opponentId, selectedWeapon } = useSelector((state: RootState) => state.match);
     const { id } = useSelector((state: RootState) => state.auth);
+    const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
+
     const { socket } = useContext(SocketContext);
 
     const [optionZone, setOptionZone] = useState(id);
@@ -134,7 +139,26 @@ const AssingWeaponModal: FC = () => {
             newMatch[zone] = newMatch[zone].map((card: Card, index: number) => {
 
                 if (Number(i) === index) {
+
                     const arms = card.armsId ? card.armsId : [];
+
+                    const newMessage: Message = {
+                        id: myUserId as string,
+                        username: username as string,
+                        text: `Asignando arma "${selectedWeapon.name}" a mi aliado "${card.name}"`,
+                        isAction: true
+                    };
+            
+                    socket?.emit( 'personal-message', {
+                        matchId,
+                        message: newMessage
+                    }, (data: any) => {
+                        newMessage.date = data;
+                        dispatch(addMessageAction(newMessage));
+                        scrollToBottom('messages');
+                    });
+
+                    
                     return {
                         ...card,
                         armsId: [...arms, selectedWeapon.idx]
@@ -161,7 +185,25 @@ const AssingWeaponModal: FC = () => {
             newOpponentMatch[zone] = newOpponentMatch[zone].map((card: Card, index: number) => {
 
                 if (Number(i) === index) {
+
                     const arms = card.armsId ? card.armsId : [];
+
+                    const newMessage: Message = {
+                        id: myUserId as string,
+                        username: username as string,
+                        text: `Asignando arma "${selectedWeapon.name}" a aliado "${card.name}" oponente`,
+                        isAction: true
+                    };
+            
+                    socket?.emit( 'personal-message', {
+                        matchId,
+                        message: newMessage
+                    }, (data: any) => {
+                        newMessage.date = data;
+                        dispatch(addMessageAction(newMessage));
+                        scrollToBottom('messages');
+                    });
+
                     return {
                         ...card,
                         armsId: [...arms, selectedWeapon.idx]

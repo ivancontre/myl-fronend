@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
 import { Alert, Modal, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
@@ -15,6 +15,10 @@ import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
 import { Dictionary } from '../../store/match/types';
 import { isTouchDevice } from '../../helpers/touch';
+import { SocketContext } from '../../context/SocketContext';
+import { addMessageAction } from '../../store/chat/action';
+import { scrollToBottom } from '../../helpers/scrollToBottom';
+import { Message } from '../../store/chat/types';
 
 const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -28,7 +32,11 @@ interface ViewCastleModalProps {
 
 const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRead, isOpponent }) => {
 
-    const { viewCardsOrigin, viewCardsDestiny } = useSelector((state: RootState) => state.match);
+    const { viewCardsOrigin, viewCardsDestiny, matchId } = useSelector((state: RootState) => state.match);
+
+    const { socket } = useContext(SocketContext);
+
+    const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const dispatch = useDispatch();
 
@@ -76,28 +84,137 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
     const handleCancelModal = () => {
         resetModal();
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Dejó de ver "${zone}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
     };
 
     const handleOkModal = () => {
 
         if (onlyRead) {
-            resetModal();            
+            resetModal();
+            
+            const newMessage: Message = {
+                id: myUserId as string,
+                username: username as string,
+                text: `Dejó de ver "${zone}" oponente`,
+                isAction: true
+            };
+    
+            socket?.emit( 'personal-message', {
+                matchId,
+                message: newMessage
+            }, (data: any) => {
+                newMessage.date = data;
+                dispatch(addMessageAction(newMessage));
+                scrollToBottom('messages');
+            });
+
             return;
         }
 
-
-        // si isOpponent en true, entonces al opponentMatch se le quita 
-
         const newMatch = { ...origin };
 
-        newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];
+        if (!amount) {
+
+            if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone])) {
+                
+                const newMessage: Message = {
+                    id: myUserId as string,
+                    username: username as string,
+                    text: `Ordenando "${zone}"`,
+                    isAction: true
+                };
+        
+                socket?.emit( 'personal-message', {
+                    matchId,
+                    message: newMessage
+                }, (data: any) => {
+                    newMessage.date = data;
+                    dispatch(addMessageAction(newMessage));
+                    scrollToBottom('messages');
+                });
+            }
+
+        } else {
+
+            if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone].slice(-amount))) {
+                
+                const newMessage: Message = {
+                    id: myUserId as string,
+                    username: username as string,
+                    text: `Ordenando "${zone}"`,
+                    isAction: true
+                };
+        
+                socket?.emit( 'personal-message', {
+                    matchId,
+                    message: newMessage
+                }, (data: any) => {
+                    newMessage.date = data;
+                    dispatch(addMessageAction(newMessage));
+                    scrollToBottom('messages');
+                });
+            }
+        }
+
+        newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];        
         
         if (optionSelect && viewCardsDestiny.length) {
             newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
-        } 
+
+            const newMessage: Message = {
+                id: myUserId as string,
+                username: username as string,
+                text: `Moviendo "${viewCardsDestiny.length}" carta(s) a "${optionSelect}"`,
+                isAction: true
+            };
+    
+            socket?.emit( 'personal-message', {
+                matchId,
+                message: newMessage
+            }, (data: any) => {
+                newMessage.date = data;
+                dispatch(addMessageAction(newMessage));
+                scrollToBottom('messages');
+            });
+
+        }
 
         dispatch(changeMatch(newMatch));
         resetModal();
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Dejó de ver "${zone}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
+        
     };
 
     const moveCard = useCallback(

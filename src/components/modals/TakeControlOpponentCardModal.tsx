@@ -7,6 +7,9 @@ import { ZONE_NAMES } from "../../constants";
 import { Card } from '../../store/card/types';
 import { changeMatch, changOpponenteMatch } from '../../store/match/action';
 import { SocketContext } from '../../context/SocketContext';
+import { Message } from '../../store/chat/types';
+import { addMessageAction } from '../../store/chat/action';
+import { scrollToBottom } from '../../helpers/scrollToBottom';
 
 interface TakeControlOpponentCardModalProps {
     zone: string;
@@ -19,6 +22,8 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
 
     const { match, opponentMatch, matchId } = useSelector((state: RootState) => state.match);
     const { modalOpenTakeControlOpponentCard } = useSelector((state: RootState) => state.uiModal);
+    const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
+
     const [optionSelect, setOptionSelect] = useState('');
     const dispatch = useDispatch();
 
@@ -55,6 +60,22 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
         socket?.emit('update-match-opponent', {
             match: newOpponentMatch,
             matchId
+        });
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Tomando control de "${card.name}" oponente y enviándola a mi "${optionSelect}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
         });
 
     };

@@ -200,13 +200,13 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
 
                         {
                             (!isOpponent && title.split(":")[0] === UNPAID_GOLD_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
                             )
                         }
 
                         {
                             (!isOpponent && title.split(":")[0] === GOLDS_PAID_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white',height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white',height: 15, width: 15, float: 'right' }} />
                             )
                         }
 

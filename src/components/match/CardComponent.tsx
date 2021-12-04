@@ -397,7 +397,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Barajando Castillo`,
+            text: `Barajando "${CASTLE_ZONE}"`,
             isAction: true
         };
 
@@ -424,7 +424,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const getHand = (ammunt: number) => {
         if (!match[CASTLE_ZONE].length) {
-            message.warning(`No hay cartas en ${CASTLE_ZONE}`);
+            message.warning(`No hay cartas en "${CASTLE_ZONE}"`);
             handleVisibleChangePopever(false);
             return;
         }
@@ -452,42 +452,155 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     };
 
     const showToOpponent = () => {
-        console.log('Action:', `Mostrando Castillo al oponente`);
 
         socket?.emit('show-clastle-to-opponent', {
             matchId
         });
+
         handleVisibleChangePopever(false);   
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Mostrando "${CASTLE_ZONE}" al oponente`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+
     };
 
     const viewMyCementery = () => {
         dispatch(openModalViewCementery());
         handleVisibleChangePopever(false);
+        
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo mi "${CEMETERY_ZONE}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewMyExile = () => {
         dispatch(openModalViewExile());
         handleVisibleChangePopever(false);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo mi "${EXILE_ZONE}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewMyRemoval = () => {
         dispatch(openModalViewRemoval());
         handleVisibleChangePopever(false);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo mi "${REMOVAL_ZONE}"`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewCementeryOpponent = () => {
         dispatch(openModalViewCementeryOpponent());
         handleVisibleChangePopever(false);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo "${CEMETERY_ZONE}" oponente`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewExileOpponent = () => {
         dispatch(openModalViewExileOpponent());
         handleVisibleChangePopever(false);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo "${EXILE_ZONE}" oponente`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewRemovalOpponent = () => {
         dispatch(openModalViewRemovalOpponent());
         handleVisibleChangePopever(false);
+
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text: `Viendo ${REMOVAL_ZONE} oponente`,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
     };
 
     const viewModalAssignWeapon = () => {
@@ -497,7 +610,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         } else {            
             dispatch(setWeaponAction({
                 index, 
-                idx: card.idx as string
+                idx: card.idx as string,
+                name: card.name
             }));
             dispatch(openModalAssignWeapon());
         }
@@ -512,8 +626,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     };
 
     const sendToCastle = (zoneName: string) => {
-        
-        console.log('Action:', `Enviando y barajando "${card.name}" de "${zoneName}" a "${CASTLE_ZONE}"`);
 
         const dragCard: DragCard =  {
             ...card,
@@ -526,7 +638,23 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const newCards = { ...match };
         const newCardsOpponent = { ...opponentMatch };        
 
-        if (cardToDelete.user === myUserId) { // Enviando mis propias cartas            
+        if (cardToDelete.user === myUserId) { // Enviando mis propias cartas    
+            
+            const newMessage: Message = {
+                id: myUserId as string,
+                username: username as string,
+                text: `Enviando y barajando "${cardToDelete.name}" de "${zoneName}" a mi "${CASTLE_ZONE}"`,
+                isAction: true
+            };
+    
+            socket?.emit( 'personal-message', {
+                matchId,
+                message: newMessage
+            }, (data: any) => {
+                newMessage.date = data;
+                dispatch(addMessageAction(newMessage));
+                scrollToBottom('messages');
+            });
             
             if (cardToDelete.armsId) {
 
@@ -544,9 +672,41 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                             
                             newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
 
+                            const newMessage: Message = {
+                                id: myUserId as string,
+                                username: username as string,
+                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a mi "${CASTLE_ZONE}"`,
+                                isAction: true
+                            };
+                    
+                            socket?.emit( 'personal-message', {
+                                matchId,
+                                message: newMessage
+                            }, (data: any) => {
+                                newMessage.date = data;
+                                dispatch(addMessageAction(newMessage));
+                                scrollToBottom('messages');
+                            });
+
                         } else {
 
                             newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
+
+                            const newMessage: Message = {
+                                id: myUserId as string,
+                                username: username as string,
+                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${CASTLE_ZONE}" oponente`,
+                                isAction: true
+                            };
+                    
+                            socket?.emit( 'personal-message', {
+                                matchId,
+                                message: newMessage
+                            }, (data: any) => {
+                                newMessage.date = data;
+                                dispatch(addMessageAction(newMessage));
+                                scrollToBottom('messages');
+                            });
 
                         }
 
@@ -607,6 +767,22 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
         } else { // ------------------- Enviando cartas robadas -------------------------------------
 
+            const newMessage: Message = {
+                id: myUserId as string,
+                username: username as string,
+                text: `Enviando y barajando "${cardToDelete.name}" de "${zoneName}" a "${CASTLE_ZONE}" oponente`,
+                isAction: true
+            };
+    
+            socket?.emit( 'personal-message', {
+                matchId,
+                message: newMessage
+            }, (data: any) => {
+                newMessage.date = data;
+                dispatch(addMessageAction(newMessage));
+                scrollToBottom('messages');
+            });
+
             if (cardToDelete.armsId) {
 
                 for (const armId of cardToDelete.armsId as string[]) {
@@ -623,9 +799,41 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                             
                             newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
 
+                            const newMessage: Message = {
+                                id: myUserId as string,
+                                username: username as string,
+                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a mi "${CASTLE_ZONE}"`,
+                                isAction: true
+                            };
+                    
+                            socket?.emit( 'personal-message', {
+                                matchId,
+                                message: newMessage
+                            }, (data: any) => {
+                                newMessage.date = data;
+                                dispatch(addMessageAction(newMessage));
+                                scrollToBottom('messages');
+                            });
+
                         } else {
 
                             newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
+
+                            const newMessage: Message = {
+                                id: myUserId as string,
+                                username: username as string,
+                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${CASTLE_ZONE}" oponente`,
+                                isAction: true
+                            };
+                    
+                            socket?.emit( 'personal-message', {
+                                matchId,
+                                message: newMessage
+                            }, (data: any) => {
+                                newMessage.date = data;
+                                dispatch(addMessageAction(newMessage));
+                                scrollToBottom('messages');
+                            });
 
                         }
 
@@ -850,7 +1058,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Viendo Castillo`,
+            text: `Viendo "${CASTLE_ZONE}"`,
             isAction: true
         };
 
@@ -872,7 +1080,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Botando carta del ${CASTLE_ZONE} al ${CEMETERY_ZONE}`,
+            text: `Botando carta del "${CASTLE_ZONE}" al "${CEMETERY_ZONE}"`,
             isAction: true
         };
 
