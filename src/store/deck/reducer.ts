@@ -1,7 +1,7 @@
-import { DeckState, DeckActionTypes, deckAddNew, deckLoad, Deck, deckLoadUpdating, deckResetUpdating, deckDelete, deckUpdate, deckSetDefault } from "./types";
+import { DeckState, DeckActionTypes, deckAddNew, deckLoad, Deck, deckLoadUpdating, deckResetUpdating, deckDelete, deckUpdate, deckSetDefault, deckReset } from "./types";
 
 const initialState: DeckState = {
-    decks: [],
+    decks: null,
     deckUpdating: null,
     deckDefault: null
 };
@@ -13,7 +13,7 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
         case deckAddNew:
             return {
                 ...state,
-                decks: [...state.decks,  action.payload]
+                decks: [...state.decks as Deck[],  action.payload]
             };
 
         case deckLoad:
@@ -26,7 +26,7 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
         case deckLoadUpdating:
             return {
                 ...state,
-                deckUpdating: state.decks.find((e: Deck) => e.id === action.payload) as Deck
+                deckUpdating: state.decks?.find((e: Deck) => e.id === action.payload) as Deck
             };
 
         case deckResetUpdating:
@@ -38,21 +38,22 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
         case deckDelete:
             return {
                 ...state,
-                decks: state.decks.filter((e: Deck) => e.id !== action.payload)
+                decks: state.decks?.filter((e: Deck) => e.id !== action.payload) as Deck[],
+                deckDefault: state.deckDefault?.id === action.payload ? null : state.deckDefault
             };
 
         case deckUpdate:
             return {
                 ...state,
-                decks: state.decks.map(
+                decks: state.decks?.map(
                     (e: Deck) => (e.id === action.payload.id) ? action.payload : e
-                )
+                )  as Deck[]
             }
         
         case deckSetDefault:
             return {
                 ...state,
-                decks: state.decks.map((e: Deck) => {
+                decks: state.decks?.map((e: Deck) => {
                     if (e.id === action.payload) {
                         return {
                             ...e,
@@ -61,9 +62,12 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
                     }
 
                     return e;
-                }),
-                deckDefault: state.decks.find((e: Deck) => e.id === action.payload) as Deck
-            }
+                })  as Deck[],
+                deckDefault: state.decks?.find((e: Deck) => e.id === action.payload) as Deck
+            };
+
+        case deckReset:
+            return initialState;
     
 
         default:

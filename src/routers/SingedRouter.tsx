@@ -16,8 +16,6 @@ import '../css/signed.css'
 import Cards from '../components/signed/admin/Cards';
 import { MenuContext } from '../context/MenuContext';
 import NewCard from '../components/signed/admin/NewCard';
-//import { useSelector } from 'react-redux';
-//import { RootState } from '../store';
 import Users from '../components/signed/admin/Users';
 import { useHistory, useLocation } from 'react-router';
 import '../css/signed.css'
@@ -27,11 +25,15 @@ import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
 import { matchSetMatchId, matchSetOpponentId, matchSetOpponentUsername, resetMatch } from '../store/match/action';
-import { resetDeckUpdating } from '../store/deck/action';
+import { resetDeckUpdating, resetDeck } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
 import MatchPage from '../pages/MatchPage';
 import { RootState } from '../store';
+import { resetChatAction } from '../store/chat/action';
+import { resetModal } from '../store/ui-modal/action';
+import { playReset } from '../store/play/action';
+
 const { Content, Sider } = Layout;
 
 export const SingedRouter: FC = () => {
@@ -53,7 +55,11 @@ export const SingedRouter: FC = () => {
         dispatch(resetDeckUpdating());
         dispatch(resetCardUpdating());
         dispatch(resetMatch());
-        dispatch(resetAllDescription())
+        dispatch(resetAllDescription());
+        dispatch(resetChatAction());
+        dispatch(resetDeck());
+        dispatch(resetModal());
+        dispatch(playReset());
     };   
 
     const confirm = () => {
@@ -95,7 +101,7 @@ export const SingedRouter: FC = () => {
             btn,
             key,
             onClose: close,
-            duration: 10,
+            duration: 15,
             className: 'centered',
         });
 

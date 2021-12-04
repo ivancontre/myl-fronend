@@ -13,9 +13,9 @@ import { ColumnsType } from 'antd/lib/table';
 import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
 import { MenuContext } from '../../../context/MenuContext';
+import { Deck } from '../../../store/deck/types';
 
-const Play: FC = () => {
-    
+const Play: FC = () => {    
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
@@ -27,7 +27,7 @@ const Play: FC = () => {
     const dispatch = useDispatch();
 
     const { activeUsers } = useSelector((state: RootState) => state.play);
-    const { decks } = useSelector((state: RootState) => state.decks);   
+    const { decks, deckDefault } = useSelector((state: RootState) => state.decks);   
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -45,11 +45,11 @@ const Play: FC = () => {
 
     useEffect(() => {
 
-        if (decks.length === 0) { 
+        if (!decks) { 
             dispatch(startLoadDeck());
         }
 
-    }, [dispatch, decks.length]);
+    }, [dispatch, decks]);
 
     const handleSearch = (selectedKeys: string, confirm: Function, dataIndex: string) => {
         confirm();
@@ -135,7 +135,7 @@ const Play: FC = () => {
     let timer: any;
     
     const countDown = (username: string, opponentId: string, key: string) => {
-        let secondsToGo = 10;
+        let secondsToGo = 15;
         const modal = Modal.info({
             title: 'Esperando confirmación',
             content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
@@ -255,17 +255,50 @@ const Play: FC = () => {
             key: 'x',
             render: (text, row) => {
 
-                if (!row.playing && row.online) {
+                if (!row.playing && row.online && isCorrectDeck() && isCorrectDeckDefault()) {
                     return <Button onClick={ () => invite(row.id, row.username) } ghost>Invitar a jugar</Button>
                 }
             },
         },
     ];
 
+    const isCorrectDeck = () => {
+
+        if (decks && decks[0]?.cards.length === 50) {
+            return true;
+        }
+        
+        return false;
+    };
+
+    const isCorrectDeckDefault = () => {
+
+
+        if (deckDefault?.cards.length === 50) {
+            return true;
+        }
+        
+        return false;
+    };
+
     return (
         <>
-             <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado" type="info" showIcon/>
+             <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado y posee alguno seleccionado por defecto" type="info" showIcon/>
  
+            {
+                !isCorrectDeck() && (
+                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes crear al menos 1 mazo con 50 cartas para poder jugar" type="warning" showIcon/>
+
+                )
+            }
+
+            {
+                (decks as Deck[]) && (decks as Deck[]).length > 0 && !isCorrectDeckDefault() && (
+                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes tener un mazo escogido por defecto" type="warning" showIcon/>
+
+                )
+            }
+
              <Table<User>
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 

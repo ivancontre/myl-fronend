@@ -8,6 +8,7 @@ export const deckResetUpdating = '[deck] Reset updating';
 export const deckDelete = '[deck] Delete';
 export const deckUpdate = '[deck] Update';
 export const deckSetDefault = '[deck] Set default';
+export const deckReset = '[deck] Reset';
 
 export type Deck = {
     id?: string;
@@ -17,7 +18,7 @@ export type Deck = {
 };
 
 export type DeckState = {
-    decks: Deck[];
+    decks: null | Deck[];
     deckUpdating: Deck | null;
     deckDefault: Deck | null;
 };
@@ -56,6 +57,10 @@ type DeckSetDefaultAction = {
     payload: string
 };
 
+type DeckResetAction = {
+    type: typeof deckReset
+};
+
 export type DeckActionTypes = 
 DeckAddNewAction | 
 DeckLoadAction |
@@ -63,4 +68,5 @@ DeckLoadUpdatingAction |
 DeckResetUpdatingAction |
 DeckDeleteAction |
 DeckUpdateAction |
-DeckSetDefaultAction;
+DeckSetDefaultAction |
+DeckResetAction;

@@ -1,6 +1,13 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
+import { resetCardUpdating } from "../card/action";
+import { resetChatAction } from "../chat/action";
+import { resetDeck, resetDeckUpdating } from "../deck/action";
+import { resetAllDescription } from "../description/action";
+import { resetMatch } from "../match/action";
+import { playReset } from "../play/action";
+import { resetModal } from "../ui-modal/action";
 import { AuthActionTypes,
         authLogin, 
         authLogout, 
@@ -100,7 +107,7 @@ export const startRegister = (name: string, lastname: string, email: string, use
 };
 
 export const startChecking = () => {
-    return async (dispatch: Dispatch<AuthActionTypes>) => {
+    return async (dispatch: Dispatch<any>) => {
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -130,6 +137,14 @@ export const startChecking = () => {
 
             } else {
                 dispatch(logout());
+                dispatch(resetDeckUpdating());
+                dispatch(resetCardUpdating());
+                dispatch(resetMatch());
+                dispatch(resetAllDescription());
+                dispatch(resetChatAction());
+                dispatch(resetDeck());
+                dispatch(resetModal());
+                dispatch(playReset());
             }
         } catch (error) {
             console.log(error);

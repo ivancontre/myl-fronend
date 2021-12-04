@@ -28,7 +28,8 @@ import {
     uiOpenModalTakeControlOpponentCard,
     uiCloseModalTakeControlOpponentCard,
     uiOpenModalAssignModal,
-    uiCloseModalAssignModal
+    uiCloseModalAssignModal,
+    uiResetModal
 } from "./types";
 
 
@@ -228,6 +229,9 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
                 ...state,
                 modalOpenAssignWeapon: false
             };
+
+        case uiResetModal:
+            return initialState;
 
         default:
             return state;

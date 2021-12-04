@@ -51,14 +51,14 @@ const NewDeck: FC = () => {
         }
 
         if (params.id && params.id !== 'undefined') {
-            if (decks.length === 0) {
+            if (decks && decks.length === 0) {
                 getFromAPI();
             } else {
                 dispatch(loadDeckUpdating(params.id));
             }
         }
 
-    }, [params.id, dispatch, decks.length]);
+    }, [params.id, dispatch, decks, decks?.length]);
 
     useEffect(() => {
         
@@ -69,9 +69,11 @@ const NewDeck: FC = () => {
             }];
 
             setFields(fields);
+        } else {
+            dispatch(resetMySelection());
         }
 
-    }, [deckUpdating]);
+    }, [deckUpdating, dispatch]);
 
     const handleSelectEdition = async (editionId: string) => {
         setLoading(true);
@@ -167,6 +169,11 @@ const NewDeck: FC = () => {
         return type?.name;
     };
 
+    const confirm = (e: any) => {
+        dispatch(resetMySelection());
+        history.push('/decks');
+    };
+
     const handleOnFinish = async (values: any) => {
 
         if (selectMyCards.length < 50) {
@@ -182,19 +189,19 @@ const NewDeck: FC = () => {
         setLoadingSave(true);
 
         if (!deckUpdating) {
+            
             await dispatch(startAddNewDeck(body));
+            setLoadingSave(false);
+            confirm(null);
+            
         } else {
             await dispatch(startUpdateDeck(deckUpdating.id as string, body));
+            setLoadingSave(false);
         }
 
-        setLoadingSave(false);
+        
 
-    }
-
-    const confirm = (e: any) => {
-        dispatch(resetMySelection());
-        history.push('/decks');
-    };
+    };    
       
     const cancel = (e: any) => {};      
 
@@ -212,12 +219,12 @@ const NewDeck: FC = () => {
                             onCancel={cancel}
                             cancelText="No"
                         >
-                            <Tooltip className="actions" title="Volver al listado">
+                            <Tooltip title="Volver al listado">
                                 <Button type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
                             </Tooltip>
                         </Popconfirm>
                     ) : (
-                        <Tooltip className="actions" title="Volver al listado">
+                        <Tooltip title="Volver al listado">
                             <Button onClick={ confirm } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
                         </Tooltip>
                     )}

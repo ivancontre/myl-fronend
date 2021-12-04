@@ -149,7 +149,6 @@ const Decks: FC = () => {
 
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[]) => {
-            console.log(`selectedRowKeys1: ${selectedRowKeys}`);
             const id = selectedRowKeys.toString();
             dispatch(startSetDefaultDeck(id));
         }
@@ -161,7 +160,19 @@ const Decks: FC = () => {
                 <Button onClick={ handleNewDesk } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
 
-            <Alert style={{marginTop: 10}} message="En esta sección podrás crear tus mazos. Si no tiene al menos un mazo creado no podrás jugar" type="info" showIcon/>
+            <Alert style={{marginTop: 10}} message="En esta sección podrás crear tus mazos. Podrás seleccionar tu mazo por defecto. Si no tiene al menos un mazo creado no podrás jugar" type="info" showIcon/>
+
+            {
+                decks && decks.length === 0 && (
+                    <Alert style={{ width: "100%", marginTop: 10 }} message="Debes crear al menos 1 mazo" type="warning" showIcon/>
+                )
+            }
+
+            {
+                decks && decks.length > 0 && !deckDefault && (
+                    <Alert style={{ width: "100%", marginTop: 10 }} message="Debes tener un mazo escogido por defecto" type="warning" showIcon/>
+                )
+            }
 
             <Table<Deck>
                 rowSelection={{
@@ -172,9 +183,9 @@ const Decks: FC = () => {
                 pagination={{ defaultPageSize: 15 }}
                 rowKey="id" 
                 columns={ columns } 
-                dataSource={ decks } 
+                dataSource={ decks as Deck[]} 
                 style={{ paddingTop: 10 }}
-                loading={ decks.length > 0 ? false : true }
+                loading={ decks === null ? true : false }
             />
             
         </>

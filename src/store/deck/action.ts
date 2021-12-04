@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault } from "./types";
+import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault, deckReset } from "./types";
 
 export const startAddNewDeck = (deck: any) => {
     return async (dispatch: Dispatch<DeckActionTypes>) => {
@@ -107,8 +107,7 @@ export const resetDeckUpdating = () => {
 };
 
 export const startSetDefaultDeck = (id: string) => {
-
-    console.log('object')
+    
     return async (dispatch: Dispatch<DeckActionTypes>) => {
 
         try {
@@ -161,5 +160,11 @@ const deleteDeck = (id: string): DeckActionTypes => {
     return {
         type: deckDelete,
         payload: id
+    }
+};
+
+export const resetDeck = (): DeckActionTypes => {
+    return {
+        type: deckReset
     }
 };

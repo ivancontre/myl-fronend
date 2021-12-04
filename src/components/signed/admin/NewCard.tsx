@@ -254,7 +254,7 @@ const NewCard = () => {
 
     return (
         <>
-            <Tooltip className="actions" title="Volver al listado">
+            <Tooltip title="Volver al listado">
                 <Button onClick={ back } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
             </Tooltip>
 

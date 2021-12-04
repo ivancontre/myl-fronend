@@ -7,6 +7,9 @@ import { RootState } from '../../store';
 import { addMessageAction } from '../../store/chat/action';
 import { Message } from '../../store/chat/types';
 
+
+import { QuestionOutlined, StopOutlined, LikeOutlined } from '@ant-design/icons';
+
 const Buttons: FC = () => {
 
     const { socket } = useContext(SocketContext);
@@ -78,15 +81,15 @@ const Buttons: FC = () => {
 
     return (
         <div>
-            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } style={{marginBottom: 3}} >
+            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionOutlined />} style={{marginBottom: 3}} >
                 Lanzar dado
             </Button>
-            
-            <Button type="primary" block danger onClick={ stop } style={{marginBottom: 3}} >
+
+            <Button type="primary" block danger onClick={ stop } icon={ <StopOutlined /> } style={{marginBottom: 3}} >
                 Stop!
             </Button>
             
-            <Button type="primary" block onClick={ yourTurn } >
+            <Button type="primary" block onClick={ yourTurn } icon={ <LikeOutlined /> }>
                 Tu turno!
             </Button>
         </div>
