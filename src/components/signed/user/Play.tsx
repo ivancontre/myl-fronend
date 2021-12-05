@@ -304,8 +304,8 @@ const Play: FC = () => {
                 playing && <Alert style={{ width: "100%", marginBottom: 10 }} message="Ya te encuentras en una partida. Debes finalizarla para poder jugar desde aquí" type="warning" showIcon/>
             }
 
-            <Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag>
-            <Tag color="red" style={{fontSize: 14}}>{`Mis derrotas: ${defeats ? defeats : '0'}`}</Tag>
+            <p><Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag></p>
+            <p><Tag color="red" style={{fontSize: 14}}>{`Mis derrotas: ${defeats ? defeats : '0'}`}</Tag></p>
 
             <Table<User>
                  pagination={{ defaultPageSize: 15 }}

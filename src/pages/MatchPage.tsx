@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { Col, Popover, Modal, Row, Button, Divider } from 'antd';
 
-import { MenuOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 
 import CardComponent from '../components/match/CardComponent';
@@ -544,20 +544,7 @@ const MatchPage: FC = () => {
                                     </Col>
                                 </Row>
 
-                                {/* <Row gutter={[8, 8]} style={{padding: 10}}>
-                                    <Col span={ 22 } style={{backgroundColor: '#330000', padding: 20, borderRadius: 5}}>
-                                        <Steps current={current} size="small">
-                                            {steps.map(item => (
-                                                <Step key={item.title} title={item.title} />
-                                            ))}
-                                        </Steps>
-                                    </Col>
-                                    <Col span={ 2 } style={{padding: 15}}>
-                                        <Button type="primary" size="large" onClick={() => next()}>
-                                            Next
-                                        </Button>
-                                    </Col>
-                                </Row> */}
+                                <Divider/>   
 
                                 <Row gutter={[8, 8]}>
 
@@ -642,8 +629,15 @@ const MatchPage: FC = () => {
                             
                         </Col>
                         <Col span={4} className="content-actions">
+
+                            <Row gutter={[8, 8]}>
+                                <Col span={24} style={{width: '100%', textAlign: 'end'}} >
+                                    <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
+                                </Col>
+                            </Row>    
+
                             <Row gutter={[16, 8]} justify="end">
-                                <Col>
+                                <Col style={{width: '100%'}}>
                                     <Popover
                                         placement="leftTop" 
                                         trigger="click"
@@ -651,25 +645,20 @@ const MatchPage: FC = () => {
                                         visible={ visiblePopover }
                                         onVisibleChange={ handleVisibleChangePopever }
                                     >
-                                        <Button  style={{backgroundColor: 'black'}} icon={<MenuOutlined />} >{`vs ${opponentUsername}`}</Button>
+                                        <Button style={{backgroundColor: '#780F0F'}} block icon={<CloseCircleOutlined />} >Salir</Button>
                                     </Popover>
                                 </Col> 
                             </Row>
 
-                            <Divider/>
-
-                            
+                            <Divider/>                            
                             
                             <Row gutter={[8, 8]}>
                                 <Col span={24} style={{width: '100%'}} >
                                     <Chat />
                                 </Col>
-                            </Row>
+                            </Row>             
 
-                            
-
-
-                            <Row gutter={[8, 8]} justify="end" align="bottom">
+                               <Row gutter={[8, 8]} justify="end" align="bottom">
                                 <Col>
                                     <Buttons />
                                 </Col>

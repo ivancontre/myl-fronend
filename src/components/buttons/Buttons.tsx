@@ -81,7 +81,7 @@ const Buttons: FC = () => {
 
     return (
         <div>
-            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionOutlined />} style={{marginBottom: 3}} >
+            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionOutlined />} style={{marginBottom: 3, backgroundColor: 'darkgoldenrod'}} >
                 Lanzar dado
             </Button>
 
