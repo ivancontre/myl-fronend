@@ -321,9 +321,9 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                             <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>  
                             <Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  
 
-                            <Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option>  
-                            <Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  
-                            <Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  
+                            { zone !== CEMETERY_ZONE && (<Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option> )} 
+                            { zone !== EXILE_ZONE && (<Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  )} 
+                            { zone !== REMOVAL_ZONE && (<Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  )} 
                                 
                         </Select>
                     )
