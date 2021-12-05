@@ -363,8 +363,10 @@ const NewDeck: FC = () => {
                                     autoComplete="off"
                                     onFinish={ handleOnFinish }
                                     fields={ fields }
+                                    
                                 >
                                     <Form.Item
+                                        style={{width: '100%', paddingBottom: 10}}
                                         name="name" 
                                         rules={[{
                                             required: true,
@@ -372,10 +374,13 @@ const NewDeck: FC = () => {
                                         }
                                     ]} >
                                         <Input placeholder="Ingrese nombre del Mazo" />
+                                        
                                     </Form.Item>
 
-                                    <Form.Item >
-                                        <Button loading={ loadingSave } htmlType="submit" type="primary">{params.id ? 'Actualizar' : 'Guardar'}</Button>
+                                    <Form.Item 
+                                        style={{width: '100%'}}
+                                    >
+                                        <Button loading={ loadingSave } htmlType="submit" type="primary" style={{float: 'right'}} >{params.id ? 'Actualizar' : 'Guardar'}</Button>
                                     </Form.Item>
 
                                 </Form>
