@@ -32,6 +32,7 @@ import { isTouchDevice } from '../helpers/touch';
 import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
 import Buttons from '../components/buttons/Buttons';
+import { startSetDetailAction } from '../store/auth/action';
 
 const { confirm } = Modal;
 
@@ -80,7 +81,7 @@ const MatchPage: FC = () => {
     const { socket } = useContext(SocketContext);
 
     const finishMatch = useCallback(() => {
-
+        dispatch(startSetDetailAction());
         Modal.destroyAll();
         dispatch(resetMatch());
         dispatch(resetChatAction());

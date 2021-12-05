@@ -11,6 +11,7 @@ import { resetModal } from "../ui-modal/action";
 import { AuthActionTypes,
         authLogin, 
         authLogout, 
+        authStartSetDetail, 
         User 
 } from "./types";
 
@@ -162,6 +163,44 @@ export const startLogout = () => {
         dispatch(logout());
     }
 };
+
+export const startSetDetailAction = () => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/auth/detail', {}, 'GET', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                
+                dispatch(setDetail(respJson.playing, respJson.victories ? respJson.victories : 0, respJson.defeats ? respJson.defeats: 0));
+
+            } else {
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+};
+
+const setDetail = (playing: boolean, victories: number, defeats: number): AuthActionTypes => {
+    return {
+        type: authStartSetDetail,
+        payload: {
+            playing,
+            victories,
+            defeats
+        }
+    }
+};
+
 
 const login = (user: User): AuthActionTypes => {
     return {

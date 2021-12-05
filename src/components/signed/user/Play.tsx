@@ -28,7 +28,7 @@ const Play: FC = () => {
 
     const { activeUsers } = useSelector((state: RootState) => state.play);
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
-    const { victories, defeats } = useSelector((state: RootState) => state.auth);  
+    const { victories, defeats, playing } = useSelector((state: RootState) => state.auth);  
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -256,7 +256,7 @@ const Play: FC = () => {
             key: 'x',
             render: (text, row) => {
 
-                if (!row.playing && row.online && isCorrectDeck() && isCorrectDeckDefault()) {
+                if (!playing && !row.playing && row.online && isCorrectDeck() && isCorrectDeckDefault()) {
                     return <Button onClick={ () => invite(row.id, row.username) } ghost>Invitar a jugar</Button>
                 }
             },
@@ -288,7 +288,7 @@ const Play: FC = () => {
  
             {
                 !isCorrectDeck() && (
-                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes crear al menos 1 mazo con 50 cartas para poder jugar" type="warning" showIcon/>
+                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes crear al menos 1 mazo para poder jugar" type="warning" showIcon/>
 
                 )
             }
@@ -298,6 +298,10 @@ const Play: FC = () => {
                     <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes tener un mazo escogido por defecto" type="warning" showIcon/>
 
                 )
+            }
+
+            {
+                playing && <Alert style={{ width: "100%", marginBottom: 10 }} message="Ya te encuentras en una partida. Debes finalizarla para poder jugar desde aquí" type="warning" showIcon/>
             }
 
             <Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag>

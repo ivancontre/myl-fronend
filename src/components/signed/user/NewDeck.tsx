@@ -13,7 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import '../../../css/new-deck.css';
-import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
+import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startSetDefaultDeck, startUpdateDeck } from '../../../store/deck/action';
 import { Card } from '../../../store/card/types';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { MenuContext } from '../../../context/MenuContext';
@@ -54,7 +54,7 @@ const NewDeck: FC = () => {
         }
 
         if (params.id && params.id !== 'undefined') {
-            if (decks && decks.length === 0) {
+            if (!decks) {
                 getFromAPI();
             } else {
                 dispatch(loadDeckUpdating(params.id));
@@ -241,6 +241,11 @@ const NewDeck: FC = () => {
             
         } else {
             await dispatch(startUpdateDeck(deckUpdating.id as string, body));
+
+            if (deckUpdating.byDefault) {
+                dispatch(startSetDefaultDeck(deckUpdating.id as string));
+            }
+            
             setLoadingSave(false);
         }        
 

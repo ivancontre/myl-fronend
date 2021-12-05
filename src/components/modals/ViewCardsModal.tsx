@@ -310,7 +310,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                 {
                     !onlyRead && (
                         <Select
-                            placeholder="Mover a"
+                            placeholder="Mover a..."
                             style={{ width: "100%", marginTop: 20, marginBottom: 20 }}
                             onChange={ handleSelect }                      
                         >

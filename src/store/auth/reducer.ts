@@ -1,6 +1,6 @@
 
   
-import { AuthActionTypes, authCheckingFinish, authLogin, authLogout, AuthState } from "./types";
+import { AuthActionTypes, authCheckingFinish, authLogin, authLogout, authStartSetDetail, AuthState } from "./types";
 
 const initialState: AuthState = {
     checking: true,
@@ -29,6 +29,14 @@ export const authReducer = (state: typeof initialState = initialState, action: A
                 checking: false,
                 logged: false
             };
+
+        case authStartSetDetail:
+            return {
+                ...state,
+                playing: action.payload.playing,
+                victories: action.payload.victories,
+                defeats: action.payload.defeats
+            }
     
         default:
             return state;
