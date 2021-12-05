@@ -658,13 +658,7 @@ const MatchPage: FC = () => {
 
                             <Divider/>
 
-                            <Row gutter={[8, 8]} justify="end" align="bottom">
-                                <Col>
-                                    <Buttons />
-                                </Col>
-                            </Row>
                             
-                            <Divider/>
                             
                             <Row gutter={[8, 8]}>
                                 <Col span={24} style={{width: '100%'}} >
@@ -673,7 +667,14 @@ const MatchPage: FC = () => {
                             </Row>
 
                             
-                            
+
+
+                            <Row gutter={[8, 8]} justify="end" align="bottom">
+                                <Col>
+                                    <Buttons />
+                                </Col>
+                            </Row>
+
                         </Col>
                     </Row>
                 </DndProvider>
