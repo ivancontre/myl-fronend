@@ -20,7 +20,7 @@ import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { Message } from '../../store/chat/types';
 
-const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
+const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE } = ZONE_NAMES;
 
 interface ViewCastleModalProps {
     origin: Dictionary<Card[] | []>;
@@ -320,6 +320,10 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                             <Select.Option key={ GOLDS_PAID_ZONE } value={ GOLDS_PAID_ZONE }>{ GOLDS_PAID_ZONE }</Select.Option>  
                             <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>  
                             <Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  
+
+                            <Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option>  
+                            <Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  
+                            <Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  
                                 
                         </Select>
                     )
