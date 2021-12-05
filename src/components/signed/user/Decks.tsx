@@ -9,9 +9,10 @@ import { Link } from 'react-router-dom';
 import { Deck } from '../../../store/deck/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { resetDeckUpdating, startDeleteDeck, startLoadDeck, startSetDefaultDeck } from '../../../store/deck/action';
+import { deleteDeck, resetDeckUpdating, startLoadDeck, startSetDefaultDeck } from '../../../store/deck/action';
 import { resetCardUpdating } from '../../../store/card/action';
 import { MenuContext } from '../../../context/MenuContext';
+import { SocketContext } from '../../../context/SocketContext';
 
 const Decks: FC = () => {
 
@@ -27,6 +28,8 @@ const Decks: FC = () => {
     const dispatch = useDispatch();
 
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
+
+    const { socket } = useContext(SocketContext);
 
     const handleNewDesk = () => {
         history.push(`/decks/new`);
@@ -114,7 +117,15 @@ const Decks: FC = () => {
     });
 
     const handleDelete = (deckId?: string) => {
-        dispatch(startDeleteDeck(deckId as string));
+        socket?.emit( 'delete-deck', {
+            deckId
+        }, (data: any) => {
+            dispatch(deleteDeck(deckId as string));
+        });  
+
+
+        //dispatch(deleteDeck(id));
+        //dispatch(startDeleteDeck(deckId as string));
     };
 
     const ref0 = useRef();

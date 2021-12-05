@@ -156,7 +156,7 @@ const updateDeck = (deck: Deck): DeckActionTypes => {
     }
 }
 
-const deleteDeck = (id: string): DeckActionTypes => {
+export const deleteDeck = (id: string): DeckActionTypes => {
     return {
         type: deckDelete,
         payload: id

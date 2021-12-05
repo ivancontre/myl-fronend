@@ -180,7 +180,7 @@ export const SingedRouter: FC = () => {
 
                     <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="profile" icon={<UserOutlined />}>
+                        <Menu.Item key="profile" icon={<UserOutlined />} >
                             { `Bienvenido ${username}`}
                         </Menu.Item>
 
@@ -217,7 +217,7 @@ export const SingedRouter: FC = () => {
                         }
                         
 
-                        <Menu.Item className="btn-logout" key="logout" icon={<LogoutOutlined />}>
+                        <Menu.Item className="btn-logout" key="logout" icon={<LogoutOutlined />} title="">
 
                             <Popconfirm
                                 title="¿Salir?"

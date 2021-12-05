@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Message } from '../../store/chat/types';
@@ -20,11 +20,23 @@ const Chat = () => {
 
     const dispatch = useDispatch();
 
+    const [animated, setAnimated] = useState(false);
+
     useEffect(() => {
         
         socket?.on('receive-personal-message', (message: Message) => {
             dispatch(addMessageAction(message));
             scrollToBottom('messages');
+
+            if (message.text === 'STOP!!!' || message.text === 'TU TURNO!!!') {
+
+                setAnimated(true);
+
+                setTimeout(() => {
+                    setAnimated(false);
+                }, 500);
+
+            }
         });
 
         return () => {
@@ -37,7 +49,7 @@ const Chat = () => {
     return (
 
         <div className="chat">
-            <div className="messages" id="messages">
+            <div className={ animated ? "animate__animated animate__headShake messages" : "messages" } id="messages">
                 {
                     chats.map((message: Message, index: number) => (
                         ( message.id === opponentId )

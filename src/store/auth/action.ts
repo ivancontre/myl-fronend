@@ -35,7 +35,8 @@ export const startLogin = (username: string, password: string) => {
                     status: respJson.user.status,
                     online: respJson.user.online,
                     playing: respJson.user.playing,
-                    defeats: respJson.user.defeats
+                    defeats: respJson.user.defeats,
+                    victories: respJson.user.victories
                 }));
 
             } else {
@@ -81,7 +82,8 @@ export const startRegister = (name: string, lastname: string, email: string, use
                     status: respJson.user.status,
                     online: respJson.user.online,
                     playing: respJson.user.playing,
-                    defeats: respJson.user.defeats
+                    defeats: respJson.user.defeats,
+                    victories: respJson.user.victories
                 }));
 
             } else {
@@ -132,7 +134,8 @@ export const startChecking = () => {
                     status: respJson.user.status,
                     online: respJson.user.online,
                     playing: respJson.user.playing,
-                    defeats: respJson.user.defeats
+                    defeats: respJson.user.defeats,
+                    victories: respJson.user.victories
                 }));
 
             } else {

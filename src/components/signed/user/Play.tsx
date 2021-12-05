@@ -27,7 +27,8 @@ const Play: FC = () => {
     const dispatch = useDispatch();
 
     const { activeUsers } = useSelector((state: RootState) => state.play);
-    const { decks, deckDefault } = useSelector((state: RootState) => state.decks);   
+    const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
+    const { victories, defeats } = useSelector((state: RootState) => state.auth);  
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -299,7 +300,10 @@ const Play: FC = () => {
                 )
             }
 
-             <Table<User>
+            <Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag>
+            <Tag color="red" style={{fontSize: 14}}>{`Mis derrotas: ${defeats ? defeats : '0'}`}</Tag>
+
+            <Table<User>
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 
                  columns={ columns } 

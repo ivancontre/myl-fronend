@@ -24,6 +24,8 @@ interface FieldData {
     value?: any;
 };
 
+const { Search } = Input;
+
 const NewDeck: FC = () => {
 
     const history = useHistory();
@@ -38,6 +40,7 @@ const NewDeck: FC = () => {
     const { deckUpdating, decks } = useSelector((state: RootState) => state.decks); 
 
     const [typeId, setTypeId] = useState<string>('all');
+    const [search, setSearch] = useState<string>('');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingSave, setLoadingSave] = useState<boolean>(false);
@@ -119,34 +122,75 @@ const NewDeck: FC = () => {
         if (zoneName === 'cards') {
             
             if (typeId !== 'all') {
-                return cardsByEdition
-                    .filter(card => card.type === typeId)
-                    .map((card, index) => {
-                        return (
-                            <NewDeckCard 
-                                key={ index }
-                                id={ card.id }
-                                index={ index }
-                                moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                zone={ zoneName }
-                                card={ card }
-                            />
-                        )                        
-                    });
+
+                if (search) {
+                    
+                    return cardsByEdition
+                        .filter(card => card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1)
+                        .filter(card => card.type === typeId)
+                        .map((card, index) => {
+                            return (
+                                <NewDeckCard 
+                                    key={ index }
+                                    id={ card.id }
+                                    index={ index }
+                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                    zone={ zoneName }
+                                    card={ card }
+                                />
+                            )                        
+                        });
+
+                } else {
+                    return cardsByEdition
+                        .filter(card => card.type === typeId)
+                        .map((card, index) => {
+                            return (
+                                <NewDeckCard 
+                                    key={ index }
+                                    id={ card.id }
+                                    index={ index }
+                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                    zone={ zoneName }
+                                    card={ card }
+                                />
+                            )                        
+                        });
+                }
+                
             } else {
-                return cardsByEdition
-                    .map((card, index) => {
-                        return (
-                            <NewDeckCard 
-                                key={ index }
-                                id={ card.id }
-                                index={ index }
-                                moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                zone={ zoneName }
-                                card={ card }
-                            />
-                        )                        
-                    });
+
+                if (search) {
+                    return cardsByEdition
+                        .filter(card => card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1)
+                        .map((card, index) => {
+                            return (
+                                <NewDeckCard 
+                                    key={ index }
+                                    id={ card.id }
+                                    index={ index }
+                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                    zone={ zoneName }
+                                    card={ card }
+                                />
+                            )                        
+                        });
+                } else {
+                    return cardsByEdition
+                        .map((card, index) => {
+                            return (
+                                <NewDeckCard 
+                                    key={ index }
+                                    id={ card.id }
+                                    index={ index }
+                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                    zone={ zoneName }
+                                    card={ card }
+                                />
+                            )                        
+                        });
+                }
+                
             }
 
         } else {
@@ -197,13 +241,20 @@ const NewDeck: FC = () => {
         } else {
             await dispatch(startUpdateDeck(deckUpdating.id as string, body));
             setLoadingSave(false);
-        }
-
-        
+        }        
 
     };    
       
     const cancel = (e: any) => {};      
+
+    const onSearch = (value: string) => {
+        if (!value) {
+            setSearch('');
+            return;
+        }
+
+        setSearch(value);
+    };
 
     return (
         <>
@@ -268,6 +319,12 @@ const NewDeck: FC = () => {
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
+                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } />
+                </Col>
+            </Row>
+
+            <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
+                <Col span={ 24 } >
                     <Alert message="Arrastra las cartas de izquierda a derecha para agregarlas a tu mazo" type="info" showIcon/>
                 </Col>
             </Row>
@@ -276,7 +333,7 @@ const NewDeck: FC = () => {
             <Row style={{ paddingTop: 10 }}>
                 <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
                     <Col className="container-deck" span={ 14 } >
-                    <Tag color="gold">{`Total: ${cardsByEdition.length}`}</Tag>
+                        <Tag color="gold">{`Total: ${cardsByEdition.length}`}</Tag>
                         <Tag color="green">{`Aliados: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
                         <Tag color="green">{`Armas: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
                         <Tag color="green">{`Oros: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
