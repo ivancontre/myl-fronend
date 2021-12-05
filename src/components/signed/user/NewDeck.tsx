@@ -81,6 +81,7 @@ const NewDeck: FC = () => {
     const handleSelectEdition = async (editionId: string) => {
         setLoading(true);
         await dispatch(startLoadCardByEdition(editionId));
+        setSearch('');
         setLoading(false)
     };
 

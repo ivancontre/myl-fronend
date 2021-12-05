@@ -46,7 +46,7 @@ export const SocketProvider = ({ children }: Props) => {
 
     useEffect(() => {
         socket?.on('active-users-list', (users: User[]) => {
-
+            console.log('!!!')
             const newUsers = users.filter(user => user.id !== id && (user.decks && user.decks.length > 0 && user.decks.find((deck: Deck) => deck.byDefault)));
 
             dispatch(playSetActiveUsers(newUsers));
