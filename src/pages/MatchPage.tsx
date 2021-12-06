@@ -658,7 +658,7 @@ const MatchPage: FC = () => {
                                 </Col>
                             </Row>             
 
-                               <Row gutter={[8, 8]} justify="end" align="bottom">
+                            <Row gutter={[8, 8]} justify="end" align="bottom" className="row-buttons">
                                 <Col>
                                     <Buttons />
                                 </Col>

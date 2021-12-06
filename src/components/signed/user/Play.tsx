@@ -311,9 +311,9 @@ const Play: FC = () => {
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 
                  columns={ columns } 
-                 dataSource={ activeUsers } 
+                 dataSource={ activeUsers as User[] } 
                  style={{ paddingTop: 10 }}
-                 loading={ activeUsers.length > 0 ? false : true }
+                 loading={ activeUsers === null ? true : false }
              />
         </>
     )

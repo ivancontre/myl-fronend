@@ -4,7 +4,7 @@ export const setActiveUsers = '[play] Set active users';
 export const resetPlay = '[play] Reset';
 
 export type PlayState = {
-    activeUsers: User[];
+    activeUsers: User[] | null;
 };
 
 type PlaySetActiveUsers = {

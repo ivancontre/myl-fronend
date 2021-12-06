@@ -117,4 +117,10 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 .content-actions {
   background-color: black;
   border: 3px solid rgb(60, 31, 31);
+  position: relative;
+}
+
+.row-buttons {
+  position: absolute;
+  bottom: 0;
 }
