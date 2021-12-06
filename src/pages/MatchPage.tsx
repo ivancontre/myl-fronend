@@ -101,8 +101,10 @@ const MatchPage: FC = () => {
                 socket?.emit('close-match', {
                     matchId,
                     opponentId
+                }, () => {
+                    finishMatch();
                 });
-                finishMatch();
+                
             },
             onCancel() {
                 setVisiblePopover(false); 
@@ -124,8 +126,10 @@ const MatchPage: FC = () => {
                     socket?.emit('approve-request-leave-mutual-match', {
                         matchId,
                         opponentId
+                    }, () => {
+                        finishMatch();
                     });
-                    finishMatch();
+                    
                     
                 },
                 onCancel() {
