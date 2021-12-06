@@ -1,7 +1,6 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { SpinActionTypes } from "../spinUI/types";
 import { Card, CardActionTypes, cardAddNew, cardByEdition, cardLoad, cardLoadUpdating, cardResetUpdating, cardsResetMySelection, cardUpdate, selectMyCards } from "./types";
 
 export const startAddNewCard = (card: any) => {
@@ -75,7 +74,7 @@ export const startLoadCard = () => {
 };
 
 export const startLoadCardUpdating = (id: string) => {
-    return async (dispatch: Dispatch<CardActionTypes | SpinActionTypes>) => {
+    return async (dispatch: Dispatch<CardActionTypes>) => {
 
         try {
             const token = localStorage.getItem('token') as string;

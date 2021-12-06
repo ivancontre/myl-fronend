@@ -1,4 +1,4 @@
-import { Image, Modal, Radio, Space, Typography } from 'antd';
+import { Image, Modal, Radio, RadioChangeEvent, Space, Typography } from 'antd';
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -252,13 +252,12 @@ const AssingWeaponModal: FC = () => {
 
     };
 
-    const onChangeZone = (e: any) => {
-        setOptionZone(e.target.value)
+    const onChangeZone = (e: RadioChangeEvent) => {
+        setOptionZone(e.target.value);
     };
 
-    const onChangeCarrier = (e: any) => {
-        console.log(e.target.value)
-        setOptionCarrier(e.target.value)
+    const onChangeCarrier = (e: RadioChangeEvent) => {
+        setOptionCarrier(e.target.value);
     };
 
 

@@ -214,7 +214,7 @@ const NewDeck: FC = () => {
         return type?.name;
     };
 
-    const confirm = (e: any) => {
+    const confirm = (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
         dispatch(resetMySelection());
         history.push('/decks');
     };
@@ -237,7 +237,7 @@ const NewDeck: FC = () => {
             
             await dispatch(startAddNewDeck(body));
             setLoadingSave(false);
-            confirm(null);
+            confirm(undefined);
             
         } else {
             await dispatch(startUpdateDeck(deckUpdating.id as string, body));

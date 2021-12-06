@@ -129,7 +129,7 @@ const Cards: FC = () => {
             key: 'num',
             width: '5%',
             ...getColumnSearchProps('num', ref0),
-            sorter: (a: any, b: any) => {
+            sorter: (a: Card, b: Card) => {
                 let newA = a.num;
                 let newB = b.num;
 
@@ -146,7 +146,7 @@ const Cards: FC = () => {
             key: 'name',
             width: '30%',
             ...getColumnSearchProps('name', ref1),
-            sorter: (a: any, b: any) => { 
+            sorter: (a: Card, b: Card) => { 
                 if(a.name < b.name) { return -1; }
                 if(a.name > b.name) { return 1; }
                 return 0;
@@ -162,7 +162,7 @@ const Cards: FC = () => {
             width: '20%',
             ...getColumnSearchProps('edition', ref2),
             sortDirections: ['descend', 'ascend'],
-            sorter: (a: any, b: any) => { 
+            sorter: (a: Card, b: Card) => { 
                 if(a.edition < b.edition) { return -1; }
                 if(a.edition > b.edition) { return 1; }
                 return 0;
@@ -175,7 +175,7 @@ const Cards: FC = () => {
             width: '20%',
             ...getColumnSearchProps('type', ref3),
             sortDirections: ['descend', 'ascend'],
-            sorter: (a: any, b: any) => { 
+            sorter: (a: Card, b: Card) => { 
                 if(a.type < b.type) { return -1; }
                 if(a.type > b.type) { return 1; }
                 return 0;

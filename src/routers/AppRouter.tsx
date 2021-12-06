@@ -10,7 +10,6 @@ import { RootState } from '../store';
 import { startChecking } from '../store/auth/action';
 import { startLoadCard } from '../store/card/action';
 import { startLoadEditionCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../store/description/action';
-//import Match from '../pages/Match';
 import { AuthRouter } from './AuthRouter';
 import { PrivateRouter } from './PrivateRouter';
 import { PublicRouter } from './PublicRouter';
@@ -27,6 +26,7 @@ const AppRouter: FC = () => {
     }, [dispatch])
 
     useEffect(() => {
+        
         if (logged) {
             dispatch(startLoadTypeCard());
             dispatch(startLoadFrecuencyCard());
@@ -35,8 +35,7 @@ const AppRouter: FC = () => {
             dispatch(startLoadCard());       
         }
         
-    }, [dispatch, logged])
-
+    }, [dispatch, logged]);
 
     if (checking) {
         return (
@@ -45,7 +44,6 @@ const AppRouter: FC = () => {
             />
         )
     }
-
 
     return (
         
@@ -60,8 +58,7 @@ const AppRouter: FC = () => {
 
                 </Switch>
             </div>
-        </Router>
-        
+        </Router>    
         
     )
 }
