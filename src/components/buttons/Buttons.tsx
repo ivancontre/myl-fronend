@@ -17,46 +17,6 @@ const Buttons: FC = () => {
     const { matchId } = useSelector((state: RootState) => state.match);
     const dispatch = useDispatch();
 
-    const stop = () => {
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `STOP!!!`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
-
-    };
-
-    const yourTurn = () => {
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `TU TURNO!!!`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
-
-    };
-
     const sendMessage = (text: string) => {
 
         const newMessage: Message = {
