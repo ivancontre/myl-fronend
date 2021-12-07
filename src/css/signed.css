@@ -20,3 +20,11 @@ ul.menu-myl{
 .ant-layout {
     transition: all 0.2s;
 }
+
+.ant-menu.ant-menu-dark {
+    background: #18183B;
+}
+
+.ant-layout-sider-trigger {
+    background: #0F0F23;
+}
