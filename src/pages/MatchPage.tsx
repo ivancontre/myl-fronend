@@ -252,7 +252,7 @@ const MatchPage: FC = () => {
         
         socket?.on('updating-match-opponent', (data) => {
             console.log('updating-match-opponent');
-            dispatch(changeMatch(data));
+            dispatch(changeMatch(data, false));
         });
 
         return () => {
