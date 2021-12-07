@@ -47,7 +47,7 @@ const MatchPage: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
+    const { match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone, takeControlOpponentCardControlType } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const history = useHistory();
    
@@ -464,7 +464,7 @@ const MatchPage: FC = () => {
 
             { modalOpenViewHandOpponent && <ViewCardsModal origin={ opponentMatch } zone={ HAND_ZONE } onlyRead />}
 
-            { modalOpenTakeControlOpponentCard && <TakeControlOpponentCardModal zone={ takeControlOpponentCardZone } index={ takeControlOpponentCardIndex } /> }
+            { modalOpenTakeControlOpponentCard && <TakeControlOpponentCardModal zone={ takeControlOpponentCardZone } index={ takeControlOpponentCardIndex } controlType={ takeControlOpponentCardControlType }/> }
 
             { modalOpenAssignWeapon && <AssingWeaponModal /> }
 

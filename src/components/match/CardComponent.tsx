@@ -56,7 +56,99 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const newCards = { ...match };
         const newCardsOpponent = { ...opponentMatch };
 
-        let cardOpponenet = false;
+        if (cardToMove.user === myUserId) { // Moviendo mis propias cartas
+
+            // si tiene armas, puede tener armas mías o armas asignadas por el oponente
+            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
+                
+                for (const armId of cardToMove.armsId as string[]) {
+
+                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
+
+                    if (armCardInMyZone) {
+
+                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
+
+                        delete armCardInMyZone.bearerId;
+
+                        if (armCardInMyZone.user === myUserId) {
+                            
+                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
+
+                        } else {
+
+                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // si es un arma
+            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
+                // Al portador se le debe quitar esta arma
+                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                if (bearerInMyDefenseZone) {
+                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                        if (card.idx === bearerInMyDefenseZone.idx) {
+                            return {
+                                ...card,
+                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                            }
+                        }
+
+                        return card;
+                    });
+                } else {
+
+                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                    if (bearerInMyAttackZone) {
+                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyAttackZone.idx) {
+                                return {
+                                    ...card,
+                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                                }
+                            }
+    
+                            return card;
+                        });
+                    }
+                }
+
+                delete cardToMove.bearerId;
+            }
+
+            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+            newCards[zoneName] = [...newCards[zoneName], cardToMove];
+
+            if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
+
+                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
+                dispatch(changeMatch(newMatch));
+
+            } else {
+                dispatch(changeMatch(newCards));
+            }
+
+
+        }
+
+
+
+
+
+
+
+        //const newCards = { ...match };
+        //const newCardsOpponent = { ...opponentMatch };
+
+        /*let cardOpponenet = false;
 
         if (card.user === myUserId) { // Moviendo mis propias cartas
 
@@ -276,7 +368,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
             }
             
-        }
+        }*/
 
     };
 
@@ -628,8 +720,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         handleVisibleChangePopever(false);
     };
 
-    const takeControlOpponentCard = (zone: string) => {
-        dispatch(setTakeControlOpponentCardAction(index, zone));
+    const takeControlOpponentCard = (zone: string, controlType: string) => {
+        dispatch(setTakeControlOpponentCardAction(index, zone, controlType));
         dispatch(openModalTakeControlOpponentCard());
         handleVisibleChangePopever(false);
     };
@@ -986,7 +1078,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
                     { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }  
                 </div>
             )}
@@ -999,7 +1093,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
                     { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }    
                 </div>
             )}
@@ -1012,7 +1108,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
                     { card.bearerId && <Button type="link" onClick={ () => viewBearer(false) }>Conocer Portador</Button> }
                 </div>
             )}
@@ -1025,7 +1123,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button>
                 </div>
             )}
 
@@ -1037,7 +1137,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button>
                 </div>
             )}
 

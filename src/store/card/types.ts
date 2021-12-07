@@ -31,6 +31,7 @@ export type Card = {
     armsId?: string[];
     bearerId?: string;
     vibrate?: boolean;
+    controlType?: string;
 };
 
 export type CardState = {

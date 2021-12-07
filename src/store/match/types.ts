@@ -26,6 +26,7 @@ export type MatchState = {
     amountCardsView: number;
     takeControlOpponentCardIndex: number;
     takeControlOpponentCardZone: string;
+    takeControlOpponentCardControlType: string;
     selectedWeapon: any;
 };
 

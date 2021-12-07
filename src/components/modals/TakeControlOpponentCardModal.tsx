@@ -14,11 +14,12 @@ import { scrollToBottom } from '../../helpers/scrollToBottom';
 interface TakeControlOpponentCardModalProps {
     zone: string;
     index: number;
+    controlType: string;
 };
 
 const { DEFENSE_ZONE, ATTACK_ZONE, SUPPORT_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, EXILE_ZONE } = ZONE_NAMES;
 
-const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zone, index}) => {
+const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zone, index, controlType}) => {
 
     const { match, opponentMatch, matchId } = useSelector((state: RootState) => state.match);
     const { modalOpenTakeControlOpponentCard } = useSelector((state: RootState) => state.uiModal);
@@ -39,7 +40,9 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
         const newOpponentMatch = { ...opponentMatch };
         const newMatch = { ...match };
 
-        const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;        
+        const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;     
+        
+        card.controlType = controlType;
 
         newOpponentMatch[zone] = newOpponentMatch[zone].filter((card: Card, index2: number) => index2 !== index);
         newMatch[optionSelect] = [...newMatch[optionSelect], card];

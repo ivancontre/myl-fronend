@@ -12,6 +12,7 @@ const initialState: MatchState = {
     amountCardsView: 1,
     takeControlOpponentCardIndex: -1,
     takeControlOpponentCardZone: '',
+    takeControlOpponentCardControlType: '',
     selectedWeapon: null
 };
 
@@ -73,7 +74,8 @@ export const matchReducer = (state: typeof initialState = initialState, action: 
             return {
                 ...state,
                 takeControlOpponentCardIndex: action.payload.index,
-                takeControlOpponentCardZone: action.payload.zone
+                takeControlOpponentCardZone: action.payload.zone,
+                takeControlOpponentCardControlType: action.payload.controlType
             };
 
         case setWeapon:
