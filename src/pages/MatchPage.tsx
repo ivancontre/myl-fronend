@@ -128,8 +128,7 @@ const MatchPage: FC = () => {
                         opponentId
                     }, () => {
                         finishMatch();
-                    });
-                    
+                    });                    
                     
                 },
                 onCancel() {

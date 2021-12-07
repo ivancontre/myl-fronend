@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.dark.css';
 
 body {
-    background: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1638832975/old-black-background-grunge-texture-dark-wallpaper-blackboard-chalkboard-room-wall_eonvx5.jpg");
+    background-image: linear-gradient(to top, #000000, #060002, #0a0006, #0c000c, #0b0012, #0b0012, #0b0012, #0b0012, #0c000c, #0a0006, #060002, #000000);
     
 }
 
