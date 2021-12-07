@@ -1,1 +1,10 @@
 @import '~antd/dist/antd.dark.css';
+
+body {
+    background: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1638832975/old-black-background-grunge-texture-dark-wallpaper-blackboard-chalkboard-room-wall_eonvx5.jpg");
+    
+}
+
+.ant-layout {
+    background: unset;
+}

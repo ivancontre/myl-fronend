@@ -11,7 +11,7 @@ const { Content } = Layout;
 export const AuthRouter: FC = () => {
     return (
 
-        <Layout className="site-layout"  style={{ height: '100vh' }}>
+        <Layout className="site-layout">
             <Content
                 className="site-layout-background"
                 style={{
