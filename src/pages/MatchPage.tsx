@@ -239,6 +239,7 @@ const MatchPage: FC = () => {
     useEffect(() => {
         
         socket?.on('changing-opponent', (data) => {
+            console.log(data)
             dispatch(changOpponenteMatch(data));
         });
 
@@ -252,7 +253,7 @@ const MatchPage: FC = () => {
         
         socket?.on('updating-match-opponent', (data) => {
             console.log('updating-match-opponent');
-            dispatch(changeMatch(data, false));
+            //dispatch(changeMatch(data));
         });
 
         return () => {
