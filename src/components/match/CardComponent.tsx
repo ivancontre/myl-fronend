@@ -54,7 +54,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const cardToMove = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
         const newCards = { ...match };
-        const newCardsOpponent = { ...opponentMatch };
+        //const newCardsOpponent = { ...opponentMatch };
 
         let cardOpponenet = true;
 
