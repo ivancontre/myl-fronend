@@ -8,7 +8,7 @@ import { addMessageAction } from '../../store/chat/action';
 import { Message } from '../../store/chat/types';
 
 
-import { QuestionOutlined, StopOutlined, LikeOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, CheckCircleOutlined, MessageOutlined } from '@ant-design/icons';
 
 const Buttons: FC = () => {
 
@@ -57,14 +57,12 @@ const Buttons: FC = () => {
 
     };
 
-    const randomIntFromInterval = (min: number, max: number) => {
-
-        const result = Math.floor(Math.random() * (max - min + 1) + min);
+    const sendMessage = (text: string) => {
 
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Resultado dado: ${result}`,
+            text,
             isAction: true
         };
 
@@ -76,21 +74,33 @@ const Buttons: FC = () => {
             dispatch(addMessageAction(newMessage));
             scrollToBottom('messages');
         });
+
+    };
+
+    const randomIntFromInterval = (min: number, max: number) => {
+
+        const result = Math.floor(Math.random() * (max - min + 1) + min);
+        sendMessage(`Resultado dado: ${result}`);
+
     };
 
 
     return (
         <div>
-            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionOutlined />} style={{marginBottom: 3, backgroundColor: 'darkgoldenrod'}} >
+            <Button type="default" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionCircleOutlined />} style={{marginBottom: 3, backgroundColor: 'darkgoldenrod'}} >
                 Lanzar dado
             </Button>
 
-            <Button type="primary" block danger onClick={ stop } icon={ <StopOutlined /> } style={{marginBottom: 3}} >
+            <Button type="primary" block danger onClick={ () => sendMessage('STOP!!!') } icon={ <ExclamationCircleOutlined /> } style={{marginBottom: 3}} >
                 Stop!
             </Button>
             
-            <Button type="primary" block onClick={ yourTurn } icon={ <LikeOutlined /> }>
+            <Button type="primary" block onClick={ () => sendMessage('TU TURNO!!!') } icon={ <CheckCircleOutlined /> }>
                 Tu turno!
+            </Button>
+
+            <Button type="default" block onClick={ () => sendMessage('Pensando...') } icon={ <MessageOutlined /> }>
+                Pensando...
             </Button>
         </div>
     )
