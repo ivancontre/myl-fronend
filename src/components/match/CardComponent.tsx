@@ -54,9 +54,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         const cardToMove = match[item.zone].find((card: Card, index2: number) => index2 === index) as Card;
 
         const newCards = { ...match };
-        //const newCardsOpponent = { ...opponentMatch };
+        const newCardsOpponent = { ...opponentMatch };
 
-        let cardOpponenet = true;
+        let cardOpponenet = false;
 
         if (card.user === myUserId) { // Moviendo mis propias cartas
 
@@ -94,7 +94,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                         } else {
                             cardOpponenet = true;
-                            opponentMatch[zoneName] = [...opponentMatch[zoneName], armCardInMyZone];
+                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
 
                         }
 
@@ -150,7 +150,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 dispatch(changeMatch(newMatch));
 
                 if (cardOpponenet) {
-                    const newMatchOpponent = shuffle({ ...opponentMatch }, CASTLE_ZONE);
+                    const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
                     dispatch(changOpponenteMatch(newMatchOpponent));
                     socket?.emit('update-match-opponent', {
                         match: newMatchOpponent,
@@ -164,9 +164,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 dispatch(changeMatch(newCards));
 
                 if (cardOpponenet) {
-                    dispatch(changOpponenteMatch(opponentMatch));
+                    dispatch(changOpponenteMatch(newCardsOpponent));
                     socket?.emit('update-match-opponent', {
-                        match: opponentMatch,
+                        match: newCardsOpponent,
                         matchId
                     });   
                 }
@@ -193,7 +193,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                         } else {
 
-                            opponentMatch[zoneName] = [...opponentMatch[zoneName], armCardInMyZone];
+                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
 
                         }
 
@@ -246,7 +246,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
             if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
                 console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}" oponente`);
-                opponentMatch[zoneName] = [...opponentMatch[zoneName], cardToMove];
+                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], cardToMove];
             } else {
                 console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
                 newCards[zoneName] = [...newCards[zoneName], cardToMove];
@@ -256,7 +256,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                 const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
                 dispatch(changeMatch(newMatch));
-                const newMatchOpponent = shuffle({ ...opponentMatch }, CASTLE_ZONE);
+                const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
                 dispatch(changOpponenteMatch(newMatchOpponent));
 
                 socket?.emit('update-match-opponent', {
@@ -267,10 +267,10 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             } else {
                 
                 dispatch(changeMatch(newCards));
-                dispatch(changOpponenteMatch(opponentMatch));
+                dispatch(changOpponenteMatch(newCardsOpponent));
 
                 socket?.emit('update-match-opponent', {
-                    match: opponentMatch,
+                    match: newCardsOpponent,
                     matchId
                 });
 
