@@ -74,7 +74,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 scrollToBottom('messages');
             });
 
-            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {                
+            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {                
 
                 for (const armId of cardToMove.armsId as string[]) {
 
@@ -103,7 +103,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 delete cardToMove.armsId;
             }
 
-            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
                 // Al portador se le debe quitar esta arma
                 const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
 
@@ -166,7 +166,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
         } else { // ------------------- Enviando cartas robadas -------------------------------------
             
-            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
 
                 for (const armId of cardToMove.armsId as string[]) {
 
@@ -196,7 +196,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
             }
 
-            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE)) {
+            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
                 // Al portador se le debe quitar esta arma
                 const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
 
