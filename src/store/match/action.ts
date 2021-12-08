@@ -67,13 +67,12 @@ export const setAmountCardsViewAction = (amount: number) => {
     }
 };
 
-export const setTakeControlOpponentCardAction = (index: number, zone: string, controlType: string) => {
+export const setTakeControlOpponentCardAction = (index: number, zone: string) => {
     return {
         type: setTakeControlOpponentCard,
         payload: {
             index,
-            zone,
-            controlType
+            zone
         }
     }
 };

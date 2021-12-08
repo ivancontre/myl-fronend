@@ -74,8 +74,7 @@ export const matchReducer = (state: typeof initialState = initialState, action: 
             return {
                 ...state,
                 takeControlOpponentCardIndex: action.payload.index,
-                takeControlOpponentCardZone: action.payload.zone,
-                takeControlOpponentCardControlType: action.payload.controlType
+                takeControlOpponentCardZone: action.payload.zone
             };
 
         case setWeapon:

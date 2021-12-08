@@ -45,6 +45,24 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     const [visiblePopover, setVisiblePopover] = useState(false);
     const [animated, setAnimated] = useState(false);
 
+    const sendMessage = (text: string) => {
+        const newMessage: Message = {
+            id: myUserId as string,
+            username: username as string,
+            text,
+            isAction: true
+        };
+
+        socket?.emit( 'personal-message', {
+            matchId,
+            message: newMessage
+        }, (data: any) => {
+            newMessage.date = data;
+            dispatch(addMessageAction(newMessage));
+            scrollToBottom('messages');
+        });
+    };
+
     const changeCardZone = (item: DragCard, zoneName: string) => {
         
         if (item.zone === zoneName || isOpponent) {
@@ -55,6 +73,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
         const newCards = { ...match };
         const newCardsOpponent = { ...opponentMatch };
+        let haveOpponentArm = false;
 
         if (cardToMove.user === myUserId) { // Moviendo mis propias cartas
 
@@ -73,119 +92,13 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                         if (armCardInMyZone.user === myUserId) {
                             
+                            sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}"`);                            
                             newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
 
                         } else {
 
-                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-            // si es un arma
-            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
-                // Al portador se le debe quitar esta arma
-                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                if (bearerInMyDefenseZone) {
-                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                        if (card.idx === bearerInMyDefenseZone.idx) {
-                            return {
-                                ...card,
-                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                            }
-                        }
-
-                        return card;
-                    });
-                } else {
-
-                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                    if (bearerInMyAttackZone) {
-                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyAttackZone.idx) {
-                                return {
-                                    ...card,
-                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                                }
-                            }
-    
-                            return card;
-                        });
-                    }
-                }
-
-                delete cardToMove.bearerId;
-            }
-
-            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
-            newCards[zoneName] = [...newCards[zoneName], cardToMove];
-
-            if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
-
-                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
-                dispatch(changeMatch(newMatch));
-
-            } else {
-                dispatch(changeMatch(newCards));
-            }
-
-
-        }
-
-
-
-
-
-
-
-        //const newCards = { ...match };
-        //const newCardsOpponent = { ...opponentMatch };
-
-        /*let cardOpponenet = false;
-
-        if (card.user === myUserId) { // Moviendo mis propias cartas
-
-            const newMessage: Message = {
-                id: myUserId as string,
-                username: username as string,
-                text: `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`,
-                isAction: true
-            };
-
-            socket?.emit( 'personal-message', {
-                matchId,
-                message: newMessage
-            }, (data: any) => {
-                newMessage.date = data;
-                dispatch(addMessageAction(newMessage));
-                scrollToBottom('messages');
-            });
-
-            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {                
-
-                for (const armId of cardToMove.armsId as string[]) {
-
-                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-
-                    if (armCardInMyZone) {
-
-                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-
-                        delete armCardInMyZone.bearerId;
-
-                        if (armCardInMyZone.user === myUserId) {
-                            
-                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
-
-                        } else {
-                            cardOpponenet = true;
+                            sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}" oponente`);
+                            haveOpponentArm = true;
                             newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
 
                         }
@@ -195,13 +108,16 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 }
 
                 delete cardToMove.armsId;
+
             }
 
+            // si es un arma. Aquí el arma es mía
             if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
                 // Al portador se le debe quitar esta arma
                 const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
 
                 if (bearerInMyDefenseZone) {
+
                     newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
                         if (card.idx === bearerInMyDefenseZone.idx) {
                             return {
@@ -212,6 +128,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
                         return card;
                     });
+
                 } else {
 
                     const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
@@ -238,10 +155,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
             if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
 
+                sendMessage(`Moviendo y barajando "${item.name}" de "${item.zone}" a "${zoneName}"`);
                 const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
                 dispatch(changeMatch(newMatch));
 
-                if (cardOpponenet) {
+                if (haveOpponentArm) {
                     const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
                     dispatch(changOpponenteMatch(newMatchOpponent));
                     socket?.emit('update-match-opponent', {
@@ -249,128 +167,134 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         matchId
                     });
                 }
-                
 
             } else {
 
+                sendMessage(`Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
                 dispatch(changeMatch(newCards));
 
-                if (cardOpponenet) {
+                if (haveOpponentArm) {
                     dispatch(changOpponenteMatch(newCardsOpponent));
                     socket?.emit('update-match-opponent', {
                         match: newCardsOpponent,
                         matchId
-                    });   
+                    });
                 }
 
             }
 
-        } else { // ------------------- Enviando cartas robadas -------------------------------------
-            
-            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
 
-                for (const armId of cardToMove.armsId as string[]) {
+        } else { // Si estoy moviendo una carta robada
 
-                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-                    
-                    if (armCardInMyZone) {
+            if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE) {
+                // Si es un aliado con armas, elimino sus armas y las armas las enío al destino
+                if (cardToMove.armsId) {
+                    for (const armId of cardToMove.armsId as string[]) {
+    
+                        const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
+                        
+                        if (armCardInMyZone) {
+    
+                            newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
+    
+                            delete armCardInMyZone.bearerId;
+    
+                            if (armCardInMyZone.user === myUserId) {
 
-                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-
-                        delete armCardInMyZone.bearerId;
-
-                        if (armCardInMyZone.user === myUserId) {
-                            
-                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
-
-                        } else {
-
-                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
-
-                        }
-
-                    }
-
-                }
-
-                delete cardToMove.armsId;
-
-            }
-
-            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
-                // Al portador se le debe quitar esta arma
-                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                if (bearerInMyDefenseZone) {
-                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                        if (card.idx === bearerInMyDefenseZone.idx) {
-                            return {
-                                ...card,
-                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                                sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}"`);                                
+                                newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
+    
+                            } else {
+    
+                                sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}" oponente`);    
+                                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
+    
                             }
+    
                         }
+    
+                    }
+    
+                    delete cardToMove.armsId;
+                }
 
-                        return card;
-                    })
-                } else {
+                // Si es un arma, borro su portador
+                if (cardToMove.bearerId) {
+                    // Al portador se le debe quitar esta arma
+                    const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
 
-                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                    if (bearerInMyAttackZone) {
-                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyAttackZone.idx) {
+                    if (bearerInMyDefenseZone) {
+                        newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
+                            if (card.idx === bearerInMyDefenseZone.idx) {
                                 return {
                                     ...card,
                                     armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
                                 }
                             }
-    
+
                             return card;
                         })
+                    } else {
+
+                        const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
+
+                        if (bearerInMyAttackZone) {
+                            newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
+                                if (card.idx === bearerInMyAttackZone.idx) {
+                                    return {
+                                        ...card,
+                                        armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
+                                    }
+                                }
+        
+                                return card;
+                            })
+                        }
+
                     }
+
+                    delete cardToMove.bearerId;
+                }
+
+                newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], cardToMove];
+
+                if (zoneName === CASTLE_ZONE) {
+
+                    sendMessage(`Moviendo y barajando "${item.name}" de "${item.zone}" a "${zoneName}" oponente`);
+                    dispatch(changeMatch(newCards));
+                    const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
+                    dispatch(changOpponenteMatch(newMatchOpponent));
+                    socket?.emit('update-match-opponent', {
+                        match: newMatchOpponent,
+                        matchId
+                    });
+
+                } else {
+
+                    sendMessage(`Moviendo "${item.name}" de "${item.zone}" a "${zoneName}" oponente`);
+                    dispatch(changeMatch(newCards));
+                    dispatch(changOpponenteMatch(newCardsOpponent));
+                    socket?.emit('update-match-opponent', {
+                        match: newCardsOpponent,
+                        matchId
+                    });
 
                 }
 
-                delete cardToMove.bearerId;
-            }
 
-            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+            } else { // Si muevo una carta en juego
 
-            if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE) {
-                console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}" oponente`);
-                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], cardToMove];
-            } else {
-                console.log('Action:', `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
+                sendMessage(`Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
+                newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
                 newCards[zoneName] = [...newCards[zoneName], cardToMove];
-            }            
 
-            if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
-
-                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
-                dispatch(changeMatch(newMatch));
-                const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
-                dispatch(changOpponenteMatch(newMatchOpponent));
-
-                socket?.emit('update-match-opponent', {
-                    match: newMatchOpponent,
-                    matchId
-                });
-
-            } else {
-                
                 dispatch(changeMatch(newCards));
-                dispatch(changOpponenteMatch(newCardsOpponent));
-
-                socket?.emit('update-match-opponent', {
-                    match: newCardsOpponent,
-                    matchId
-                });
 
             }
-            
-        }*/
 
-    };
+        }
+   };
 
     const [{ handlerId }, drop] = useDrop({
         accept: 'card',
@@ -720,8 +644,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         handleVisibleChangePopever(false);
     };
 
-    const takeControlOpponentCard = (zone: string, controlType: string) => {
-        dispatch(setTakeControlOpponentCardAction(index, zone, controlType));
+    const takeControlOpponentCard = (zone: string) => {
+        dispatch(setTakeControlOpponentCardAction(index, zone));
         dispatch(openModalTakeControlOpponentCard());
         handleVisibleChangePopever(false);
     };
@@ -732,270 +656,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             ...card,
             zone: zoneName, 
             index: index
-        };     
+        };
 
-        const cardToDelete = match[dragCard.zone].find((card: Card, index2: number) => index2 === index) as Card;
-
-        const newCards = { ...match };
-        const newCardsOpponent = { ...opponentMatch };        
-
-        if (cardToDelete.user === myUserId) { // Enviando mis propias cartas    
-            
-            const newMessage: Message = {
-                id: myUserId as string,
-                username: username as string,
-                text: `Enviando y barajando "${cardToDelete.name}" de "${zoneName}" a mi "${CASTLE_ZONE}"`,
-                isAction: true
-            };
-    
-            socket?.emit( 'personal-message', {
-                matchId,
-                message: newMessage
-            }, (data: any) => {
-                newMessage.date = data;
-                dispatch(addMessageAction(newMessage));
-                scrollToBottom('messages');
-            });
-            
-            if (cardToDelete.armsId) {
-
-                for (const armId of cardToDelete.armsId as string[]) {
-
-                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-
-                    if (armCardInMyZone) {
-
-                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-
-                        delete armCardInMyZone.bearerId;
-
-                        if (armCardInMyZone.user === myUserId) {
-                            
-                            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
-
-                            const newMessage: Message = {
-                                id: myUserId as string,
-                                username: username as string,
-                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a mi "${CASTLE_ZONE}"`,
-                                isAction: true
-                            };
-                    
-                            socket?.emit( 'personal-message', {
-                                matchId,
-                                message: newMessage
-                            }, (data: any) => {
-                                newMessage.date = data;
-                                dispatch(addMessageAction(newMessage));
-                                scrollToBottom('messages');
-                            });
-
-                        } else {
-
-                            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
-
-                            const newMessage: Message = {
-                                id: myUserId as string,
-                                username: username as string,
-                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${CASTLE_ZONE}" oponente`,
-                                isAction: true
-                            };
-                    
-                            socket?.emit( 'personal-message', {
-                                matchId,
-                                message: newMessage
-                            }, (data: any) => {
-                                newMessage.date = data;
-                                dispatch(addMessageAction(newMessage));
-                                scrollToBottom('messages');
-                            });
-
-                        }
-
-                    }
-
-                }
-
-                delete cardToDelete.armsId;
-            }
-
-            if (cardToDelete.bearerId) {
-                // Al portador se le debe quitar esta arma
-                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
-
-                if (bearerInMyDefenseZone) {
-                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                        if (card.idx === bearerInMyDefenseZone.idx) {
-                            return {
-                                ...card,
-                                armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
-                            }
-                        }
-
-                        return card;
-                    });
-                } else {
-
-                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
-
-                    if (bearerInMyAttackZone) {
-                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyAttackZone.idx) {
-                                return {
-                                    ...card,
-                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
-                                }
-                            }
-    
-                            return card;
-                        });
-                    }
-                }
-
-                delete cardToDelete.bearerId;
-            }
-
-            newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
-            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], cardToDelete];
-
-            const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
-            dispatch(changeMatch(newMatch));
-            const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
-            dispatch(changOpponenteMatch(newMatchOpponent));
-            socket?.emit('update-match-opponent', {
-                match: newMatchOpponent,
-                matchId
-            });
-
-        } else { // ------------------- Enviando cartas robadas -------------------------------------
-
-            const newMessage: Message = {
-                id: myUserId as string,
-                username: username as string,
-                text: `Enviando y barajando "${cardToDelete.name}" de "${zoneName}" a "${CASTLE_ZONE}" oponente`,
-                isAction: true
-            };
-    
-            socket?.emit( 'personal-message', {
-                matchId,
-                message: newMessage
-            }, (data: any) => {
-                newMessage.date = data;
-                dispatch(addMessageAction(newMessage));
-                scrollToBottom('messages');
-            });
-
-            if (cardToDelete.armsId) {
-
-                for (const armId of cardToDelete.armsId as string[]) {
-
-                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-                    
-                    if (armCardInMyZone) {
-
-                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-
-                        delete armCardInMyZone.bearerId;
-
-                        if (armCardInMyZone.user === myUserId) {
-                            
-                            newCards[CASTLE_ZONE] = [...newCards[CASTLE_ZONE], armCardInMyZone];
-
-                            const newMessage: Message = {
-                                id: myUserId as string,
-                                username: username as string,
-                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a mi "${CASTLE_ZONE}"`,
-                                isAction: true
-                            };
-                    
-                            socket?.emit( 'personal-message', {
-                                matchId,
-                                message: newMessage
-                            }, (data: any) => {
-                                newMessage.date = data;
-                                dispatch(addMessageAction(newMessage));
-                                scrollToBottom('messages');
-                            });
-
-                        } else {
-
-                            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], armCardInMyZone];
-
-                            const newMessage: Message = {
-                                id: myUserId as string,
-                                username: username as string,
-                                text: `Enviando y barajando "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${CASTLE_ZONE}" oponente`,
-                                isAction: true
-                            };
-                    
-                            socket?.emit( 'personal-message', {
-                                matchId,
-                                message: newMessage
-                            }, (data: any) => {
-                                newMessage.date = data;
-                                dispatch(addMessageAction(newMessage));
-                                scrollToBottom('messages');
-                            });
-
-                        }
-
-                    }
-
-                }
-
-                delete cardToDelete.armsId;
-            }
-
-            if (cardToDelete.bearerId) {
-                // Al portador se le debe quitar esta arma
-                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
-
-                if (bearerInMyDefenseZone) {
-                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                        if (card.idx === bearerInMyDefenseZone.idx) {
-                            return {
-                                ...card,
-                                armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
-                            }
-                        }
-
-                        return card;
-                    })
-                } else {
-
-                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToDelete.bearerId);
-
-                    if (bearerInMyAttackZone) {
-                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyAttackZone.idx) {
-                                return {
-                                    ...card,
-                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToDelete.idx)
-                                }
-                            }
-    
-                            return card;
-                        })
-                    }
-
-                }
-
-                delete cardToDelete.bearerId;
-            }
-
-            newCards[dragCard.zone] = newCards[dragCard.zone].filter((card: Card, index2: number) => index2 !== index);
-            newCardsOpponent[CASTLE_ZONE] = [...newCardsOpponent[CASTLE_ZONE], cardToDelete];
-
-            const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
-            dispatch(changeMatch(newMatch));
-            const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
-            dispatch(changOpponenteMatch(newMatchOpponent));
-
-            socket?.emit('update-match-opponent', {
-                match: newMatchOpponent,
-                matchId
-            });
-        }
-
+        changeCardZone(dragCard, CASTLE_ZONE);
         handleVisibleChangePopever(false);
     };
 
@@ -1078,9 +741,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
                     { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }  
                 </div>
             )}
@@ -1093,9 +754,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
                     { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }    
                 </div>
             )}
@@ -1108,9 +767,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button><br/>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button><br/>
                     { card.bearerId && <Button type="link" onClick={ () => viewBearer(false) }>Conocer Portador</Button> }
                 </div>
             )}
@@ -1123,9 +780,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button>
                 </div>
             )}
 
@@ -1137,9 +792,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
             )) && (
                 <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'FINAL_FASE') }>Tomar control hasta la fase final</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'FINAL_GAME') }>Tomar control por el resto del juego</Button><br/>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE, 'WHILE_EFFECT') }>Tomar control mientras carta efecto esté en juego</Button>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button>
                 </div>
             )}
 
