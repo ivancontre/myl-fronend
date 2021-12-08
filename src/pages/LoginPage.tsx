@@ -21,7 +21,7 @@ const LoginPage: FC = () => {
 
     return (
         <>
-            <Title level={ 1 }>Iniciar Sesión</Title>
+            <Title level={ 2 }>Iniciar Sesión</Title>
 
             <Form
                 name="normal_login"
@@ -69,11 +69,13 @@ const LoginPage: FC = () => {
                 </Form.Item> */}
 
                 <Form.Item>
-                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block>
+                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>
                         Ingresar
                     </Button>
-                    O 
-                    <Link to="/auth/register" > registrate!</Link>
+
+                    <p>¿No tienes cuenta? <Link to="/auth/register"> registrate aquí</Link></p>
+                    <p>¿Olvidaste tu contraseña? <Link to="/auth/recovery-password"> recupérala aquí</Link></p>                  
+                    
                 </Form.Item>
             </Form>
         </>

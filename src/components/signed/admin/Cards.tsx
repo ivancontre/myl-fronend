@@ -124,7 +124,7 @@ const Cards: FC = () => {
 
     const columns: ColumnsType<Card> = [
         {
-            title: 'Número',
+            title: 'N°',
             dataIndex: 'num',
             key: 'num',
             width: '5%',

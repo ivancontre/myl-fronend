@@ -190,6 +190,29 @@ export const startSetDetailAction = () => {
     }
 };
 
+export const startRecoveryPasswordAction = (email: string) => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const resp = await runFetch('api/auth/recovery-password', { email }, 'POST');
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                message.success('Se enviará la nueva contraseña a su correo');
+            } else {
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+};
+
 const setDetail = (playing: boolean, victories: number, defeats: number): AuthActionTypes => {
     return {
         type: authStartSetDetail,

@@ -97,7 +97,7 @@ export const SingedRouter: FC = () => {
         notification.open({
             message: 'Nueva invitación',
             description:
-              `El usuario ${username} te está invitando a jugar`,
+              `El usuario "${username}" te está invitando a jugar`,
             btn,
             key,
             onClose: close,

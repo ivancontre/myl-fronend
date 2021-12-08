@@ -23,7 +23,7 @@ const RegisterPage = () => {
 
     return (
         <>
-            <Title level={ 1 }>Registro</Title>
+            <Title level={ 2 }>Registro</Title>
 
             <Form
                 name="normal_login"
@@ -147,11 +147,10 @@ const RegisterPage = () => {
                 </Form.Item> */}
 
                 <Form.Item>
-                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block>
+                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>
                         Aceptar
                     </Button>
-                    O 
-                    <Link to="/auth/login" > inicia sesión!</Link>
+                    <p>¿Ya tienes cuenta? <Link to="/auth/login"> inicia sesión aquí</Link></p>
                 </Form.Item>
             </Form>
         </>

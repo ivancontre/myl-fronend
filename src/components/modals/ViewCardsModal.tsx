@@ -42,13 +42,17 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
     useEffect(() => {
 
-        if (amount) {
-            dispatch(setViewCardsOrigin(origin[zone].slice(-amount)));
-        } else {
-            dispatch(setViewCardsOrigin(origin[zone]));
+        if (origin[zone]) {
+            if (amount) {
+                dispatch(setViewCardsOrigin(origin[zone].slice(-amount)));
+            } else {
+                console.log('object')
+                dispatch(setViewCardsOrigin(origin[zone]));
+            }
+    
+            dispatch(setViewCardsDestiny([]));
         }
-
-        dispatch(setViewCardsDestiny([]));
+        
         
         
     }, [dispatch, origin, zone, amount]);

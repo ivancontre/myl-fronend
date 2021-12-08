@@ -677,7 +677,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     <Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/>
                     <Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/>
                     <Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/>
-                    <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button>
+                    <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/>
+                    <Button type="link" onClick={ showToOpponent }>Mostrar X al oponente</Button>
                 </div>
             )}
 

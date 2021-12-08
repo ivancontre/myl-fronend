@@ -5,6 +5,7 @@ import LoginPage from '../pages/LoginPage';
 
 import '../css/auth.css';
 import RegisterPage from '../pages/RegisterPage';
+import RecoveryPasswordPage from '../pages/RecoveryPasswordPage';
 
 const { Content } = Layout;
 
@@ -26,6 +27,8 @@ export const AuthRouter: FC = () => {
                                 <Route exact path="/auth/login" component={ LoginPage } />
 
                                 <Route exact path="/auth/register" component={ RegisterPage } />
+
+                                <Route exact path="/auth/recovery-password" component={ RecoveryPasswordPage } />
 
                                 <Redirect to="/auth/login" />
 

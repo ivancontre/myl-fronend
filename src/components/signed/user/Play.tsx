@@ -140,8 +140,9 @@ const Play: FC = () => {
         const modal = Modal.info({
             title: 'Esperando confirmación',
             content: `El usuario "${username}" tiene ${secondsToGo} segundos para confirmar`,
-            okButtonProps: { hidden: true },
+            onOk: () => cancelInvitation(opponentId, key),
             onCancel: () => cancelInvitation(opponentId, key),
+            okText: 'Cancelar',
         });
         
         timer = setInterval(() => {
