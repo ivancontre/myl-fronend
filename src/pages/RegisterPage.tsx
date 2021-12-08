@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button,  Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined, SmileOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { startRegister } from '../store/auth/action';
@@ -19,7 +19,6 @@ const RegisterPage = () => {
         setloading(false);
 
     };
-
 
     return (
         <>
@@ -42,7 +41,7 @@ const RegisterPage = () => {
                 >
                     <Input 
                         type="text" 
-                        prefix={<UserOutlined className="site-form-item-icon" />} 
+                        prefix={<SmileOutlined className="site-form-item-icon" />} 
                         placeholder="Nombre" 
                     />
                 
@@ -59,7 +58,7 @@ const RegisterPage = () => {
                 >
                     <Input 
                         type="text" 
-                        prefix={<UserOutlined className="site-form-item-icon" />} 
+                        prefix={<SmileOutlined className="site-form-item-icon" />} 
                         placeholder="Apellido" 
                     />
                 
@@ -79,7 +78,7 @@ const RegisterPage = () => {
                 >
                     <Input 
                         type="text" 
-                        prefix={<UserOutlined className="site-form-item-icon" />} 
+                        prefix={<MailOutlined className="site-form-item-icon" />} 
                         placeholder="Correo" 
                     />
                 </Form.Item>
@@ -104,7 +103,17 @@ const RegisterPage = () => {
 
                 <Form.Item
                     name="password"
-                    rules={[{ required: true, message: 'Por favor ingresa tu contraseña' }]}
+                    rules={[
+                        { 
+                            required: true, 
+                            message: 'Por favor ingresa tu contraseña' 
+                        },
+                        {  
+                            min: 6, 
+                            message: 'La contraseña debe tener a lo menos 6 caracteres' 
+                        }
+                    
+                    ]}
                     hasFeedback
                 >
                     <Input.Password
@@ -119,7 +128,11 @@ const RegisterPage = () => {
                     rules={[
                         {
                           required: true,
-                          message: 'Por favor confirma tu contraseña!',
+                          message: 'Por favor confirma tu contraseña!'
+                        },
+                        {  
+                            min: 6, 
+                            message: 'La contraseña debe tener a lo menos 6 caracteres' 
                         },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
@@ -138,13 +151,6 @@ const RegisterPage = () => {
                         placeholder="Repetir contraseña"
                     />
                 </Form.Item>
-                
-                {/* <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
-
-                </Form.Item> */}
 
                 <Form.Item>
                     <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>
@@ -158,4 +164,4 @@ const RegisterPage = () => {
     )
 }
 
-export default RegisterPage
+export default RegisterPage;

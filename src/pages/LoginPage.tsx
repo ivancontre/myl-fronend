@@ -18,6 +18,7 @@ const LoginPage: FC = () => {
         await dispatch(startLogin(email, password));
         setloading(false);
     };
+    
 
     return (
         <>
@@ -48,11 +49,18 @@ const LoginPage: FC = () => {
         
                 <Form.Item
                     name="password"
-                    rules={[{ 
+                    rules={[
+                        { 
                             required: true, 
                             message: 'Por favor ingresa tu contraseña' 
+                        },
+                        {  
+                            min: 6, 
+                            message: 'La contraseña debe tener a lo menos 6 caracteres' 
                         }
+                    
                     ]}
+                    hasFeedback
                 >
                     <Input.Password
                         prefix={<LockOutlined className="site-form-item-icon" />}
@@ -60,13 +68,6 @@ const LoginPage: FC = () => {
                         placeholder="Contraseña"
                     />
                 </Form.Item>
-                
-                {/* <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
-
-                </Form.Item> */}
 
                 <Form.Item>
                     <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>

@@ -12,6 +12,7 @@ import { AuthActionTypes,
         authLogin, 
         authLogout, 
         authStartSetDetail, 
+        authStartUpdateData, 
         User 
 } from "./types";
 
@@ -190,6 +191,32 @@ export const startSetDetailAction = () => {
     }
 };
 
+export const startSetUpdateDataAction = (data: any) => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/auth/update', data, 'PUT', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                
+                dispatch(setUpdateData(respJson.name as string, respJson.lastname as string));
+
+            } else {
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+};
+
 export const startRecoveryPasswordAction = (email: string) => {
     return async (dispatch: Dispatch<AuthActionTypes>) => {
 
@@ -210,6 +237,16 @@ export const startRecoveryPasswordAction = (email: string) => {
             console.log(error);
         }
         
+    }
+};
+
+const setUpdateData = (name: string, lastname: string): AuthActionTypes  => {
+    return {
+        type: authStartUpdateData,
+        payload: {
+            name,
+            lastname
+        }
     }
 };
 

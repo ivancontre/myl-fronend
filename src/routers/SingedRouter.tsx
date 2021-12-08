@@ -33,6 +33,7 @@ import { RootState } from '../store';
 import { resetChatAction } from '../store/chat/action';
 import { resetModal } from '../store/ui-modal/action';
 import { playReset } from '../store/play/action';
+import Account from '../components/signed/user/Account';
 
 const { Content, Sider } = Layout;
 
@@ -180,7 +181,7 @@ export const SingedRouter: FC = () => {
 
                     <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="profile" icon={<UserOutlined />} >
+                        <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0}}>
                             { `Bienvenido ${username}`}
                         </Menu.Item>
 
@@ -193,6 +194,12 @@ export const SingedRouter: FC = () => {
                         <Menu.Item key="decks" icon={<BlockOutlined />}>
                             <Link to="/decks">
                                 Mis Mazos
+                            </Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="account" icon={<UserOutlined />}>
+                            <Link to="/account">
+                                Mi Cuenta
                             </Link>
                         </Menu.Item>
 
@@ -248,7 +255,8 @@ export const SingedRouter: FC = () => {
                                 <Route exact path="/decks" component={ Decks } />
                                 
                                 <Route exact path="/decks/new" component={ NewDeck } />
-                                
+
+                                <Route exact path="/account" component={ Account } />
 
                                 <Route exact path="/decks/:id/edit" component={ NewDeck } />
 

@@ -7,6 +7,7 @@ export const authCheckingFinish = '[auth] Finish checking login state';
 export const authLogout = '[auth] Logout';
 export const authStartRenewToken = '[auth] Start renew token';
 export const authStartSetDetail = '[auth] Start get detail'; // playing, defeats, victories
+export const authStartUpdateData = '[auth] Start Update data';
 
 export type User = {
     id: string;
@@ -46,4 +47,9 @@ type AuthStartSetDetail = {
     payload: any
 };
 
-export type AuthActionTypes = AuthLogin | AuthCheckingFinish | AuthLogout | AuthStartSetDetail;
+type AuthStartUpdateData = {
+    type: typeof authStartUpdateData,
+    payload: any
+};
+
+export type AuthActionTypes = AuthLogin | AuthCheckingFinish | AuthLogout | AuthStartSetDetail | AuthStartUpdateData;
