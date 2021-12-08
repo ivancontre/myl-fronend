@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, Modal } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { resetCardUpdating } from "../card/action";
@@ -17,7 +17,7 @@ import { AuthActionTypes,
 } from "./types";
 
 export const startLogin = (username: string, password: string) => {
-    return async (dispatch: Dispatch<AuthActionTypes>) => {
+    return async (dispatch: Dispatch<AuthActionTypes> | any) => {
 
         try {
             const resp = await runFetch('api/auth/login', { username, password }, 'POST');
@@ -41,7 +41,23 @@ export const startLogin = (username: string, password: string) => {
                     victories: respJson.user.victories
                 }));
 
+            } else if (resp.status === 401 && respJson.openModalForVerifyAccount) {
+
+                Modal.confirm({
+                    title: '¡Verificación de correo requerida!',
+                    content: `El correo asociado al usuario "${username}" es "${respJson.email}" y aún no se encuentra verificado. Mientras no se verifique no podrá iniciar sesión. ¿Verificar?`,
+                    onOk: () => { 
+                        message.info('Enviando correo de verificación...', 5)
+                        dispatch(startRetryVerify(respJson.email));
+
+                                               
+                     },
+                    okText: 'Verificar',
+                    cancelText: 'Salir'
+                });
+
             } else {
+
                 if (respJson.errors) {
 
                     for (let [, value] of Object.entries(respJson.errors)) {
@@ -50,9 +66,10 @@ export const startLogin = (username: string, password: string) => {
                     }
 
                 } else {
-                    message.warn(respJson.msg);
+                    message.warn(respJson.msg, 5);
                     console.log(respJson.msg);
                 }
+
             }
             
         } catch (error) {
@@ -71,9 +88,44 @@ export const startRegister = (name: string, lastname: string, email: string, use
             const respJson = await resp.json();
 
             if (resp.status === 201) {
+
+                message.success('Registrado correctamente. Revisa tu bandeja de entrada de tu correo para verificar la cuenta', 5);
+
+            } else {
+                if (respJson.errors) {
+
+                    for (let [, value] of Object.entries(respJson.errors)) {
+                        message.warn((value as any).msg);
+                        console.log((value as any).msg);
+                    }
+
+                } else {
+                    message.warn(respJson.msg, 5);
+                    console.log(respJson.msg);
+                }
+                
+            }
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador')
+            console.log(error);
+        }
+        
+    }
+};
+
+export const startVerifyToken = (token: string) => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+            
+            const resp = await runFetch('api/auth/verify-token', {}, 'GET', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+
                 localStorage.setItem('token', respJson.token);
                 localStorage.setItem('token-init-date', new Date().getTime().toString());
-
+                
                 dispatch(login({
                     id: respJson.user.id,
                     name: respJson.user.name,
@@ -89,21 +141,39 @@ export const startRegister = (name: string, lastname: string, email: string, use
                 }));
 
             } else {
-                if (respJson.errors) {
-
-                    for (let [, value] of Object.entries(respJson.errors)) {
-                        message.warn((value as any).msg);
-                        console.log((value as any).msg);
-                    }
-
-                } else {
-                    message.warn(respJson.msg);
-                    console.log(respJson.msg);
-                }
-                
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
             }
+
         } catch (error) {
-            message.error('Error interno, consulte con el administrador')
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+};
+
+export const startRetryVerify = (email: string) => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const resp = await runFetch('api/auth/retry-verify', {email}, 'POST');
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+
+                message.success('Revisa tu bandeja de entrada de tu correo para verificar la cuenta', 5);
+
+            } else {
+
+                message.warn(respJson.msg);
+                console.log(respJson.msg);      
+
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
             console.log(error);
         }
         

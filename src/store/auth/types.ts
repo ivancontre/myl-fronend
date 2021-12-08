@@ -8,6 +8,7 @@ export const authLogout = '[auth] Logout';
 export const authStartRenewToken = '[auth] Start renew token';
 export const authStartSetDetail = '[auth] Start get detail'; // playing, defeats, victories
 export const authStartUpdateData = '[auth] Start Update data';
+export const authStartVerifyToken = '[auth] Start Verify token';
 
 export type User = {
     id: string;
@@ -52,4 +53,9 @@ type AuthStartUpdateData = {
     payload: any
 };
 
-export type AuthActionTypes = AuthLogin | AuthCheckingFinish | AuthLogout | AuthStartSetDetail | AuthStartUpdateData;
+type AuthStartVerifyToken = {
+    type: typeof authStartVerifyToken,
+    payload: string
+};
+
+export type AuthActionTypes = AuthLogin | AuthCheckingFinish | AuthLogout | AuthStartSetDetail | AuthStartUpdateData | AuthStartVerifyToken;

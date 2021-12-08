@@ -6,6 +6,7 @@ import LoginPage from '../pages/LoginPage';
 import '../css/auth.css';
 import RegisterPage from '../pages/RegisterPage';
 import RecoveryPasswordPage from '../pages/RecoveryPasswordPage';
+import VerifyAccountPage from '../pages/VerifyAccountPage';
 
 const { Content } = Layout;
 
@@ -23,6 +24,8 @@ export const AuthRouter: FC = () => {
                     <Row justify="space-around" align="middle">
                         <Col xs={ 24 } sm= { 12 } md={ 9 } lg={ 9 } xl={ 6 } >
                             <Switch>
+
+                                <Route exact path="/auth/verify/:token" component={ VerifyAccountPage } />
 
                                 <Route exact path="/auth/login" component={ LoginPage } />
 

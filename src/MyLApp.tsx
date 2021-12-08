@@ -12,13 +12,15 @@ const MyLApp: FC = () => {
     localStorage.openpages = Date.now();
 
     const onLocalStorageEvent = function(e: StorageEvent){
-        
+        console.log(e)
         if(e.key === 'openpages'){
             // Emit that you're already available.
             localStorage.page_available = Date.now();
         }
   
-        if(e.key === 'page_available') {
+        const notIsInAuth = e.url.indexOf('auth') === -1;
+
+        if(e.key === 'page_available' && notIsInAuth) {
             
             alert('Ya posees una pestaña abierta con la aplicación. Solo puedes tener una sola abierta');
             const win = window.open("about:blank", "_self");

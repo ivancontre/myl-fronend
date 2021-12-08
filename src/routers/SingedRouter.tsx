@@ -72,7 +72,7 @@ export const SingedRouter: FC = () => {
     };
 
     const close = () => {
-        console.log('close notification')
+        console.log('close notification');
     };
 
     const acceptInvitation = useCallback((key: string, opponentId: string) => {
@@ -181,7 +181,7 @@ export const SingedRouter: FC = () => {
 
                     <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0}}>
+                        <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0, fontSize: 16}}>
                             { `Bienvenido ${username}`}
                         </Menu.Item>
 
