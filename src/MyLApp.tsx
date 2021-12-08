@@ -12,7 +12,7 @@ const MyLApp: FC = () => {
     localStorage.openpages = Date.now();
 
     const onLocalStorageEvent = function(e: StorageEvent){
-        console.log(e)
+        
         if(e.key === 'openpages'){
             // Emit that you're already available.
             localStorage.page_available = Date.now();
