@@ -19,8 +19,9 @@ import { SocketContext } from '../../context/SocketContext';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { Message } from '../../store/chat/types';
+import { shuffle } from '../../helpers/shuffle';
 
-const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE } = ZONE_NAMES;
+const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, CASTLE_ZONE } = ZONE_NAMES;
 
 interface ViewCastleModalProps {
     origin: Dictionary<Card[] | []>;
@@ -86,13 +87,12 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         dispatch(setAmountCardsViewAction(1));
     };
 
-    const handleCancelModal = () => {
-        resetModal();
+    const sendMessage = (text: string) => {
 
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Dejó de ver "${zone}"`,
+            text,
             isAction: true
         };
 
@@ -107,117 +107,64 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
     };
 
+    const handleCancelModal = () => {
+        
+        resetModal();
+        sendMessage(`Dejó de ver "${zone}"`);
+
+    };
+
     const handleOkModal = () => {
 
         if (onlyRead) {
             resetModal();
-            
-            const newMessage: Message = {
-                id: myUserId as string,
-                username: username as string,
-                text: `Dejó de ver "${zone}" oponente`,
-                isAction: true
-            };
-    
-            socket?.emit( 'personal-message', {
-                matchId,
-                message: newMessage
-            }, (data: any) => {
-                newMessage.date = data;
-                dispatch(addMessageAction(newMessage));
-                scrollToBottom('messages');
-            });
-
+            sendMessage(`Dejó de ver "${zone}" oponente`);
             return;
         }
 
-        const newMatch = { ...origin };
+        let newMatch = { ...origin };
 
-        if (!amount) {
+        /*if (!amount) {
 
+            console.log(viewCardsOrigin);
+            console.log(newMatch[zone])
             if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone])) {
                 
-                const newMessage: Message = {
-                    id: myUserId as string,
-                    username: username as string,
-                    text: `Ordenando "${zone}"`,
-                    isAction: true
-                };
-        
-                socket?.emit( 'personal-message', {
-                    matchId,
-                    message: newMessage
-                }, (data: any) => {
-                    newMessage.date = data;
-                    dispatch(addMessageAction(newMessage));
-                    scrollToBottom('messages');
-                });
+                sendMessage(`Ordenando "${zone}" 1`);
             }
 
         } else {
 
             if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone].slice(-amount))) {
                 
-                const newMessage: Message = {
-                    id: myUserId as string,
-                    username: username as string,
-                    text: `Ordenando "${zone}"`,
-                    isAction: true
-                };
-        
-                socket?.emit( 'personal-message', {
-                    matchId,
-                    message: newMessage
-                }, (data: any) => {
-                    newMessage.date = data;
-                    dispatch(addMessageAction(newMessage));
-                    scrollToBottom('messages');
-                });
+                sendMessage(`Ordenando "${zone}" 2`);
             }
-        }
+        }*/
 
         newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];        
         
         if (optionSelect && viewCardsDestiny.length) {
+
             newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
 
-            const newMessage: Message = {
-                id: myUserId as string,
-                username: username as string,
-                text: `Moviendo "${viewCardsDestiny.length}" carta(s) a "${optionSelect}"`,
-                isAction: true
-            };
-    
-            socket?.emit( 'personal-message', {
-                matchId,
-                message: newMessage
-            }, (data: any) => {
-                newMessage.date = data;
-                dispatch(addMessageAction(newMessage));
-                scrollToBottom('messages');
-            });
+            if (optionSelect !== CASTLE_ZONE) {
+
+                sendMessage(`Moviendo "${viewCardsDestiny.length}" carta(s) de "${zone}" a "${optionSelect}"`);
+
+            } else {
+
+                newMatch = shuffle({ ...newMatch }, CASTLE_ZONE);
+
+                sendMessage(`Moviendo y barajando "${viewCardsDestiny.length}" carta(s) de "${zone}" a "${optionSelect}"`);
+
+            }
 
         }
 
         dispatch(changeMatch(newMatch));
         resetModal();
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Dejó de ver "${zone}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
-
+        sendMessage(`Dejó de ver "${zone}"`);
         
     };
 
@@ -328,6 +275,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                             { zone !== CEMETERY_ZONE && (<Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option> )} 
                             { zone !== EXILE_ZONE && (<Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  )} 
                             { zone !== REMOVAL_ZONE && (<Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  )} 
+
+                            { zone !== CASTLE_ZONE && (<Select.Option key={ CASTLE_ZONE } value={ CASTLE_ZONE }>{ CASTLE_ZONE }</Select.Option>  )} 
                                 
                         </Select>
                     )
