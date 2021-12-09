@@ -4,3 +4,35 @@
     border-radius: 5px;
     overflow-y: auto;
 }
+
+.not-disabled > .react-tag-input {
+    background: unset !important;
+    border: 1px solid #434343 !important;
+    background: transparent !important;
+    font-size: inherit !important;
+    
+}
+
+.disabled > .react-tag-input {
+    color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: #434343;
+    box-shadow: none;
+    
+    opacity: 1;
+    font-size: inherit !important;
+
+
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.react-tag-input__input {
+    color: rgba(255, 255, 255, 0.85) !important;
+    background-color: transparent !important;
+    transition: all 0.3s !important;
+}
+
+.react-tag-input:focus {
+    background-color: red;
+}

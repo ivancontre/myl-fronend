@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message, Input, Form, Popconfirm } from 'antd';
+import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message, Input, Form } from 'antd';
 import { useHistory, useParams } from 'react-router';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import update from 'immutability-helper';
@@ -18,6 +18,9 @@ import { Card } from '../../../store/card/types';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { MenuContext } from '../../../context/MenuContext';
 import { isTouchDevice } from '../../../helpers/touch';
+
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
 
 interface FieldData {
     name: string | number | (string | number)[];
@@ -41,9 +44,11 @@ const NewDeck: FC = () => {
 
     const [typeId, setTypeId] = useState<string>('all');
     const [search, setSearch] = useState<string>('');
+    const [searchInMyCards, setSearchInMyCards] = useState<string>('');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingSave, setLoadingSave] = useState<boolean>(false);
+    const [tags, setTags] = useState<string[]>([])
 
     const dispatch = useDispatch();
 
@@ -82,6 +87,7 @@ const NewDeck: FC = () => {
         setLoading(true);
         await dispatch(startLoadCardByEdition(editionId));
         setSearch('');
+        setTags([]);
         setLoading(false)
     };
 
@@ -122,91 +128,43 @@ const NewDeck: FC = () => {
 
         if (zoneName === 'cards') {
             
-            if (typeId !== 'all') {
+            return cardsByEdition
+                    .filter(card => {
+                        return  (typeId !== 'all' ? card.type === typeId : true) && 
+                                (search ? card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1 : true) &&
+                                (tags ? tags.every( tag => card.ability?.toUpperCase().includes(tag.toUpperCase())) : true)
+                       
+                    })
+                    .map((card, index) => {
+                        return (
+                            <NewDeckCard 
+                                key={ index }
+                                id={ card.id }
+                                index={ index }
+                                moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                                zone={ zoneName }
+                                card={ card }
+                            />
+                        )                        
+                    });
 
-                if (search) {
-                    
-                    return cardsByEdition
-                        .filter(card => card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1)
-                        .filter(card => card.type === typeId)
-                        .map((card, index) => {
-                            return (
-                                <NewDeckCard 
-                                    key={ index }
-                                    id={ card.id }
-                                    index={ index }
-                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                    zone={ zoneName }
-                                    card={ card }
-                                />
-                            )                        
-                        });
-
-                } else {
-                    return cardsByEdition
-                        .filter(card => card.type === typeId)
-                        .map((card, index) => {
-                            return (
-                                <NewDeckCard 
-                                    key={ index }
-                                    id={ card.id }
-                                    index={ index }
-                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                    zone={ zoneName }
-                                    card={ card }
-                                />
-                            )                        
-                        });
-                }
-                
-            } else {
-
-                if (search) {
-                    return cardsByEdition
-                        .filter(card => card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1)
-                        .map((card, index) => {
-                            return (
-                                <NewDeckCard 
-                                    key={ index }
-                                    id={ card.id }
-                                    index={ index }
-                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                    zone={ zoneName }
-                                    card={ card }
-                                />
-                            )                        
-                        });
-                } else {
-                    return cardsByEdition
-                        .map((card, index) => {
-                            return (
-                                <NewDeckCard 
-                                    key={ index }
-                                    id={ card.id }
-                                    index={ index }
-                                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                                    zone={ zoneName }
-                                    card={ card }
-                                />
-                            )                        
-                        });
-                }
-                
-            }
-
-        } else {
-            return selectMyCards
-                .map((card, index) => (
-                    <NewDeckCard 
-                        key={ index }
-                        id={ card.id }
-                        index={ index }
-                        moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
-                        zone={ zoneName }
-                        card={ card }
-                    />
-                ));
-        }        
+        }
+            
+        return selectMyCards
+            .filter(card => {
+                return searchInMyCards ? card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(searchInMyCards.toUpperCase()) > -1 : true;
+            })
+            .map((card, index) => (
+                <NewDeckCard 
+                    key={ index }
+                    id={ card.id }
+                    index={ index }
+                    moveCard={(dragIndex, hoverIndex, zoneName) => moveCard(dragIndex, hoverIndex, zoneName)}
+                    zone={ zoneName }
+                    card={ card }
+                />
+            ));
+             
     };
 
     const getNameType = (id: string) => {
@@ -259,9 +217,7 @@ const NewDeck: FC = () => {
             setLoadingSave(false);
         }        
 
-    };    
-      
-    const cancel = (e: any) => {};      
+    };     
 
     const onSearch = (value: string) => {
         if (!value) {
@@ -272,29 +228,27 @@ const NewDeck: FC = () => {
         setSearch(value);
     };
 
+    const onSearchInMyCards = (value: string) => {
+        if (!value) {
+            setSearchInMyCards('');
+            return;
+        }
+
+        setSearchInMyCards(value);
+    };
+
+    const onChangeTags = (tags: string[]) => {
+        setTags(tags);
+    };
+
     return (
         <>
             <Row>
                 <Col span={ 24 } >
 
-                    { selectMyCards.length > 0 ? (
-                        <Popconfirm
-                            title="Si vuelve al listado perderá todos los datos no guardados. ¿Volver al listado?"
-                            okText="Sí"
-                            placement="right"
-                            onConfirm={confirm}
-                            onCancel={cancel}
-                            cancelText="No"
-                        >
-                            <Tooltip title="Volver al listado">
-                                <Button type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
-                            </Tooltip>
-                        </Popconfirm>
-                    ) : (
-                        <Tooltip title="Volver al listado">
-                            <Button onClick={ confirm } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
-                        </Tooltip>
-                    )}
+                    <Tooltip title="Volver al listado">
+                        <Button onClick={ confirm } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
+                    </Tooltip>
                     
                 </Col>
             </Row>            
@@ -338,6 +292,17 @@ const NewDeck: FC = () => {
                     <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } />
                 </Col>
             </Row>
+
+            <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
+                <Col span={ 24 } className={!cardsByEdition.length ? 'disabled': 'not-disabled'}>
+                    <ReactTagInput 
+                        placeholder="Escribe una palabra clave para buscar en la habilidad de la carta y luego presiona enter"
+                        tags={tags} 
+                        onChange={ onChangeTags }
+                        />
+                </Col>
+            </Row>
+            
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
@@ -405,7 +370,11 @@ const NewDeck: FC = () => {
                                 <Tag color="green">{`Oros: ${(selectMyCards.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
                                 <Tag color="green">{`Talismanes: ${(selectMyCards.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>
                                 <Tag color="green">{`Tótems: ${(selectMyCards.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
+
                                 <Divider />
+
+                                <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearchInMyCards } disabled={ !selectMyCards.length } style={{paddingBottom: 15}} />
+
                                 <NewDeckCardContainer title="my-cards" >
                                     { selectMyCards && returnItemsForZone('my-cards')}
                                 </NewDeckCardContainer> 

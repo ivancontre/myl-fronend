@@ -136,7 +136,7 @@ const Decks: FC = () => {
             render: (text, row) => <Link to={`/decks/${row.id}/edit`}>{ text }</Link>  
         },
         {
-            title: 'Cartas',
+            title: 'N° Cartas',
             dataIndex: 'cards',
             key: 'cards',
             width: '30%',
@@ -172,7 +172,7 @@ const Decks: FC = () => {
 
             if (cards.length < 50) {
 
-                message.warn('El mazo por defecto debe tener 50 cartas');
+                message.warn('El mazo seleccionado está incompleto. Debe tener 50 cartas para seleccionarlo', 3);
 
             } else {
                 console.log('object')

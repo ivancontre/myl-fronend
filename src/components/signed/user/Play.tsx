@@ -13,7 +13,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
 import { MenuContext } from '../../../context/MenuContext';
-import { Deck } from '../../../store/deck/types';
+import { Link } from 'react-router-dom';
 
 const Play: FC = () => {    
 
@@ -257,20 +257,16 @@ const Play: FC = () => {
             key: 'x',
             render: (text, row) => {
 
-                if (!playing && !row.playing && row.online && isCorrectDeck() && isCorrectDeckDefault()) {
+                if (!playing && !row.playing && row.online && haveDecks() && isCorrectDeckDefault()) {
                     return <Button onClick={ () => invite(row.id, row.username) } ghost>Invitar a jugar</Button>
                 }
             },
         },
     ];
 
-    const isCorrectDeck = () => {
 
-        if (decks && decks[0]?.cards.length === 50) {
-            return true;
-        }
-        
-        return false;
+    const haveDecks = () => {
+        return decks ? true : false;
     };
 
     const isCorrectDeckDefault = () => {
@@ -288,15 +284,31 @@ const Play: FC = () => {
              <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado y posee alguno seleccionado por defecto" type="info" showIcon/>
  
             {
-                !isCorrectDeck() && (
-                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes crear al menos 1 mazo para poder jugar" type="warning" showIcon/>
+                !haveDecks() && (
+                    <Alert 
+                        style={{ width: "100%", marginBottom: 10 }} 
+                        message="Debes crear al menos 1 mazo con 50 cartas para poder jugar" 
+                        type="warning" 
+                        showIcon
+                        action={
+                            <Link to="decks/new">Crear nuevo mazo</Link>
+                        }
+                    />                 
 
                 )
             }
 
             {
-                (decks as Deck[]) && (decks as Deck[]).length > 0 && !isCorrectDeckDefault() && (
-                    <Alert style={{ width: "100%", marginBottom: 10 }} message="Debes tener un mazo escogido por defecto" type="warning" showIcon/>
+                haveDecks() && !isCorrectDeckDefault() && (
+                    <Alert 
+                        style={{ width: "100%", marginBottom: 10 }} 
+                        message="Debes tener un mazo elegido por defecto" 
+                        type="warning" 
+                        showIcon
+                        action={
+                            <Link to="decks">Elegir mazo</Link>
+                        }
+                    />
 
                 )
             }

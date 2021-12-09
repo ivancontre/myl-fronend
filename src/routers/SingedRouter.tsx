@@ -109,10 +109,12 @@ export const SingedRouter: FC = () => {
     }, [acceptInvitation]);
 
     const initMatch = useCallback( (payload: any) => {
+
             dispatch(matchSetOpponentId(payload.opponentId));
             dispatch(matchSetOpponentUsername(payload.opponentUsername));
             dispatch(matchSetMatchId(payload.matchId));
             history.replace('/match');
+            
     }, [dispatch, history]);
 
     useEffect(() => {
