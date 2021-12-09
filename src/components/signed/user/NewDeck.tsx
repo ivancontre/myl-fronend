@@ -221,7 +221,7 @@ const NewDeck: FC = () => {
 
     const handleOnFinish = async (values: any) => {
 
-        if (selectMyCards.length < 50) {
+        if (selectMyCards.length > 50) {
             message.warning('El mazo debe tener 50 cartas')
             return;
         }
@@ -240,10 +240,20 @@ const NewDeck: FC = () => {
             confirm(undefined);
             
         } else {
-            await dispatch(startUpdateDeck(deckUpdating.id as string, body));
+            await dispatch(startUpdateDeck(deckUpdating.id as string, body));           
 
             if (deckUpdating.byDefault) {
-                dispatch(startSetDefaultDeck(deckUpdating.id as string));
+
+                if (selectMyCards.length < 50) {
+                
+                    // tengo que setear el deafault en null y en bd quitarle la marca como defecto
+                    dispatch(startSetDefaultDeck(deckUpdating.id as string, false));
+                } else {
+
+                    dispatch(startSetDefaultDeck(deckUpdating.id as string, true));
+
+                }
+
             }
             
             setLoadingSave(false);

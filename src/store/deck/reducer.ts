@@ -54,16 +54,16 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
             return {
                 ...state,
                 decks: state.decks?.map((e: Deck) => {
-                    if (e.id === action.payload) {
+                    if (e.id === action.payload.id) {
                         return {
                             ...e,
-                            byDefault: true
+                            byDefault: action.payload.isDefault
                         }
                     }
 
                     return e;
                 })  as Deck[],
-                deckDefault: state.decks?.find((e: Deck) => e.id === action.payload) as Deck
+                deckDefault: action.payload.isDefault ? state.decks?.find((e: Deck) => e.id === action.payload.id) as Deck : null
             };
 
         case deckReset:

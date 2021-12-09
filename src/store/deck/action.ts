@@ -106,16 +106,16 @@ export const resetDeckUpdating = () => {
     }
 };
 
-export const startSetDefaultDeck = (id: string) => {
+export const startSetDefaultDeck = (id: string, isDefault: boolean) => {
     
     return async (dispatch: Dispatch<DeckActionTypes>) => {
 
         try {
             const token = localStorage.getItem('token') as string;
-            const resp = await runFetch('api/deck/'+ id, {}, 'PATCH', token);
+            const resp = await runFetch('api/deck/'+ id, { isDefault }, 'PATCH', token);
 
             if (resp.status === 200) {
-                dispatch(setDefaultDeck(id));
+                dispatch(setDefaultDeck(id, isDefault));
             } else {
                 message.error('Error al actualizar mazo por defecto');
             }
@@ -127,10 +127,13 @@ export const startSetDefaultDeck = (id: string) => {
     }
 };
 
-const setDefaultDeck = (id: string): DeckActionTypes => {
+const setDefaultDeck = (id: string, isDefault: boolean): DeckActionTypes => {
     return {
         type: deckSetDefault,
-        payload: id
+        payload: {
+            id,
+            isDefault
+        }
     }
 };
 

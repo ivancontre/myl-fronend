@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import { Button, Input, Popconfirm, Space, Tooltip, Table, Alert } from 'antd';
+import { Button, Input, Popconfirm, Space, Tooltip, Table, Alert, message, Tag } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -125,7 +125,7 @@ const Decks: FC = () => {
             title: 'Nombre',
             dataIndex: 'name',
             key: 'name',
-            width: '90%',
+            width: '60%',
             ...getColumnSearchProps('name', ref0),
             sorter: (a: any, b: any) => { 
                 if(a.name < b.name) { return -1; }
@@ -134,6 +134,21 @@ const Decks: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => <Link to={`/decks/${row.id}/edit`}>{ text }</Link>  
+        },
+        {
+            title: 'Cartas',
+            dataIndex: 'cards',
+            key: 'cards',
+            width: '30%',
+            sorter: (a: any, b: any) => { 
+                if(a.cards.length < b.cards.length) { return -1; }
+                if(a.cards.length > b.cards.length) { return 1; }
+                return 0;
+            },
+            sortDirections: ['descend', 'ascend'],
+            render: (text, row) => {
+                return row.cards.length < 50 ? (<Tag color="red">Incompleto</Tag>) : (<Tag color="green">Completo</Tag>)
+            }  
         },
         {
             title: '',
@@ -150,7 +165,21 @@ const Decks: FC = () => {
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[]) => {
             const id = selectedRowKeys.toString();
-            dispatch(startSetDefaultDeck(id));
+
+            const deck = decks?.find((deck: Deck) => deck.id === id);
+
+            const cards = deck?.cards ? deck?.cards : [];
+
+            if (cards.length < 50) {
+
+                message.warn('El mazo por defecto debe tener 50 cartas');
+
+            } else {
+                console.log('object')
+                dispatch(startSetDefaultDeck(id, true));
+
+            }
+            
         }
     };
 

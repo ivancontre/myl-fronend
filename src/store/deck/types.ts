@@ -54,7 +54,7 @@ type DeckUpdateAction = {
 
 type DeckSetDefaultAction = {    
     type: typeof deckSetDefault,
-    payload: string
+    payload: any
 };
 
 type DeckResetAction = {
