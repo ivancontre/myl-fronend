@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
+import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
@@ -419,21 +419,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const shuffleCaslte = () => {
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Barajando "${CASTLE_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Barajando "${CASTLE_ZONE}"`);
 
         setAnimated(true);
 
@@ -454,21 +440,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             return;
         }
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Robando "${ammunt}" carta(s)`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Robando "${ammunt}" carta(s)`);
 
         const newMatch = throwXcards(ammunt, match, CASTLE_ZONE, HAND_ZONE);
 
@@ -482,150 +454,58 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             matchId
         });
 
-        handleVisibleChangePopever(false);   
+        handleVisibleChangePopever(false);
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Mostrando "${CASTLE_ZONE}" al oponente`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Mostrando "${CASTLE_ZONE}" al oponente`);
 
     };
 
     const viewMyCementery = () => {
         dispatch(openModalViewCementery());
         handleVisibleChangePopever(false);
-        
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo mi "${CEMETERY_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Viendo mi "${CEMETERY_ZONE}"`);
     };
 
     const viewMyExile = () => {
         dispatch(openModalViewExile());
         handleVisibleChangePopever(false);
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo mi "${EXILE_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Viendo mi "${EXILE_ZONE}"`);
     };
 
     const viewMyRemoval = () => {
         dispatch(openModalViewRemoval());
         handleVisibleChangePopever(false);
+        sendMessage(`Viendo mi "${REMOVAL_ZONE}"`);
+    };
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo mi "${REMOVAL_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+    const viewMyAuxiliary = () => {
+        dispatch(openModalViewAuxiliary());
+        handleVisibleChangePopever(false);
+        sendMessage(`Viendo mi "${AUXILIARY_ZONE}"`);
     };
 
     const viewCementeryOpponent = () => {
         dispatch(openModalViewCementeryOpponent());
         handleVisibleChangePopever(false);
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo "${CEMETERY_ZONE}" oponente`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Viendo "${CEMETERY_ZONE}" oponente`);
     };
 
     const viewExileOpponent = () => {
         dispatch(openModalViewExileOpponent());
         handleVisibleChangePopever(false);
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo "${EXILE_ZONE}" oponente`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+        sendMessage(`Viendo "${EXILE_ZONE}" oponente`);
     };
 
     const viewRemovalOpponent = () => {
         dispatch(openModalViewRemovalOpponent());
         handleVisibleChangePopever(false);
+        sendMessage(`Viendo ${REMOVAL_ZONE} oponente`);
+    };
 
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo ${REMOVAL_ZONE} oponente`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
+    const viewAuxiliaryOpponent = () => {
+        dispatch(openModalViewAuxiliaryOpponent());
+        handleVisibleChangePopever(false);
+        sendMessage(`Viendo ${AUXILIARY_ZONE} oponente`);
     };
 
     const viewModalAssignWeapon = () => {
@@ -662,202 +542,19 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         handleVisibleChangePopever(false);
     };
 
-    const content = (
-        <div>            
-            
-            {/* ACCIONES EN MI ZONA */}
-
-            {/* Castillo */}
-            {(zone === CASTLE_ZONE && !isOpponent) && (
-                <div>
-                    <Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/>
-                    <Button type="link" onClick={ () => getHand(8) }>Robar mano</Button><br/>
-                    <Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/>
-                    <Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/>
-                    <Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/>
-                    <Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/>
-                    <Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/>
-                    <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/>
-                    <Button type="link" onClick={ showToOpponent }>Mostrar X al oponente</Button>
-                </div>
-            )}
-
-            {/* Cementerio, destierro y remoción */}
-            {(zone === CEMETERY_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ viewMyCementery }>Ver Cementerio</Button> <br/></div>
-            )}  
-
-            {(zone === EXILE_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ viewMyExile }>Ver Destierro</Button> <br/></div>
-            )}  
-
-            {(zone === REMOVAL_ZONE && !isOpponent) && (
-                <div><Button type="link" onClick={ viewMyRemoval }>Ver Remoción</Button> <br/></div>
-            )}
-
-            {/* Oros, aliados, armas y totems */}
-            {(zone === DEFENSE_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
-                <div>
-                    <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer Armas</Button> }
-                </div>
-            )}
-
-            {(zone === ATTACK_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
-                <div>
-                    <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
-                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer armas</Button> }             
-                </div>
-            )}
-
-            {(zone === SUPPORT_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
-                <div>
-                    <Button type="link" onClick={ viewModalAssignWeapon }>Asignar Portador</Button> <br/>
-                    { card.bearerId && <div><Button type="link" onClick={ () => viewBearer(true) }>Conocer Portador</Button> <br/></div> }
-                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
-                </div>
-            )}
-
-            {(zone === GOLDS_PAID_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
-                <div>
-                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
-                </div>
-            )}
-
-            {(zone === UNPAID_GOLD_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
-                <div>
-                    <Button type="link" onClick={ () => sendToCastle(UNPAID_GOLD_ZONE) }>Barajar el Castillo</Button>
-                </div>
-            )}
-
-
-            {/* ACCIONES EN ZONA OPONENTE*/}
-
-            {/* Oros, aliados, armas y totems */}
-            {(zone === DEFENSE_ZONE && (
-                (
-                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === myUserId)) ||
-                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === opponentId)) 
-                ) &&
-                opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
-            )) && (
-                <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
-                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }  
-                </div>
-            )}
-
-            {(zone === ATTACK_ZONE && (
-                (
-                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === myUserId)) ||
-                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === opponentId)) 
-                ) &&
-                opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
-            )) && (
-                <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
-                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }    
-                </div>
-            )}
-
-            {(zone === SUPPORT_ZONE && (
-                (
-                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === myUserId)) ||
-                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === opponentId)) 
-                ) &&
-                opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
-            )) && (
-                <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button><br/>
-                    { card.bearerId && <Button type="link" onClick={ () => viewBearer(false) }>Conocer Portador</Button> }
-                </div>
-            )}
-
-            {(zone === GOLDS_PAID_ZONE && (
-                (
-                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === myUserId)) ||
-                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === opponentId)) 
-                ) &&
-                opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
-            )) && (
-                <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button>
-                </div>
-            )}
-
-            {(zone === UNPAID_GOLD_ZONE && (
-                (
-                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === myUserId)) ||
-                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === opponentId)) 
-                ) &&
-                opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
-            )) && (
-                <div>
-                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button>
-                </div>
-            )}
-
-            {/* Cementerio, destierro y remoción oponentes */}
-
-            {(zone === CEMETERY_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ viewCementeryOpponent }>Ver Cementerio</Button> <br/></div>
-            )}  
-
-            {(zone === EXILE_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ viewExileOpponent }>Ver Destierro</Button> <br/></div>
-            )}  
-
-            {(zone === REMOVAL_ZONE && isOpponent) && (
-                <div><Button type="link" onClick={ viewRemovalOpponent }>Ver Remoción</Button> <br/></div>
-            )}    
-
-        </div>
-    );
-
     const openThrowCardsModal = () => {
         handleVisibleChangePopever(false);
         dispatch(openModalThrowXcards());
     }; 
 
     const openViewCastleModal = () => {
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Viendo "${CASTLE_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
-
+        sendMessage(`Viendo "${CASTLE_ZONE}"`);
         handleVisibleChangePopever(false);
         dispatch(openModalViewCastle());
     };
 
     const throwOneCard = () => {
-
-        const newMessage: Message = {
-            id: myUserId as string,
-            username: username as string,
-            text: `Botando carta del "${CASTLE_ZONE}" al "${CEMETERY_ZONE}"`,
-            isAction: true
-        };
-
-        socket?.emit( 'personal-message', {
-            matchId,
-            message: newMessage
-        }, (data: any) => {
-            newMessage.date = data;
-            dispatch(addMessageAction(newMessage));
-            scrollToBottom('messages');
-        });
-
+        sendMessage(`Botando carta del "${CASTLE_ZONE}" al "${CEMETERY_ZONE}"`);
         const newMatch = throwXcards(1, match, CASTLE_ZONE, CEMETERY_ZONE);
         dispatch(changeMatch(newMatch));
     };
@@ -1030,7 +727,168 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         if (card.vibrate) {
             return 'animate__animated animate__flash';
         }
-    }
+    };
+
+    const content = (
+        <div>            
+            
+            {/* ACCIONES EN MI ZONA */}
+
+            {/* Castillo */}
+            {(zone === CASTLE_ZONE && !isOpponent) && (
+                <div>
+                    <Button type="link" onClick={ () => getHand(1) }>Robar carta</Button><br/>
+                    <Button type="link" onClick={ () => getHand(8) }>Robar mano</Button><br/>
+                    <Button type="link" onClick={ () => openViewCastleModal() }>Ver {zone}</Button><br/>
+                    <Button type="link" onClick={ () => openSelectXcardsCastleModal() }>Ver X</Button><br/>
+                    <Button type="link" onClick={ () => throwOneCard() }>Botar carta</Button> <br/>
+                    <Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/>
+                    <Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/>
+                    <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/>
+                    <Button type="link" onClick={ showToOpponent }>Mostrar X al oponente</Button>
+                </div>
+            )}
+
+            {/* Cementerio, destierro y remoción */}
+            {(zone === CEMETERY_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyCementery }>Ver Cementerio</Button> <br/></div>
+            )}  
+
+            {(zone === EXILE_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyExile }>Ver Destierro</Button> <br/></div>
+            )}  
+
+            {(zone === REMOVAL_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyRemoval }>Ver Remoción</Button> <br/></div>
+            )}
+
+            {(zone === AUXILIARY_ZONE && !isOpponent) && (
+                <div><Button type="link" onClick={ viewMyAuxiliary }>Ver Auxiliar</Button> <br/></div>
+            )}
+
+
+            {/* Oros, aliados, armas y totems */}
+            {(zone === DEFENSE_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(DEFENSE_ZONE) }>Barajar en el Castillo</Button> <br/>
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer Armas</Button> }
+                </div>
+            )}
+
+            {(zone === ATTACK_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(ATTACK_ZONE) }>Barajar en el Castillo</Button> <br/>
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(true) }>Conocer armas</Button> }             
+                </div>
+            )}
+
+            {(zone === SUPPORT_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
+                <div>
+                    <Button type="link" onClick={ viewModalAssignWeapon }>Asignar Portador</Button> <br/>
+                    { card.bearerId && <div><Button type="link" onClick={ () => viewBearer(true) }>Conocer Portador</Button> <br/></div> }
+                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+            {(zone === GOLDS_PAID_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(SUPPORT_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+            {(zone === UNPAID_GOLD_ZONE && (!isOpponent || match[zone].find(c => c.user === opponentId))) && (
+                <div>
+                    <Button type="link" onClick={ () => sendToCastle(UNPAID_GOLD_ZONE) }>Barajar el Castillo</Button>
+                </div>
+            )}
+
+
+            {/* ACCIONES EN ZONA OPONENTE*/}
+
+            {/* Oros, aliados, armas y totems */}
+            {(zone === DEFENSE_ZONE && (
+                (
+                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[DEFENSE_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[DEFENSE_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(DEFENSE_ZONE) }>Tomar control de Aliado</Button><br/>
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }  
+                </div>
+            )}
+
+            {(zone === ATTACK_ZONE && (
+                (
+                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[ATTACK_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[ATTACK_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(ATTACK_ZONE) }>Tomar control de Aliado</Button><br/>
+                    { card.armsId && <Button type="link" onClick={ () => viewArms(false) }>Conocer armas</Button> }    
+                </div>
+            )}
+
+            {(zone === SUPPORT_ZONE && (
+                (
+                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[SUPPORT_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[SUPPORT_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(SUPPORT_ZONE) }>Tomar control de Arma</Button><br/>
+                    { card.bearerId && <Button type="link" onClick={ () => viewBearer(false) }>Conocer Portador</Button> }
+                </div>
+            )}
+
+            {(zone === GOLDS_PAID_ZONE && (
+                (
+                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[GOLDS_PAID_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(GOLDS_PAID_ZONE) }>Tomar control de Oro</Button>
+                </div>
+            )}
+
+            {(zone === UNPAID_GOLD_ZONE && (
+                (
+                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === myUserId)) ||
+                    opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (c.user === opponentId)) 
+                ) &&
+                opponentMatch[UNPAID_GOLD_ZONE].find((c, index2) => (index2 === index && c.id === card.id))
+            )) && (
+                <div>
+                    <Button type="link" onClick={ () => takeControlOpponentCard(UNPAID_GOLD_ZONE) }>Tomar control de Oro</Button>
+                </div>
+            )}
+
+            {/* Cementerio, destierro y remoción oponentes */}
+
+            {(zone === CEMETERY_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewCementeryOpponent }>Ver Cementerio</Button> <br/></div>
+            )}  
+
+            {(zone === EXILE_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewExileOpponent }>Ver Destierro</Button> <br/></div>
+            )}  
+
+            {(zone === REMOVAL_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewRemovalOpponent }>Ver Remoción</Button> <br/></div>
+            )}
+
+            {(zone === AUXILIARY_ZONE && isOpponent) && (
+                <div><Button type="link" onClick={ viewAuxiliaryOpponent }>Ver Auxiliar</Button> <br/></div>
+            )} 
+
+        </div>
+    );
 
     return (
         <>

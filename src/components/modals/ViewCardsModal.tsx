@@ -9,7 +9,7 @@ import update from 'immutability-helper';
 import { ZONE_NAMES } from "../../constants";
 import { RootState } from '../../store';
 import { Card } from '../../store/card/types';
-import { closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
+import { closeModalViewAuxiliary, closeModalViewAuxiliaryOpponent, closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
 import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
@@ -65,9 +65,11 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             modalOpenViewCementery, 
             modalOpenViewExile, 
             modalOpenViewRemoval,
+            modalOpenViewAuxiliary,
             modalOpenViewCementeryOpponent, 
             modalOpenViewExileOpponent, 
             modalOpenViewRemovalOpponent,
+            modalOpenViewAuxiliaryOpponent,
             modalOpenViewHandOpponent
     } = useSelector((state: RootState) => state.uiModal);
 
@@ -80,9 +82,12 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         dispatch(closeModalViewCementery());
         dispatch(closeModalViewExile());
         dispatch(closeModalViewRemoval());
+        dispatch(closeModalViewAuxiliary());
+
         dispatch(closeModalViewCementeryOpponent());
         dispatch(closeModalViewExileOpponent());
         dispatch(closeModalViewRemovalOpponent());
+        dispatch(closeModalViewAuxiliaryOpponent());
         dispatch(closeModalViewHandOpponent());
         dispatch(setAmountCardsViewAction(1));
     };
@@ -243,9 +248,11 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                 modalOpenViewCementery ||
                 modalOpenViewExile ||
                 modalOpenViewRemoval ||
+                modalOpenViewAuxiliary ||
                 modalOpenViewCementeryOpponent ||
                 modalOpenViewExileOpponent ||
                 modalOpenViewRemovalOpponent ||
+                modalOpenViewAuxiliaryOpponent ||
                 modalOpenViewHandOpponent
             } 
             onCancel={ handleCancelModal } 
@@ -269,8 +276,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                             <Select.Option key={ DEFENSE_ZONE } value={ DEFENSE_ZONE }>{ DEFENSE_ZONE }</Select.Option>
                             <Select.Option key={ ATTACK_ZONE } value={ ATTACK_ZONE }>{ ATTACK_ZONE }</Select.Option>
                             <Select.Option key={ GOLDS_PAID_ZONE } value={ GOLDS_PAID_ZONE }>{ GOLDS_PAID_ZONE }</Select.Option>  
-                            <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>  
-                            <Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  
+                            <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>
+                            { zone !== AUXILIARY_ZONE && (<Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  )} 
 
                             { zone !== CEMETERY_ZONE && (<Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option> )} 
                             { zone !== EXILE_ZONE && (<Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  )} 

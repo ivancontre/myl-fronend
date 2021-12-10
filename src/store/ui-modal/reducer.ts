@@ -29,7 +29,11 @@ import {
     uiCloseModalTakeControlOpponentCard,
     uiOpenModalAssignModal,
     uiCloseModalAssignModal,
-    uiResetModal
+    uiResetModal,
+    uiOpenModalViewAuxiliary,
+    uiCloseModalViewAuxiliary,
+    uiOpenModalViewAuxiliaryOpponent,
+    uiCloseModalViewAuxiliaryOpponent
 } from "./types";
 
 
@@ -43,10 +47,12 @@ const initialState: UiModalState = {
     modalOpenViewCementery: false,
     modalOpenViewExile: false,
     modalOpenViewRemoval: false,
+    modalOpenViewAuxiliary: false,
 
     modalOpenViewCementeryOpponent: false,
     modalOpenViewExileOpponent: false,
     modalOpenViewRemovalOpponent: false,
+    modalOpenViewAuxiliaryOpponent: false,
 
     modalOpenViewHandOpponent: false,
 
@@ -156,6 +162,18 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
                 modalOpenViewRemoval: false
             };
 
+        case uiOpenModalViewAuxiliary:        
+            return {
+                ...state,
+                modalOpenViewAuxiliary: true
+            };
+        
+        case uiCloseModalViewAuxiliary:        
+            return {
+                ...state,
+                modalOpenViewAuxiliary: false
+            };
+
         /** */
         case uiOpenModalViewCementeryOpponent:        
             return {
@@ -191,6 +209,18 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenViewRemovalOpponent: false
+            };
+
+        case uiOpenModalViewAuxiliaryOpponent:        
+            return {
+                ...state,
+                modalOpenViewAuxiliaryOpponent: true
+            };
+        
+        case uiCloseModalViewAuxiliaryOpponent:        
+            return {
+                ...state,
+                modalOpenViewAuxiliaryOpponent: false
             };
 
         case uiOpenModalViewHandOpponent:        

@@ -19,6 +19,8 @@ export const uiOpenModalViewExile = '[ui-modal] Open modal ViewExile';
 export const uiCloseModalViewExile = '[ui-modal] Close modal ViewExile';
 export const uiOpenModalViewRemoval = '[ui-modal] Open modal ViewRemoval';
 export const uiCloseModalViewRemoval = '[ui-modal] Close modal ViewRemoval';
+export const uiOpenModalViewAuxiliary = '[ui-modal] Open modal ViewAuxiliary';
+export const uiCloseModalViewAuxiliary = '[ui-modal] Close modal ViewAuxiliary';
 
 export const uiOpenModalViewCementeryOpponent = '[ui-modal] Open modal ViewCementery Opponent';
 export const uiCloseModalViewCementeryOpponent = '[ui-modal] Close modal ViewCementery Opponent';
@@ -26,6 +28,8 @@ export const uiOpenModalViewExileOpponent = '[ui-modal] Open modal ViewExile Opp
 export const uiCloseModalViewExileOpponent = '[ui-modal] Close modal ViewExile Opponent';
 export const uiOpenModalViewRemovalOpponent = '[ui-modal] Open modal ViewRemoval Opponent';
 export const uiCloseModalViewRemovalOpponent = '[ui-modal] Close modal ViewRemoval Opponent';
+export const uiOpenModalViewAuxiliaryOpponent = '[ui-modal] Open modal ViewAuxiliary Opponent';
+export const uiCloseModalViewAuxiliaryOpponent = '[ui-modal] Close modal ViewAuxiliary Opponent';
 
 export const uiOpenModalViewHandOpponent = '[ui-modal] Open modal ViewHand Opponent';
 export const uiCloseModalViewHandOpponent = '[ui-modal] Close modal ViewHand Opponent';
@@ -35,6 +39,8 @@ export const uiCloseModalTakeControlOpponentCard = '[ui-modal] Close modal Take 
 
 export const uiOpenModalAssignModal = '[ui-modal] Open modal Assign Weapon';
 export const uiCloseModalAssignModal = '[ui-modal] Close modal Assign Weapon';
+
+
 
 export const uiResetModal = '[ui-modal] REset modals';
 
@@ -48,10 +54,12 @@ export type UiModalState = {
     modalOpenViewCementery: boolean;
     modalOpenViewExile: boolean;
     modalOpenViewRemoval: boolean;
+    modalOpenViewAuxiliary: boolean;
 
     modalOpenViewCementeryOpponent: boolean;
     modalOpenViewExileOpponent: boolean;
     modalOpenViewRemovalOpponent: boolean;
+    modalOpenViewAuxiliaryOpponent: boolean;
 
     modalOpenViewHandOpponent: boolean;
 
@@ -125,6 +133,15 @@ type ModalViewRemovalCloseAction = {
     type: typeof uiCloseModalViewRemoval;
 };
 
+type ModalViewAuxiliaryOpenAction = {
+    type: typeof uiOpenModalViewAuxiliary;
+};
+
+type ModalViewAuxiliaryCloseAction = {
+    type: typeof uiCloseModalViewAuxiliary;
+};
+
+
 /** **/
 type ModalViewCementeryOpponentOpenAction = {
     type: typeof uiOpenModalViewCementeryOpponent;
@@ -150,6 +167,13 @@ type ModalViewRemovalOpponentCloseAction = {
     type: typeof uiCloseModalViewRemovalOpponent;
 };
 
+type ModalViewAuxiliaryOpponentOpenAction = {
+    type: typeof uiOpenModalViewAuxiliaryOpponent;
+};
+
+type ModalViewAuxiliaryOpponentCloseAction = {
+    type: typeof uiCloseModalViewAuxiliaryOpponent;
+};
 
 type ModalViewHandOpponentOpenAction = {
     type: typeof uiOpenModalViewHandOpponent;
@@ -190,18 +214,25 @@ ModalSelectXCastleOpenAction |
 ModalSelectXCastleCloseAction |
 ModalViewCastleOpponentOpenAction |
 ModalViewCastleOpponentCloseAction |
+
 ModalViewCementeryOpenAction |
 ModalViewCementeryCloseAction |
 ModalViewExileOpenAction |
 ModalViewExileCloseAction |
 ModalViewRemovalOpenAction |
 ModalViewRemovalCloseAction |
+ModalViewAuxiliaryOpenAction |
+ModalViewAuxiliaryCloseAction |
+
 ModalViewCementeryOpponentOpenAction |
 ModalViewCementeryOpponentCloseAction |
 ModalViewExileOpponentOpenAction |
 ModalViewExileOpponentCloseAction |
 ModalViewRemovalOpponentOpenAction |
 ModalViewRemovalOpponentCloseAction |
+ModalViewAuxiliaryOpponentOpenAction |
+ModalViewAuxiliaryOpponentCloseAction |
+
 ModalViewHandOpponentOpenAction |
 ModalViewHandOpponentCloseAction |
 ModalTakeControlOpponentCardOpenAction |

@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Tooltip, Select, Divider, Row, Col, Alert, Tag, message, Input, Form } from 'antd';
 import { useHistory, useParams } from 'react-router';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import update from 'immutability-helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
@@ -257,7 +257,7 @@ const NewDeck: FC = () => {
                 cardsByEdition.length === 0 && (
                     <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                         <Col span={ 24 } >
-                            <Alert message="Busque por edición" type="info" showIcon/>
+                            <Alert message="Busque por edición" type="info" showIcon icon={<ArrowDownOutlined />}  />
                         </Col>
                     </Row>
                 )

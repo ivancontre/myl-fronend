@@ -70,9 +70,11 @@ const MatchPage: FC = () => {
             modalOpenViewCementery, 
             modalOpenViewExile, 
             modalOpenViewRemoval,
+            modalOpenViewAuxiliary,
             modalOpenViewCementeryOpponent, 
             modalOpenViewExileOpponent, 
             modalOpenViewRemovalOpponent,
+            modalOpenViewAuxiliaryOpponent,
             modalOpenViewHandOpponent,
             modalOpenTakeControlOpponentCard,
             modalOpenAssignWeapon
@@ -456,10 +458,13 @@ const MatchPage: FC = () => {
             { modalOpenViewCementery && <ViewCardsModal origin={ match } zone={ CEMETERY_ZONE } /> }
             { modalOpenViewExile && <ViewCardsModal origin={ match } zone={ EXILE_ZONE } /> }
             { modalOpenViewRemoval && <ViewCardsModal origin={ match } zone={ REMOVAL_ZONE } /> }
+            { modalOpenViewAuxiliary && <ViewCardsModal origin={ match } zone={ AUXILIARY_ZONE } /> }
 
             { modalOpenViewCementeryOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CEMETERY_ZONE } onlyRead /> }
             { modalOpenViewExileOpponent && <ViewCardsModal origin={ opponentMatch } zone={ EXILE_ZONE } onlyRead /> }
             { modalOpenViewRemovalOpponent && <ViewCardsModal origin={ opponentMatch } zone={ REMOVAL_ZONE } onlyRead /> }
+            { modalOpenViewAuxiliaryOpponent && <ViewCardsModal origin={ opponentMatch } zone={ AUXILIARY_ZONE } onlyRead /> }
+            
 
             { modalOpenViewHandOpponent && <ViewCardsModal origin={ opponentMatch } zone={ HAND_ZONE } onlyRead />}
 
@@ -481,7 +486,7 @@ const MatchPage: FC = () => {
 
                                     
                                     <Col span={ 2 }>
-                                        <Zone title={ AUXILIARY_ZONE } className='zone-flex' isOpponent >
+                                        <Zone title={ AUXILIARY_ZONE } className='stack' isOpponent >
                                             { opponentMatch[AUXILIARY_ZONE] && returnItemsForZoneOpponent(AUXILIARY_ZONE) }
                                         </Zone>
                                     </Col>
@@ -634,7 +639,7 @@ const MatchPage: FC = () => {
                         <Col span={4} className="content-actions">
 
                             <Row gutter={[8, 8]}>
-                                <Col span={24} style={{width: '100%', textAlign: 'end'}} >
+                                <Col span={24} style={{width: '100%', textAlign: 'center'}} >
                                     <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
                                 </Col>
                             </Row>    

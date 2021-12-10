@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard, uiOpenModalAssignModal, uiCloseModalAssignModal, uiResetModal } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard, uiOpenModalAssignModal, uiCloseModalAssignModal, uiResetModal, uiCloseModalViewAuxiliary, uiOpenModalViewAuxiliary, uiOpenModalViewAuxiliaryOpponent, uiCloseModalViewAuxiliaryOpponent } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -96,6 +96,21 @@ export const closeModalViewRemoval = (): ModalActionTypes => {
     }
 };
 
+export const openModalViewAuxiliary = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewAuxiliary
+    }
+};
+
+export const closeModalViewAuxiliary = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewAuxiliary
+    }
+};
+
+
+/** */
+
 export const openModalViewCementeryOpponent = (): ModalActionTypes => {
     return {
         type: uiOpenModalViewCementeryOpponent
@@ -129,6 +144,18 @@ export const openModalViewRemovalOpponent = (): ModalActionTypes => {
 export const closeModalViewRemovalOpponent = (): ModalActionTypes => {
     return {
         type: uiCloseModalViewRemovalOpponent
+    }
+};
+
+export const openModalViewAuxiliaryOpponent = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalViewAuxiliaryOpponent
+    }
+};
+
+export const closeModalViewAuxiliaryOpponent = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalViewAuxiliaryOpponent
     }
 };
 
