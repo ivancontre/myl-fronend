@@ -88,7 +88,7 @@ const NewDeck: FC = () => {
         await dispatch(startLoadCardByEdition(editionId));
         setSearch('');
         setTags([]);
-        setLoading(false)
+        setLoading(false);
     };
 
     const handleSelectType = (typeId: string) => {
@@ -251,7 +251,17 @@ const NewDeck: FC = () => {
                     </Tooltip>
                     
                 </Col>
-            </Row>            
+            </Row>
+
+            {
+                cardsByEdition.length === 0 && (
+                    <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
+                        <Col span={ 24 } >
+                            <Alert message="Busque por edición" type="info" showIcon/>
+                        </Col>
+                    </Row>
+                )
+            }   
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
@@ -303,13 +313,15 @@ const NewDeck: FC = () => {
                 </Col>
             </Row>
             
-
-            <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
-                <Col span={ 24 } >
-                    <Alert message="Arrastra las cartas de izquierda a derecha para agregarlas a tu mazo" type="info" showIcon/>
-                </Col>
-            </Row>
-
+            {
+                cardsByEdition.length > 0 && (
+                    <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
+                        <Col span={ 24 } >
+                            <Alert message="Arrastra las cartas de izquierda a derecha para agregarlas a tu mazo" type="info" showIcon/>
+                        </Col>
+                    </Row>
+                )
+            }
                        
             <Row style={{ paddingTop: 10 }}>
                 <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
