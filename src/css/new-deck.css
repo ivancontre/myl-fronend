@@ -5,7 +5,7 @@
     overflow-y: auto;
 }
 
-.not-disabled > .react-tag-input {
+/*.not-disabled > .react-tag-input {
     background: unset !important;
     border: 1px solid #434343 !important;
     background: transparent !important;
@@ -14,17 +14,17 @@
 }
 
 .disabled > .react-tag-input {
-    color: rgba(255, 255, 255, 0.3);
     background-color: rgba(255, 255, 255, 0.08);
     border-color: #434343;
     box-shadow: none;
     
-    opacity: 1;
+    opacity: 0.95;
     font-size: inherit !important;
 
 
-    pointer-events: none;
+    
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .react-tag-input__input {
@@ -33,6 +33,77 @@
     transition: all 0.3s !important;
 }
 
-.react-tag-input:focus {
-    background-color: red;
+div.disabled > .react-tag-input:focus {
+    background-color: red !important;
+} */
+
+div.react-tag-input {
+    box-sizing:border-box;
+    position:relative;
+    width:100%;
+    height:auto;
+    min-height:2.375em;
+    padding:.1875em .375em;
+    overflow-y:auto;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    font-size: unset;
+    background: unset;
+    color: unset;
+    border:1px solid #434343;
+    border-radius:3px;
 }
+
+div.react-tag-input > input.react-tag-input__input {
+    width:auto;
+    flex-grow:1;
+    height:1.875em;
+    padding:0 0 0 .1875em;
+    margin:0;
+    font-size:1em;
+    line-height:1;
+    background:transparent;
+    color: unset;
+    border: unset;
+    border-radius:3px;
+    outline:0;
+    box-shadow:none;
+    -webkit-appearance:none
+}
+
+div.react-tag-input > input.react-tag-input__input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+div.react-tag-input:hover, div.react-tag-input:focus {
+    border-color: #165996;
+    box-shadow: 0 0 0 2px rgb(23 125 220 / 20%);
+    border-right-width: 1px !important;
+    outline: 0;
+}
+
+div.react-tag-input > div.react-tag-input__tag{
+    position:relative;
+    display: flex;
+    align-items: center;
+    font-size: .85em;
+    line-height: 1.2;
+    background: #18183B;
+    border:1px solid #434343;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+div.disabled > div.react-tag-input {
+    color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: #434343;
+    box-shadow: none;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+div.disabled > div.react-tag-input > input.react-tag-input__input {
+    pointer-events: none;
+}
+
