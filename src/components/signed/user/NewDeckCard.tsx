@@ -1,4 +1,4 @@
-import { Image } from 'antd';
+import { Image, message } from 'antd';
 import React, { FC, useRef } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DropTargetOptions } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +38,17 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
         if (zoneName === 'my-cards') {
             //mover hacia "my-cards"
             const card = cardsByEdition.find((card: Card) => card.id === item.id) as Card;
+
+            const filter = selectMyCards.filter((card: Card) => card.id === item.id) as Card[];
+
+            if (card?.isUnique) {
+                if (filter.length > 0) { 
+                    return message.warn(`Las carta "${card?.name}" debe estar solo una vez al ser ÚNICA`);
+                }
+            } else if (filter.length > 2) {
+                return message.warn(`Las carta "${card?.name}" debe estar a lo más 3 veces`);
+            
+            }
 
             const newCardsToMySelection = [...selectMyCards, card];   
             
