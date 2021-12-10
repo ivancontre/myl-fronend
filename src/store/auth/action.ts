@@ -168,7 +168,7 @@ export const startRetryVerify = (email: string) => {
 
             } else {
 
-                message.warn(respJson.msg);
+                message.warn(respJson.msg, 7);
                 console.log(respJson.msg);      
 
             }
