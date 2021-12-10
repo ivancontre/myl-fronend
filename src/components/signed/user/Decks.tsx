@@ -175,7 +175,7 @@ const Decks: FC = () => {
                 message.warn('El mazo seleccionado está incompleto. Debe tener 50 cartas para seleccionarlo', 3);
 
             } else {
-                console.log('object')
+                
                 dispatch(startSetDefaultDeck(id, true));
 
             }

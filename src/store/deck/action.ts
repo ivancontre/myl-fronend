@@ -1,10 +1,14 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
+import { resetMySelection } from "../card/action";
+import { CardActionTypes } from "../card/types";
 import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault, deckReset } from "./types";
 
-export const startAddNewDeck = (deck: any) => {
-    return async (dispatch: Dispatch<DeckActionTypes>) => {
+export const startAddNewDeck = (deck: any, history: any, setLoadingSave: Function) => {
+    return async (dispatch: Dispatch<DeckActionTypes | CardActionTypes>) => {
+
+        setLoadingSave(true);
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -12,41 +16,89 @@ export const startAddNewDeck = (deck: any) => {
             let respJson = await resp.json();
 
             if (resp.status === 201) {
-                dispatch(addNewDeck(respJson));                
+
+                dispatch(addNewDeck(respJson));
+                dispatch(resetMySelection());
                 message.success(`Mazo "${respJson.name}" creado correctamente`);
+                history.push('/decks');
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
+                setLoadingSave(false);
+
             } else {
-                console.log(resp);
-                message.error('Error al crear mazo');
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
+                setLoadingSave(false);
             }
+            
 
         } catch (error) {
             console.log(error);
             message.error('Error al crear mazo!');
+            setLoadingSave(false);
         }
     }
 };
 
-export const startUpdateDeck = (id: string, deck: any) => {
+export const startUpdateDeck = (id: string, deck: any, isDefault: boolean, lengthSelectMyCards: number, setLoadingSave: Function) => {
 
-    return async (dispatch: Dispatch<DeckActionTypes>) => {
+    return async (dispatch: Dispatch<DeckActionTypes | Function>) => {
+
+        setLoadingSave(true);
 
         try {
-            const token = localStorage.getItem('token') as string;
+
+            const token = localStorage.getItem('token') as string;            
             const resp = await runFetch('api/deck/' + id, deck, 'PUT', token);
             let respJson = await resp.json();
 
             if (resp.status === 200) {
+
                 dispatch(updateDeck(respJson));
+
+                if (isDefault) {
+
+                    if (lengthSelectMyCards < 50) {
+                    
+                        // tengo que setear el deafault en null y en bd quitarle la marca como defecto
+                        dispatch(startSetDefaultDeck(id as string, false));
+                    } else {
+    
+                        dispatch(startSetDefaultDeck(id as string, true));
+    
+                    }
+    
+                }
+
+                setLoadingSave(false);
                 message.success(`Mazo "${respJson.name}" actualizado correctamente`);
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
+                setLoadingSave(false);
+
             } else {
-                console.log(resp);
-                message.error('Error al actualizar mazo');
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
+                setLoadingSave(false);
             }
+            
 
         } catch (error) {
             console.log(error);
             message.error('Error al actualizar mazo!');
-
+            setLoadingSave(false);
         }
     }
 
@@ -63,7 +115,8 @@ export const startLoadDeck = () => {
             if (resp.status === 200) {
                 dispatch(loadDecks(respJson));
             } else {
-                message.error('Error al obtener mazos');
+                message.warn(respJson.msg, 7);
+                console.log(respJson.msg);  
             }
 
         } catch (error) {
@@ -79,11 +132,13 @@ export const startDeleteDeck = (id: string) => {
         try {
             const token = localStorage.getItem('token') as string;
             const resp = await runFetch('api/deck/'+ id, {}, 'DELETE', token);
+            let respJson = await resp.json();
 
             if (resp.status === 200) {
                 dispatch(deleteDeck(id));
             } else {
-                message.error('Error al eliminar mazos');
+                message.warn(respJson.msg, 7);
+                console.log(respJson.msg);  
             }
 
         } catch (error) {

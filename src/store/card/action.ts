@@ -163,7 +163,7 @@ export const loadCardsMySelection = (cards: Card[]): CardActionTypes => {
     }
 };
 
-export const resetMySelection = () => {
+export const resetMySelection = (): CardActionTypes => {
     return {
         type: cardsResetMySelection
     }

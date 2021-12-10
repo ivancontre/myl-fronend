@@ -13,7 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import '../../../css/new-deck.css';
-import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startSetDefaultDeck, startUpdateDeck } from '../../../store/deck/action';
+import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
 import { Card } from '../../../store/card/types';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { MenuContext } from '../../../context/MenuContext';
@@ -189,33 +189,15 @@ const NewDeck: FC = () => {
             cards: selectMyCards.map(card => card.id)
         };
 
-        setLoadingSave(true);
-
         if (!deckUpdating) {
             
-            await dispatch(startAddNewDeck(body));
-            setLoadingSave(false);
-            confirm(undefined);
+            await dispatch(startAddNewDeck(body, history, setLoadingSave));
             
         } else {
-            await dispatch(startUpdateDeck(deckUpdating.id as string, body));           
 
-            if (deckUpdating.byDefault) {
-
-                if (selectMyCards.length < 50) {
-                
-                    // tengo que setear el deafault en null y en bd quitarle la marca como defecto
-                    dispatch(startSetDefaultDeck(deckUpdating.id as string, false));
-                } else {
-
-                    dispatch(startSetDefaultDeck(deckUpdating.id as string, true));
-
-                }
-
-            }
+            await dispatch(startUpdateDeck(deckUpdating.id as string, body, deckUpdating.byDefault, selectMyCards.length, setLoadingSave));
             
-            setLoadingSave(false);
-        }        
+        }
 
     };     
 
