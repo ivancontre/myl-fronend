@@ -114,7 +114,7 @@ export const startRegister = (name: string, lastname: string, email: string, use
 };
 
 export const startVerifyToken = (token: string) => {
-    return async (dispatch: Dispatch<AuthActionTypes>) => {
+    return async (dispatch: Dispatch<any>) => {
 
         try {
             
@@ -141,6 +141,15 @@ export const startVerifyToken = (token: string) => {
                 }));
 
             } else {
+                dispatch(logout());
+                dispatch(resetDeckUpdating());
+                dispatch(resetCardUpdating());
+                dispatch(resetMatch());
+                dispatch(resetAllDescription());
+                dispatch(resetChatAction());
+                dispatch(resetDeck());
+                dispatch(resetModal());
+                dispatch(playReset());
                 message.warn(respJson.msg);
                 console.log(respJson.msg);                
             }
