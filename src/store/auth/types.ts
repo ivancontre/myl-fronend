@@ -22,7 +22,7 @@ export type User = {
     playing?: boolean;
     victories?: number;
     defeats?: number;
-    decks?: Deck[]
+    decks?: Deck[];
 };
 
 export type AuthState = Partial<User> & {

@@ -113,7 +113,7 @@ export const startRegister = (name: string, lastname: string, email: string, use
     }
 };
 
-export const startVerifyToken = (token: string) => {
+export const startVerifyToken = (token: string, history: any) => {
     return async (dispatch: Dispatch<any>) => {
 
         try {
@@ -141,17 +141,9 @@ export const startVerifyToken = (token: string) => {
                 }));
 
             } else {
-                dispatch(logout());
-                dispatch(resetDeckUpdating());
-                dispatch(resetCardUpdating());
-                dispatch(resetMatch());
-                dispatch(resetAllDescription());
-                dispatch(resetChatAction());
-                dispatch(resetDeck());
-                dispatch(resetModal());
-                dispatch(playReset());
                 message.warn(respJson.msg);
-                console.log(respJson.msg);                
+                console.log(respJson.msg);     
+                history.replace('/auth/login');
             }
 
         } catch (error) {
@@ -193,7 +185,7 @@ export const startChecking = () => {
     return async (dispatch: Dispatch<any>) => {
 
         try {
-            const token = localStorage.getItem('token') as string;
+            const token = localStorage.getItem('token') || 'token';
 
             if (!token) {
                 dispatch(logout());
@@ -220,6 +212,7 @@ export const startChecking = () => {
                 }));
 
             } else {
+                
                 dispatch(logout());
                 dispatch(resetDeckUpdating());
                 dispatch(resetCardUpdating());
@@ -230,6 +223,7 @@ export const startChecking = () => {
                 dispatch(resetModal());
                 dispatch(playReset());
             }
+
         } catch (error) {
             console.log(error);
         }        
