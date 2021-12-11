@@ -13,10 +13,8 @@ const LoginPage: FC = () => {
     const [loading, setloading] = useState(false);
 
     const onFinish = async (values: any) => {
-        setloading(true);
         const { email, password } = values;
-        await dispatch(startLogin(email, password));
-        setloading(false);
+        await dispatch(startLogin(email, password, setloading))
     };
     
 

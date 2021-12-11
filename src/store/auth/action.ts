@@ -16,8 +16,10 @@ import { AuthActionTypes,
         User 
 } from "./types";
 
-export const startLogin = (username: string, password: string) => {
+export const startLogin = (username: string, password: string, setloading: Function) => {
     return async (dispatch: Dispatch<AuthActionTypes> | any) => {
+
+        setloading(true);
 
         try {
             const resp = await runFetch('api/auth/login', { username, password }, 'POST');
@@ -56,6 +58,8 @@ export const startLogin = (username: string, password: string) => {
                     cancelText: 'Salir'
                 });
 
+                setloading(false);
+
             } else {
 
                 if (respJson.errors) {
@@ -70,11 +74,14 @@ export const startLogin = (username: string, password: string) => {
                     console.log(respJson.msg);
                 }
 
+                setloading(false);
+
             }
             
         } catch (error) {
             message.error('Error interno, consulte con el administrador')
             console.log(error);
+            setloading(false);
         }
         
     }
