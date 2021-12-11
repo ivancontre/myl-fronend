@@ -23,7 +23,7 @@ const Account: FC = () => {
 
     const { collapsedMenu } = useContext(MenuContext);
 
-    const { name, lastname, username, email } = useSelector((state: RootState) => state.auth);
+    const { name, lastname, username, email, id } = useSelector((state: RootState) => state.auth);
 
     useHideMenu(false, path, collapsedMenu);
 
@@ -67,7 +67,7 @@ const Account: FC = () => {
 
         setloading(true);
 
-        await dispatch(startSetUpdateDataAction({
+        await dispatch(startSetUpdateDataAction(id as string, {
             name: values.name,
             lastname: values.lastname,
             password: values.password,

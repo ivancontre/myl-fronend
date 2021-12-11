@@ -271,13 +271,13 @@ export const startSetDetailAction = () => {
     }
 };
 
-export const startSetUpdateDataAction = (data: any) => {
+export const startSetUpdateDataAction = (id: string, data: any) => {
     return async (dispatch: Dispatch<AuthActionTypes>) => {
 
         try {
 
             const token = localStorage.getItem('token') as string;
-            const resp = await runFetch('api/auth/update', data, 'PUT', token);
+            const resp = await runFetch('api/auth/update/' + id, data, 'PUT', token);
             const respJson = await resp.json();
 
             if (resp.status === 200) {
@@ -307,6 +307,33 @@ export const startRecoveryPasswordAction = (email: string) => {
 
             if (resp.status === 200) {
                 message.success('Se enviará la nueva contraseña a su correo');
+            } else {
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+};
+
+export const startUpdateBoolenasUserAction = (id: string, key: string, value: boolean) => {
+    
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/admin/user-boolenas/' + id, {key, value}, 'PATCH', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                
+                message.success(`Campo "${key}" cambiado a ${value}`);
+
             } else {
                 message.warn(respJson.msg);
                 console.log(respJson.msg);                

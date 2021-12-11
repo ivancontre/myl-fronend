@@ -13,6 +13,7 @@ import { User } from '../../../store/auth/types';
 import { RootState } from '../../../store';
 import { Deck } from '../../../store/deck/types';
 import moment from 'moment';
+import { startUpdateBoolenasUserAction } from '../../../store/auth/action';
 
 const Users: FC = () => {
 
@@ -197,11 +198,11 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'online', checked))} />  
             }
         },
         {
-            title: 'Jugando',
+            title: 'Playing',
             dataIndex: 'playing',
             key: 'playing',
             width: '5%',
@@ -212,11 +213,11 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'playing', checked))} />  
             }
         },
         {
-            title: 'Activo',
+            title: 'Status',
             dataIndex: 'status',
             key: 'status',
             width: '5%',
@@ -227,11 +228,11 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.status} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.status} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'status', checked))} /> 
             }
         },
         {
-            title: 'Verificado',
+            title: 'Verify',
             dataIndex: 'verify',
             key: 'verify',
             width: '5%',
@@ -242,7 +243,7 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'verify', checked))} /> 
             }
         },
         {
