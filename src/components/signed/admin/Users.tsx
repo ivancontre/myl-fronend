@@ -12,6 +12,7 @@ import { resetCardUpdating, resetMySelection } from '../../../store/card/action'
 import { User } from '../../../store/auth/types';
 import { RootState } from '../../../store';
 import { Deck } from '../../../store/deck/types';
+import moment from 'moment';
 
 const Users: FC = () => {
 
@@ -156,20 +157,20 @@ const Users: FC = () => {
         },
         {
             title: 'Ult. vez online',
-            dataIndex: 'decks',
-            key: 'decks',
+            dataIndex: 'lastTimeOnline',
+            key: 'lastTimeOnline',
             width: '10%',
             render: (text, row) => {
-                return <span>12/12/2022 23:54:00</span>
+                return !row.online && row.lastTimeOnline ? moment(row.lastTimeOnline).format('DD/MM/YY HH:mm') : (!row.lastTimeOnline ? '' : <Tag color="lime">Online</Tag>)
             }
         },
         {
             title: 'Ult. vez juego',
-            dataIndex: 'decks',
-            key: 'decks',
+            dataIndex: 'lastTimePlaying',
+            key: 'lastTimePlaying',
             width: '10%',
             render: (text, row) => {
-                return <span>12/12/2022 23:54:00</span>
+                return !row.playing && row.lastTimePlaying ? moment(row.lastTimePlaying).format('DD/MM/YY HH:mm') : (!row.lastTimePlaying ? '' : <Tag color="lime">Jugando</Tag>)
             }
         },
         {
@@ -182,6 +183,21 @@ const Users: FC = () => {
                 const defaultDeck = row.decks?.find((deck: Deck) => deck.byDefault === true);
 
                 return defaultDeck ? <Tag color="lime">Sí</Tag> : <Tag color="magneta">No</Tag>
+            }
+        },
+        {
+            title: 'Online',
+            dataIndex: 'online',
+            key: 'online',
+            width: '5%',
+            sorter: (a: any, b: any) => { 
+                if(a.online < b.online) { return -1; }
+                if(a.online > b.online) { return 1; }
+                return 0;
+            },
+            sortDirections: ['descend', 'ascend'],
+            render: (text, row) => {
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} />  
             }
         },
         {
@@ -212,21 +228,6 @@ const Users: FC = () => {
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
                 return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} /> 
-            }
-        },
-        {
-            title: 'Online',
-            dataIndex: 'online',
-            key: 'online',
-            width: '5%',
-            sorter: (a: any, b: any) => { 
-                if(a.online < b.online) { return -1; }
-                if(a.online > b.online) { return 1; }
-                return 0;
-            },
-            sortDirections: ['descend', 'ascend'],
-            render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} />  
             }
         },
         {
@@ -266,7 +267,6 @@ const Users: FC = () => {
         <div>
             <Table<User>
                  scroll={{ x: 1500 }}
-                 
                  pagination={{ defaultPageSize: 50 }}
                  rowKey="id" 
                  columns={ columns } 

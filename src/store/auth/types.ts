@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Deck } from "../deck/types";
 
 export const authLogin = '[auth] Login';
@@ -19,8 +20,10 @@ export type User = {
     role: string;
     status: boolean;
     online?: boolean;
+    lastTimeOnline?: moment.Moment;
     verify?: boolean;
     playing?: boolean;
+    lastTimePlaying?: moment.Moment;
     victories?: number;
     defeats?: number;
     decks?: Deck[];
