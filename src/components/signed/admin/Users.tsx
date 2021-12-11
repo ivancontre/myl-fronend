@@ -161,7 +161,7 @@ const Users: FC = () => {
             key: 'lastTimeOnline',
             width: '10%',
             render: (text, row) => {
-                return !row.online && row.lastTimeOnline ? moment(row.lastTimeOnline).format('DD/MM/YY HH:mm') : (!row.lastTimeOnline ? '' : <Tag color="lime">Online</Tag>)
+                return !row.online && row.lastTimeOnline ? moment(row.lastTimeOnline).format('DD/MM/YY HH:mm') : (!row.lastTimeOnline ? 'Sin registros' : <Tag color="lime">Online</Tag>)
             }
         },
         {
@@ -170,7 +170,7 @@ const Users: FC = () => {
             key: 'lastTimePlaying',
             width: '10%',
             render: (text, row) => {
-                return !row.playing && row.lastTimePlaying ? moment(row.lastTimePlaying).format('DD/MM/YY HH:mm') : (!row.lastTimePlaying ? '' : <Tag color="lime">Jugando</Tag>)
+                return !row.playing && row.lastTimePlaying ? moment(row.lastTimePlaying).format('DD/MM/YY HH:mm') : (!row.lastTimePlaying ? 'Sin registros' : <Tag color="lime">Jugando</Tag>)
             }
         },
         {
@@ -201,6 +201,21 @@ const Users: FC = () => {
             }
         },
         {
+            title: 'Jugando',
+            dataIndex: 'playing',
+            key: 'playing',
+            width: '5%',
+            sorter: (a: any, b: any) => { 
+                if(a.playing < b.playing) { return -1; }
+                if(a.playing > b.playing) { return 1; }
+                return 0;
+            },
+            sortDirections: ['descend', 'ascend'],
+            render: (text, row) => {
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} />  
+            }
+        },
+        {
             title: 'Activo',
             dataIndex: 'status',
             key: 'status',
@@ -228,21 +243,6 @@ const Users: FC = () => {
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
                 return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} /> 
-            }
-        },
-        {
-            title: 'Jugando',
-            dataIndex: 'playing',
-            key: 'playing',
-            width: '5%',
-            sorter: (a: any, b: any) => { 
-                if(a.playing < b.playing) { return -1; }
-                if(a.playing > b.playing) { return 1; }
-                return 0;
-            },
-            sortDirections: ['descend', 'ascend'],
-            render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} />  
             }
         },
         {
