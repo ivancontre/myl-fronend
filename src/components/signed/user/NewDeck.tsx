@@ -42,8 +42,10 @@ const NewDeck: FC = () => {
     const { types, editions } = useSelector((state: RootState) => state.description); 
     const { deckUpdating, decks } = useSelector((state: RootState) => state.decks); 
 
-    const [typeId, setTypeId] = useState<string>('all');
+    const [typeId, setTypeId] = useState<string | undefined>(undefined);
     const [search, setSearch] = useState<string>('');
+    const [searchText, setSearchText] = useState<string>('');
+
     const [searchInMyCards, setSearchInMyCards] = useState<string>('');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -86,8 +88,14 @@ const NewDeck: FC = () => {
     const handleSelectEdition = async (editionId: string) => {
         setLoading(true);
         await dispatch(startLoadCardByEdition(editionId));
+
+        setSearchText('');
         setSearch('');
+
         setTags([]);
+
+        setTypeId(undefined);
+
         setLoading(false);
     };
 
@@ -130,9 +138,9 @@ const NewDeck: FC = () => {
             
             return cardsByEdition
                     .filter(card => {
-                        return  (typeId !== 'all' ? card.type === typeId : true) && 
-                                (search ? card.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1 : true) &&
-                                (tags ? tags.every( tag => card.ability?.toUpperCase().includes(tag.toUpperCase())) : true)
+                        return  (typeId !== undefined ? card.type === typeId : true) && 
+                                (search ? card.name.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1 : true) &&
+                                (tags ? tags.every( tag => card.ability?.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(tag.toUpperCase())) : true)
                        
                     })
                     .map((card, index) => {
@@ -267,9 +275,9 @@ const NewDeck: FC = () => {
                         placeholder="Seleccione un tipo"
                         style={{ width: "100%" }}
                         onChange={ handleSelectType }
-                        disabled={ !cardsByEdition.length } 
+                        disabled={ !cardsByEdition.length }
+                        value={ typeId }
                     >
-                        <Select.Option key="0" value="all">Todos</Select.Option>
                         {
                             types.length > 0 && types.map(type => (
                                 <Select.Option key={ type.id } value={ type.id }>{ type.name }</Select.Option>
@@ -281,7 +289,7 @@ const NewDeck: FC = () => {
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
-                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } />
+                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ (value: any) => setSearchText(value.target.value)}/>
                 </Col>
             </Row>
 
