@@ -74,7 +74,7 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
         }
     }
 
-    const [{ handlerId }, drop] = useDrop({
+    const [{ handlerId }, ] = useDrop({
         accept: 'card',
         collect(monitor) {
             return {
@@ -163,11 +163,7 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
 
     const opacity = isDragging ? 0.4 : 1;
 
-    if (zone === 'my-cards') {
-        drag(drop(ref));
-    } else {
-        drag(ref);
-    }    
+    drag(ref); 
 
     return (
         <span ref={ ref } style={{ opacity, padding: 3 }} data-handler-id={ handlerId } >
