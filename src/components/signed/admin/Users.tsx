@@ -125,12 +125,13 @@ const Users: FC = () => {
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
+            fixed: 'left',
         },
         {
             title: 'Usuario',
             dataIndex: 'username',
             key: 'username',
-            width: '15%',
+            width: '10%',
             ...getColumnSearchProps('username', ref1),
             sorter: (a: any, b: any) => { 
                 if(a.username < b.username) { return -1; }
@@ -138,12 +139,13 @@ const Users: FC = () => {
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
+            fixed: 'left',
         },
         {
             title: 'Correo',
             dataIndex: 'email',
             key: 'email',
-            width: '20%',
+            width: '15%',
             ...getColumnSearchProps('email', ref2),
             sorter: (a: any, b: any) => { 
                 if(a.email < b.email) { return -1; }
@@ -153,7 +155,25 @@ const Users: FC = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'M. defecto',
+            title: 'Ult. vez online',
+            dataIndex: 'decks',
+            key: 'decks',
+            width: '10%',
+            render: (text, row) => {
+                return <span>12/12/2022 23:54:00</span>
+            }
+        },
+        {
+            title: 'Ult. vez juego',
+            dataIndex: 'decks',
+            key: 'decks',
+            width: '10%',
+            render: (text, row) => {
+                return <span>12/12/2022 23:54:00</span>
+            }
+        },
+        {
+            title: 'Mazo por defecto',
             dataIndex: 'decks',
             key: 'decks',
             width: '10%',
@@ -161,13 +181,14 @@ const Users: FC = () => {
 
                 const defaultDeck = row.decks?.find((deck: Deck) => deck.byDefault === true);
 
-                return defaultDeck ? <Tag color="lime">sí</Tag> : <Tag color="magneta">no</Tag>
+                return defaultDeck ? <Tag color="lime">Sí</Tag> : <Tag color="magneta">No</Tag>
             }
         },
         {
             title: 'Activo',
             dataIndex: 'status',
             key: 'status',
+            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.status < b.status) { return -1; }
                 if(a.status > b.status) { return 1; }
@@ -175,13 +196,14 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch size="small" checkedChildren="sí" unCheckedChildren="no" checked={row.status} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.status} /> 
             }
         },
         {
             title: 'Verificado',
             dataIndex: 'verify',
             key: 'verify',
+            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.verify < b.verify) { return -1; }
                 if(a.verify > b.verify) { return 1; }
@@ -189,13 +211,14 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch size="small" checkedChildren="sí" unCheckedChildren="no" checked={row.verify} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} /> 
             }
         },
         {
             title: 'Online',
             dataIndex: 'online',
             key: 'online',
+            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.online < b.online) { return -1; }
                 if(a.online > b.online) { return 1; }
@@ -203,13 +226,14 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch size="small" checkedChildren="sí" unCheckedChildren="no" checked={row.online} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} />  
             }
         },
         {
             title: 'Jugando',
             dataIndex: 'playing',
             key: 'playing',
+            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.playing < b.playing) { return -1; }
                 if(a.playing > b.playing) { return 1; }
@@ -217,33 +241,40 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch size="small" checkedChildren="sí" unCheckedChildren="no" checked={row.playing} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} />  
             }
         },
         {
             title: 'Acciones',
             dataIndex: '',
             key: 'x',
+            width: '15%',
             render: (text, row) => {
 
                 return <>
-                    {!row.verify && <Button type="link">Reenviar correo verificación</Button> }
+                    {!row.verify && <Button style={{fontSize: 11}} type="link">Reenviar correo verificación</Button> }
                     
-                    <Button type="link">Recuperar contraseña</Button>
+                    <Button style={{fontSize: 11}} type="link">Recuperar contraseña</Button>
+                    <Button style={{fontSize: 11}} type="link">Eliminar permanentemente</Button>
                 </>
             },
+            fixed: 'right',
         },
     ];
 
     return (
         <div>
             <Table<User>
+                 scroll={{ x: 1500 }}
+                 
                  pagination={{ defaultPageSize: 50 }}
                  rowKey="id" 
                  columns={ columns } 
                  dataSource={ users as User[] } 
                  style={{ paddingTop: 10 }}
                  loading={ users === null ? true : false }
+                 size="small"
+                  sticky
              />
         </div>
     )
