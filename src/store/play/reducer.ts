@@ -1,7 +1,8 @@
-import { PlayActionTypes, PlayState, resetPlay, setActiveUsers } from "./types";
+import { PlayActionTypes, PlayState, resetPlay, setActiveUsers, setUsers } from "./types";
 
 const initialState: PlayState = {
-    activeUsers: []
+    activeUsersForPlay: null,
+    users: null
 };
 
 export const playReducer = (state: typeof initialState = initialState, action: PlayActionTypes): PlayState => {
@@ -10,7 +11,13 @@ export const playReducer = (state: typeof initialState = initialState, action: P
         case setActiveUsers:
             return {
                 ...state,
-                activeUsers: [...action.payload]
+                activeUsersForPlay: [...action.payload]
+            };
+        
+        case setUsers:
+            return {
+                ...state,
+                users: [...action.payload]
             };
 
         case resetPlay:

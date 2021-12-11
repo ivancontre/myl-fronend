@@ -19,6 +19,7 @@ export type User = {
     role: string;
     status: boolean;
     online?: boolean;
+    verify?: boolean;
     playing?: boolean;
     victories?: number;
     defeats?: number;

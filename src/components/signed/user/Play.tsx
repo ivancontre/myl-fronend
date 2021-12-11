@@ -26,7 +26,7 @@ const Play: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { activeUsers } = useSelector((state: RootState) => state.play);
+    const { activeUsersForPlay } = useSelector((state: RootState) => state.play);
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
     const { victories, defeats, playing } = useSelector((state: RootState) => state.auth);  
 
@@ -281,7 +281,7 @@ const Play: FC = () => {
 
     return (
         <>
-             <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado y posee alguno seleccionado por defecto" type="info" showIcon/>
+             <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado con 50 cartas y posee alguno seleccionado por defecto" type="info" showIcon/>
  
             {
                 !haveDecks() && (
@@ -324,9 +324,9 @@ const Play: FC = () => {
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 
                  columns={ columns } 
-                 dataSource={ activeUsers as User[] } 
+                 dataSource={ activeUsersForPlay as User[] } 
                  style={{ paddingTop: 10 }}
-                 loading={ activeUsers === null ? true : false }
+                 loading={ activeUsersForPlay === null ? true : false }
              />
         </>
     )

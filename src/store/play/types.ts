@@ -1,10 +1,12 @@
 import { User } from "../auth/types";
 
-export const setActiveUsers = '[play] Set active users';
+export const setActiveUsers = '[play] Set active users for play';
+export const setUsers = '[play] Set users';
 export const resetPlay = '[play] Reset';
 
 export type PlayState = {
-    activeUsers: User[] | null;
+    activeUsersForPlay: User[] | null;
+    users: User[] | null;
 };
 
 type PlaySetActiveUsers = {
@@ -12,8 +14,13 @@ type PlaySetActiveUsers = {
     payload: User[]
 };
 
+type PlaySetUsers = {
+    type: typeof setUsers;
+    payload: User[]
+};
+
 type PlayReset = {
     type: typeof resetPlay;
 };
 
-export type PlayActionTypes = PlaySetActiveUsers | PlayReset;
+export type PlayActionTypes = PlaySetActiveUsers | PlaySetUsers | PlayReset;

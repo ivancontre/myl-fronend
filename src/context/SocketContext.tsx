@@ -6,7 +6,7 @@ import useSocket from '../hooks/useSocket';
 import { RootState } from '../store';
 import { User } from '../store/auth/types';
 import { Deck } from '../store/deck/types';
-import { playSetActiveUsers } from '../store/play/action';
+import { playSetActiveUsersForPlay, playSetUsers } from '../store/play/action';
 
 // Todo lo que se defina aquí estará disponible en sus hijos
 
@@ -46,9 +46,10 @@ export const SocketProvider = ({ children }: Props) => {
 
     useEffect(() => {
         socket?.on('active-users-list', (users: User[]) => {
-            const newUsers = users.filter(user => user.id !== id && (user.decks && user.decks.length > 0 && user.decks.find((deck: Deck) => deck.byDefault)));
-
-            dispatch(playSetActiveUsers(newUsers));
+            console.log(users)
+            dispatch(playSetUsers(users));
+            const usersForPlay = users.filter(user => user.id !== id && (user.decks && user.decks.length > 0 && user.decks.find((deck: Deck) => deck.byDefault)));
+            dispatch(playSetActiveUsersForPlay(usersForPlay));
         });
     }, [socket, dispatch, id])
 
