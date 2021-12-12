@@ -12,6 +12,8 @@ export const uiCloseModalSelectXCastle = '[ui-modal] Close modal SelectXcards';
 
 export const uiOpenModalViewCastleOpponent = '[ui-modal] Open modal ViewCastle Opponent';
 export const uiCloseModalViewCastleOpponent = '[ui-modal] Close modal ViewCastle Opponent';
+export const uiOpenModalViewXCastleOpponent = '[ui-modal] Open modal ViewCastle X Opponent';
+export const uiCloseModalViewXCastleOpponent = '[ui-modal] Close modal ViewCastle X Opponent';
 
 export const uiOpenModalViewCementery = '[ui-modal] Open modal ViewCementery';
 export const uiCloseModalViewCementery = '[ui-modal] Close modal ViewCementery';
@@ -40,16 +42,19 @@ export const uiCloseModalTakeControlOpponentCard = '[ui-modal] Close modal Take 
 export const uiOpenModalAssignModal = '[ui-modal] Open modal Assign Weapon';
 export const uiCloseModalAssignModal = '[ui-modal] Close modal Assign Weapon';
 
+export const uiOpenModalSelectXCastleOpponent = '[ui-modal] Open modal SelectXcards Opponent';
+export const uiCloseModalSelectXCastleOpponent = '[ui-modal] Close modal SelectXcards Opponent';
 
-
-export const uiResetModal = '[ui-modal] REset modals';
+export const uiResetModal = '[ui-modal] Reset modals';
 
 export type UiModalState = {
     modalOpenThrowXcards: boolean;
     modalOpenViewCastle: boolean;
     modalOpenViewXcards: boolean;
     modalOpenSelectXcards: boolean;
+    modalOpenSelectXcardsOpponent: boolean;
     modalOpenViewCastleToOpponent: boolean;
+    modalOpenXViewCastleToOpponent: boolean;
 
     modalOpenViewCementery: boolean;
     modalOpenViewExile: boolean;
@@ -100,12 +105,28 @@ type ModalSelectXCastleCloseAction = {
     type: typeof uiCloseModalSelectXCastle;
 };
 
+type ModalSelectXCastleOpenOpponentAction = {
+    type: typeof uiOpenModalSelectXCastleOpponent;
+};
+
+type ModalSelectXCastleCloseOpponentAction = {
+    type: typeof uiCloseModalSelectXCastleOpponent;
+};
+
 type ModalViewCastleOpponentOpenAction = {
     type: typeof uiOpenModalViewCastleOpponent;
 };
 
 type ModalViewCastleOpponentCloseAction = {
     type: typeof uiCloseModalViewCastleOpponent;
+};
+
+type ModalViewXCastleOpponentOpenAction = {
+    type: typeof uiOpenModalViewXCastleOpponent;
+};
+
+type ModalViewXCastleOpponentCloseAction = {
+    type: typeof uiCloseModalViewXCastleOpponent;
 };
 
 /** **/
@@ -212,8 +233,12 @@ ModalViewXCastleOpenAction |
 ModalViewXCastleCloseAction | 
 ModalSelectXCastleOpenAction |
 ModalSelectXCastleCloseAction |
+ModalSelectXCastleOpenOpponentAction |
+ModalSelectXCastleCloseOpponentAction |
 ModalViewCastleOpponentOpenAction |
 ModalViewCastleOpponentCloseAction |
+ModalViewXCastleOpponentOpenAction |
+ModalViewXCastleOpponentCloseAction |
 
 ModalViewCementeryOpenAction |
 ModalViewCementeryCloseAction |

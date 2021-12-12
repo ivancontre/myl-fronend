@@ -9,7 +9,7 @@ import update from 'immutability-helper';
 import { ZONE_NAMES } from "../../constants";
 import { RootState } from '../../store';
 import { Card } from '../../store/card/types';
-import { closeModalViewAuxiliary, closeModalViewAuxiliaryOpponent, closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle } from '../../store/ui-modal/action';
+import { closeModalViewAuxiliary, closeModalViewAuxiliaryOpponent, closeModalViewCastle, closeModalViewCastleOpponent, closeModalViewCementery, closeModalViewCementeryOpponent, closeModalViewExile, closeModalViewExileOpponent, closeModalViewHandOpponent, closeModalViewRemoval, closeModalViewRemovalOpponent, closeModalViewXCastle, closeModalViewXCastleOpponent } from '../../store/ui-modal/action';
 import CardComponentContainer from './drag/CardComponentContainer';
 import CardComponent from './drag/CardComponent';
 import { changeMatch, setAmountCardsViewAction, setViewCardsDestiny, setViewCardsOrigin } from '../../store/match/action';
@@ -70,7 +70,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             modalOpenViewExileOpponent, 
             modalOpenViewRemovalOpponent,
             modalOpenViewAuxiliaryOpponent,
-            modalOpenViewHandOpponent
+            modalOpenViewHandOpponent,
+            modalOpenXViewCastleToOpponent
     } = useSelector((state: RootState) => state.uiModal);
 
     const [optionSelect, setOptionSelect] = useState('');
@@ -79,6 +80,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         dispatch(closeModalViewCastle());
         dispatch(closeModalViewXCastle());
         dispatch(closeModalViewCastleOpponent());
+        dispatch(closeModalViewXCastleOpponent());
         dispatch(closeModalViewCementery());
         dispatch(closeModalViewExile());
         dispatch(closeModalViewRemoval());
@@ -115,7 +117,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
     const handleCancelModal = () => {
         
         resetModal();
-        sendMessage(`Dejó de ver "${zone}"`);
+        sendMessage(!onlyRead ? `Dejó de ver "${zone}"` : `Dejó de ver "${zone}" oponente`);
 
     };
 
@@ -253,7 +255,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                 modalOpenViewExileOpponent ||
                 modalOpenViewRemovalOpponent ||
                 modalOpenViewAuxiliaryOpponent ||
-                modalOpenViewHandOpponent
+                modalOpenViewHandOpponent ||
+                modalOpenXViewCastleToOpponent
             } 
             onCancel={ handleCancelModal } 
             onOk={ handleOkModal }

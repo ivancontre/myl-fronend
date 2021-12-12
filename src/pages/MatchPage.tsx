@@ -15,7 +15,7 @@ import { SocketContext } from '../context/SocketContext';
 import useHideMenu from '../hooks/useHideMenu';
 import { RootState } from '../store';
 import { Card } from '../store/card/types';
-import { changeMatch, changOpponenteMatch, resetMatch } from '../store/match/action';
+import { changeMatch, changOpponenteMatch, resetMatch, setAmountCardsViewAction } from '../store/match/action';
 import Zone from '../components/match/Zone';
 import { Dictionary } from '../store/match/types';
 
@@ -23,7 +23,7 @@ import '../css/match.css';
 import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
 import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
-import { openModalViewCastleOpponent, openModalViewHandOpponent } from '../store/ui-modal/action';
+import { openModalViewCastleOpponent, openModalViewHandOpponent, openModalViewXCastleOpponent } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
@@ -66,7 +66,8 @@ const MatchPage: FC = () => {
             modalOpenViewCastle, 
             modalOpenViewXcards, 
             modalOpenSelectXcards, 
-            modalOpenViewCastleToOpponent, 
+            modalOpenViewCastleToOpponent,
+            modalOpenXViewCastleToOpponent,
             modalOpenViewCementery, 
             modalOpenViewExile, 
             modalOpenViewRemoval,
@@ -77,7 +78,8 @@ const MatchPage: FC = () => {
             modalOpenViewAuxiliaryOpponent,
             modalOpenViewHandOpponent,
             modalOpenTakeControlOpponentCard,
-            modalOpenAssignWeapon
+            modalOpenAssignWeapon,
+            modalOpenSelectXcardsOpponent
     } = useSelector((state: RootState) => state.uiModal);
 
     const { socket } = useContext(SocketContext);
@@ -277,6 +279,19 @@ const MatchPage: FC = () => {
 
     useEffect(() => {
 
+        socket?.on('showing-x-clastle-to-opponent', (data) => {
+            dispatch(setAmountCardsViewAction(data.amountCardsView));
+            dispatch(openModalViewXCastleOpponent());
+        });
+
+        return () => {
+            socket?.off('showing-clastle-to-opponent');
+        }
+
+    }, [socket, dispatch]);
+
+    useEffect(() => {
+
         socket?.on('showing-hand-to-opponent', () => {
             dispatch(openModalViewHandOpponent());
         });
@@ -451,7 +466,9 @@ const MatchPage: FC = () => {
             { modalOpenViewCastle && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } /> }
 
             { modalOpenSelectXcards && <SelectXcardsModal /> }
+            { modalOpenSelectXcardsOpponent && <SelectXcardsModal toOpponent />}
             { modalOpenViewXcards && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
+            { modalOpenXViewCastleToOpponent && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView } onlyRead />}
 
             { modalOpenViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } onlyRead /> }
             

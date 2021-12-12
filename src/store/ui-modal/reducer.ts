@@ -33,7 +33,11 @@ import {
     uiOpenModalViewAuxiliary,
     uiCloseModalViewAuxiliary,
     uiOpenModalViewAuxiliaryOpponent,
-    uiCloseModalViewAuxiliaryOpponent
+    uiCloseModalViewAuxiliaryOpponent,
+    uiCloseModalSelectXCastleOpponent,
+    uiOpenModalSelectXCastleOpponent,
+    uiOpenModalViewXCastleOpponent,
+    uiCloseModalViewXCastleOpponent
 } from "./types";
 
 
@@ -42,7 +46,9 @@ const initialState: UiModalState = {
     modalOpenViewCastle: false,
     modalOpenViewXcards: false,
     modalOpenSelectXcards: false,
+    modalOpenSelectXcardsOpponent: false,
     modalOpenViewCastleToOpponent: false,
+    modalOpenXViewCastleToOpponent: false,
 
     modalOpenViewCementery: false,
     modalOpenViewExile: false,
@@ -123,6 +129,18 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenViewCastleToOpponent: false
+            };
+
+        case uiOpenModalViewXCastleOpponent:            
+            return {
+                ...state,
+                modalOpenXViewCastleToOpponent: true
+            };
+
+        case uiCloseModalViewXCastleOpponent:        
+            return {
+                ...state,
+                modalOpenXViewCastleToOpponent: false
             };
 
         /** */
@@ -259,6 +277,20 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
                 ...state,
                 modalOpenAssignWeapon: false
             };
+
+        case uiCloseModalSelectXCastleOpponent: {
+            return {
+                ...state,
+                modalOpenSelectXcardsOpponent: false
+            }
+        }
+
+        case uiOpenModalSelectXCastleOpponent: {
+            return {
+                ...state,
+                modalOpenSelectXcardsOpponent: true
+            }
+        }
 
         case uiResetModal:
             return initialState;

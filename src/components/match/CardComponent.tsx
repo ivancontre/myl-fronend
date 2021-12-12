@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalAssignWeapon, openModalSelectXcards, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
+import { openModalAssignWeapon, openModalSelectXcards, openModalSelectXcardsOpponent, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
@@ -484,6 +484,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         sendMessage(`Viendo mi "${AUXILIARY_ZONE}"`);
     };
 
+    const showXToOpponent = () => {
+        handleVisibleChangePopever(false);
+        dispatch(openModalSelectXcardsOpponent());
+    };
+
     const viewCementeryOpponent = () => {
         dispatch(openModalViewCementeryOpponent());
         handleVisibleChangePopever(false);
@@ -745,7 +750,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     <Button type="link" onClick={ () => openThrowCardsModal() }>Botar X</Button> <br/>
                     <Button type="link" onClick={ shuffleCaslte }>Barajar</Button> <br/>
                     <Button type="link" onClick={ showToOpponent }>Mostrar al oponente</Button> <br/>
-                    <Button type="link" onClick={ showToOpponent }>Mostrar X al oponente</Button>
+                    <Button type="link" onClick={ showXToOpponent }>Mostrar X al oponente</Button>
                 </div>
             )}
 
