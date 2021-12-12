@@ -20,6 +20,7 @@
     "react-dnd-html5-backend": "^14.0.2",
     "react-dnd-touch-backend": "^14.1.1",
     "react-dom": "^17.0.2",
+    "react-google-login": "^5.2.2",
     "react-highlight-words": "latest",
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.2.0",

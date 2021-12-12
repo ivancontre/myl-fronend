@@ -28,6 +28,8 @@ export const startLogin = (username: string, password: string, setloading: Funct
             if (resp.status === 200) {
                 localStorage.setItem('token', respJson.token);
                 localStorage.setItem('token-init-date', new Date().getTime().toString());
+                
+                setloading(false);
 
                 dispatch(login({
                     id: respJson.user.id,
@@ -35,6 +37,7 @@ export const startLogin = (username: string, password: string, setloading: Funct
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
+                    google: respJson.user.google,
                     role: respJson.user.role,
                     status: respJson.user.status,
                     online: respJson.user.online,
@@ -82,6 +85,61 @@ export const startLogin = (username: string, password: string, setloading: Funct
             message.error('Error interno, consulte con el administrador')
             console.log(error);
             setloading(false);
+        }
+        
+    }
+};
+
+export const startLoginGoogle = (tokenId: string, setloadingGoogle: Function) => {
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        setloadingGoogle(true);
+
+        try {
+
+            const resp = await runFetch('api/auth/google', { tokenId }, 'POST');
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                localStorage.setItem('token', respJson.token);
+                localStorage.setItem('token-init-date', new Date().getTime().toString());
+
+                setloadingGoogle(false);
+
+                dispatch(login({
+                    id: respJson.user.id,
+                    name: respJson.user.name,
+                    lastname: respJson.user.lastname,
+                    email: respJson.user.email,
+                    username: respJson.user.username,
+                    google: respJson.user.google,
+                    role: respJson.user.role,
+                    status: respJson.user.status,
+                    online: respJson.user.online,
+                    playing: respJson.user.playing,
+                    defeats: respJson.user.defeats,
+                    victories: respJson.user.victories
+                }));
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
+                setloadingGoogle(false);
+
+            } else {
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
+                setloadingGoogle(false);
+            }            
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador')
+            console.log(error);
+            setloadingGoogle(false);
         }
         
     }
@@ -139,6 +197,7 @@ export const startVerifyToken = (token: string, history: any) => {
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
+                    google: respJson.user.google,
                     role: respJson.user.role,
                     status: respJson.user.status,
                     online: respJson.user.online,
@@ -210,6 +269,7 @@ export const startChecking = () => {
                     lastname: respJson.user.lastname,
                     email: respJson.user.email,
                     username: respJson.user.username,
+                    google: respJson.user.google,
                     role: respJson.user.role,
                     status: respJson.user.status,
                     online: respJson.user.online,
@@ -320,7 +380,7 @@ export const startRecoveryPasswordAction = (email: string) => {
     }
 };
 
-export const startUpdateBoolenasUserAction = (id: string, key: string, value: boolean) => {
+export const startUpdateBoolenasUserAction = (id: string, username: string, key: string, value: boolean) => {
     
     return async (dispatch: Dispatch<AuthActionTypes>) => {
 
@@ -332,7 +392,7 @@ export const startUpdateBoolenasUserAction = (id: string, key: string, value: bo
 
             if (resp.status === 200) {
                 
-                message.success(`Campo "${key}" cambiado a ${value}`);
+                message.success(`Campo "${key}" cambiado a "${value}" para el usuario "${username}"`, 5);
 
             } else {
                 message.warn(respJson.msg);

@@ -17,6 +17,7 @@ export type User = {
     lastname: string;
     email: string;
     username: string;
+    google: boolean;
     role: string;
     status: boolean;
     online?: boolean;

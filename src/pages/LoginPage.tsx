@@ -1,9 +1,12 @@
 import React, { FC, useState } from 'react';
-import { Form, Input, Button,  Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button,  Typography, message } from 'antd';
+import { UserOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { startLogin } from '../store/auth/action';
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+
+import { startLogin, startLoginGoogle } from '../store/auth/action';
+
 const { Title } = Typography;
 
 
@@ -11,12 +14,21 @@ const LoginPage: FC = () => {
 
     const dispatch = useDispatch();
     const [loading, setloading] = useState(false);
+    const [loadingGoogle, setloadingGoogle] = useState(false);
 
     const onFinish = async (values: any) => {
         const { email, password } = values;
         await dispatch(startLogin(email, password, setloading))
     };
-    
+
+    const onSuccess = async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        const tokenId = (response as GoogleLoginResponse).tokenId;
+        await dispatch(startLoginGoogle(tokenId, setloadingGoogle));
+    };  
+
+    const onFailure = (error: any) => {
+        message.error('Hubo un problema al iniciar sesión con Google');
+    };
 
     return (
         <>
@@ -77,6 +89,22 @@ const LoginPage: FC = () => {
                     
                 </Form.Item>
             </Form>
+
+            <div>
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID as string}
+                    buttonText="Ingresar con Google"
+                    onSuccess={ onSuccess }
+                    onFailure={ onFailure }
+                    cookiePolicy={'single_host_origin'}
+                    render={renderProps => (
+                        <Button loading={ loadingGoogle } type="ghost" htmlType="submit" className="login-form-button" onClick={renderProps.onClick} block style={{ backgroundColor: 'rgb(94 31 16)'}} icon={<GoogleOutlined />}>
+                            Ingresar con Google
+                        </Button>
+                    )}
+                />
+            </div>
+            
         </>
        
     )

@@ -198,7 +198,7 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'online', checked))} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.online} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, row.username, 'online', checked))} />  
             }
         },
         {
@@ -213,7 +213,7 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'playing', checked))} />  
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.playing} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, row.username, 'playing', checked))} />  
             }
         },
         {
@@ -228,7 +228,7 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.status} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'status', checked))} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.status} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, row.username, 'status', checked))} /> 
             }
         },
         {
@@ -243,7 +243,7 @@ const Users: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, 'verify', checked))} /> 
+                return <Switch checkedChildren="Sí" unCheckedChildren="No" checked={row.verify} onChange={ (checked: boolean) => dispatch(startUpdateBoolenasUserAction(row.id, row.username, 'verify', checked))} /> 
             }
         },
         {

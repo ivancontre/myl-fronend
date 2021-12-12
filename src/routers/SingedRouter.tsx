@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, notification, Popconfirm } from 'antd';
+import { Button, Layout, Menu, message, notification, Popconfirm } from 'antd';
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
@@ -9,6 +9,7 @@ import {
     LogoutOutlined,
     TeamOutlined
 } from '@ant-design/icons';
+import { useGoogleLogout } from 'react-google-login';
 
 import Play from '../components/signed/user/Play';
 
@@ -49,7 +50,21 @@ export const SingedRouter: FC = () => {
 
     const history = useHistory();
 
-    const { role, username } = useSelector((state: RootState) => state.auth);
+    const { role, username, google } = useSelector((state: RootState) => state.auth);
+
+    const onLogoutGoogleSuccess = () => {
+        handleLogout();
+    };
+
+    const onFailureGoogle = () => {
+        message.error('Hubo un problema al cerrar sesión con Google');
+    };
+
+    const { signOut } = useGoogleLogout({
+        onFailure: onFailureGoogle,
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID as string,
+        onLogoutSuccess: onLogoutGoogleSuccess
+    });
     
     const handleLogout = () => {
         dispatch(startLogout());
@@ -64,7 +79,7 @@ export const SingedRouter: FC = () => {
     };   
 
     const confirm = () => {
-        handleLogout();
+        google ? signOut() : handleLogout();
     };
 
     const cancel = () => {
@@ -199,11 +214,16 @@ export const SingedRouter: FC = () => {
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="account" icon={<UserOutlined />}>
-                            <Link to="/account">
-                                Mi Cuenta
-                            </Link>
-                        </Menu.Item>
+                        {
+                            !google && (
+                                <Menu.Item key="account" icon={<UserOutlined />}>
+                                    <Link to="/account">
+                                        Mi Cuenta
+                                    </Link>
+                                </Menu.Item>
+                            )
+                        }
+                        
 
                         {
                             role === 'ADMIN_ROLE' && (
@@ -232,12 +252,13 @@ export const SingedRouter: FC = () => {
                                 title="¿Salir?"
                                 okText="Sí"
                                 placement="right"
-                                onConfirm={confirm}
-                                onCancel={cancel}
+                                onConfirm={ confirm }
+                                onCancel={ cancel }
                                 cancelText="No"
                             >
                                 Cerrar sesión
                             </Popconfirm>
+                            
                         </Menu.Item>
 
                     </Menu>
@@ -258,7 +279,11 @@ export const SingedRouter: FC = () => {
                                 
                                 <Route exact path="/decks/new" component={ NewDeck } />
 
-                                <Route exact path="/account" component={ Account } />
+                                {
+                                    !google && (
+                                        <Route exact path="/account" component={ Account } />
+                                    )
+                                }
 
                                 <Route exact path="/decks/:id/edit" component={ NewDeck } />
 

@@ -10,3 +10,13 @@
 #components-form-demo-normal-login .login-form-button {
     width: 100%;
 }
+
+div.btn-login-google > button {
+    width: 100%;
+    padding: 7px !important;
+    display: block !important;
+}
+
+div.btn-login-google > button > div {
+    padding: unset !important;
+}

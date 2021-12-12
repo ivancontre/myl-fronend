@@ -7,7 +7,7 @@ import 'animate.css';
 
 const MyLApp: FC = () => {
     
-    //document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('contextmenu', event => event.preventDefault());
 
     localStorage.openpages = Date.now();
 
@@ -22,7 +22,7 @@ const MyLApp: FC = () => {
 
         if(e.key === 'page_available' && notIsInAuth) {
             
-            alert('Ya posees una pestaña abierta con la aplicación. Solo puedes tener una sola abierta');
+            alert('Ya posees una pestaña abierta con la aplicación. Esta pestaña se cerrará...');
             const win = window.open("about:blank", "_self");
             win?.close();
             
