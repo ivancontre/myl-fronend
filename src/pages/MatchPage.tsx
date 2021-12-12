@@ -179,20 +179,6 @@ const MatchPage: FC = () => {
         }, [],
     );
 
-    const opponentCards: Dictionary<Card[] | []> = {};
-    opponentCards[CASTLE_ZONE] = [];
-    opponentCards[HAND_ZONE] = [];
-    opponentCards[ATTACK_ZONE] = [];
-    opponentCards[CEMETERY_ZONE] = [];
-    opponentCards[EXILE_ZONE] = [];
-    opponentCards[DEFENSE_ZONE] = [];
-    opponentCards[REMOVAL_ZONE] = [];    
-    opponentCards[SUPPORT_ZONE] = [];
-    opponentCards[GOLDS_PAID_ZONE] = [];
-    opponentCards[UNPAID_GOLD_ZONE] = [];
-
-    //const isMobile = window.innerWidth < 600;
-
     useEffect(() => {
 
         if (deckDefault?.cards.length) {

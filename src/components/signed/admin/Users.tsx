@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import { Button, Input, Space, Switch, Table, Tag } from 'antd';
+import { Button, Input, Popconfirm, Space, Switch, Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { SearchOutlined } from '@ant-design/icons';
@@ -13,7 +13,8 @@ import { User } from '../../../store/auth/types';
 import { RootState } from '../../../store';
 import { Deck } from '../../../store/deck/types';
 import moment from 'moment';
-import { startUpdateBoolenasUserAction } from '../../../store/auth/action';
+import { deleteUserPermanently, startUpdateBoolenasUserAction } from '../../../store/auth/action';
+import { Link } from 'react-scroll';
 
 const Users: FC = () => {
 
@@ -35,6 +36,8 @@ const Users: FC = () => {
 
     const { users } = useSelector((state: RootState) => state.play);
 
+    const { id } = useSelector((state: RootState) => state.auth);
+
     useEffect(() => {
 
         dispatch(resetCardUpdating());
@@ -51,6 +54,10 @@ const Users: FC = () => {
     const handleReset = (clearFilters: Function) => {
         clearFilters();
         setSearchText('');
+    };
+
+    const deleteUser = (id: string, username: string) => {
+        dispatch(deleteUserPermanently(id, username));
     };
 
     const getColumnSearchProps = (dataIndex: string, ref: any) => ({
@@ -268,8 +275,18 @@ const Users: FC = () => {
                 return <>
                     {!row.verify && <Button style={{fontSize: 11}} type="link">Reenviar correo verificación</Button> }
                     
-                    <Button style={{fontSize: 11}} type="link">Recuperar contraseña</Button>
-                    <Button style={{fontSize: 11}} type="link">Eliminar permanentemente</Button>
+                    <Button style={{fontSize: 11}} type="link">Recuperar contraseña</Button> <br/>
+
+                    {
+                        row.id !== id && (
+                            <Popconfirm title="¿Está seguro?" onConfirm={() => deleteUser(row.id, row.username)}>
+                                <Link style={{fontSize: 11}}  to="">Eliminar permanentemente</Link>     
+                            </Popconfirm>
+                        )
+                    }
+                    
+
+
                 </>
             },
             fixed: 'right',

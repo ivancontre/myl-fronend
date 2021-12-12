@@ -14,7 +14,7 @@ const OpponentMessage: FC<OpponentMessageProps> = ({ message }) => {
                 <span className="opponent-username">
                     { message.username + ': ' } 
                 </span>
-                <span>
+                <span className={ message.isAction ? 'font-bold' : ''}>
                     { message.text }
                 </span>
             </p>

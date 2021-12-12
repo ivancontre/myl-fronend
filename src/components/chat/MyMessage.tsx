@@ -14,7 +14,7 @@ const MyMessage: FC<MyMessageProps>  = ({ message }) => {
                 <span className="my-username">
                    { `Yo: ` }
                 </span>
-                <span>
+                <span className={ message.isAction ? 'font-bold' : ''}>
                     { message.text }
                 </span>
             </p>

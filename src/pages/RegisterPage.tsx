@@ -96,7 +96,7 @@ const RegisterPage = () => {
                         type="text" 
                         prefix={<UserOutlined className="site-form-item-icon" />} 
                         placeholder="Nombre de usuario" 
-                        maxLength={ 20 }
+                        maxLength={ 100 }
                     />
                 
                 </Form.Item>

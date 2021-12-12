@@ -418,6 +418,33 @@ export const startUpdateBoolenasUserAction = (id: string, username: string, key:
     }
 };
 
+export const deleteUserPermanently = (id: string, username: string) => {
+    
+    return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        try {
+
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/admin/user-delete/' + id, {}, 'DELETE', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                
+                message.success(`Usuario "${username}" borrado permanentemente`, 5);
+
+            } else {
+                message.warn(respJson.msg);
+                console.log(respJson.msg);                
+            }
+
+        } catch (error) {
+            message.error('Error interno, consulte con el administrador');
+            console.log(error);
+        }
+        
+    }
+}
+
 const setUpdateData = (name: string, lastname: string, username: string): AuthActionTypes  => {
     return {
         type: authStartUpdateData,
