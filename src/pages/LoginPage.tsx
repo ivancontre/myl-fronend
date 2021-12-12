@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Form, Input, Button,  Typography, message } from 'antd';
+import { Form, Input, Button,  Typography } from 'antd';
 import { UserOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -28,7 +28,6 @@ const LoginPage: FC = () => {
 
     const onFailure = (error: any) => {
         console.log(error)
-        message.error('Hubo un problema al iniciar sesión con Google');
     };
 
     return (

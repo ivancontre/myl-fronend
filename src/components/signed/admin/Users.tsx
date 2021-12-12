@@ -157,21 +157,33 @@ const Users: FC = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Ult. vez online',
+            title: 'Últ. vez online',
             dataIndex: 'lastTimeOnline',
             key: 'lastTimeOnline',
             width: '10%',
             render: (text, row) => {
-                return !row.online && row.lastTimeOnline ? moment(row.lastTimeOnline).format('DD/MM/YY HH:mm') : (!row.lastTimeOnline ? 'Sin registros' : <Tag color="lime">Online</Tag>)
+                if (row.online) {
+                    return <Tag color="lime">Online</Tag>
+                } else if (row.lastTimeOnline) {
+                    return moment(row.lastTimeOnline).format('DD/MM/YY HH:mm');
+                } else {
+                    return 'Sin registros'
+                }
             }
         },
         {
-            title: 'Ult. vez juego',
+            title: 'Últ. vez juego',
             dataIndex: 'lastTimePlaying',
             key: 'lastTimePlaying',
             width: '10%',
             render: (text, row) => {
-                return !row.playing && row.lastTimePlaying ? moment(row.lastTimePlaying).format('DD/MM/YY HH:mm') : (!row.lastTimePlaying ? 'Sin registros' : <Tag color="lime">Jugando</Tag>)
+                if (row.playing) {
+                    return <Tag color="lime">Jugando</Tag>
+                } else if (row.lastTimePlaying) {
+                    return moment(row.lastTimePlaying).format('DD/MM/YY HH:mm');
+                } else {
+                    return 'Sin registros'
+                }
             }
         },
         {
