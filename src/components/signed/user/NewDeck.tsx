@@ -231,6 +231,15 @@ const NewDeck: FC = () => {
         setTags(tags);
     };
 
+    const onChangeSearchText = (event: any) => {
+        if (event.target.value) {
+            setSearchText(event.target.value as string)
+        } else {
+            setSearchText('');
+            setSearch('');
+        }
+    };
+
     return (
         <>
             <Row>
@@ -289,7 +298,7 @@ const NewDeck: FC = () => {
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
-                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ (value: any) => setSearchText(value.target.value)}/>
+                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ onChangeSearchText }/>
                 </Col>
             </Row>
 
