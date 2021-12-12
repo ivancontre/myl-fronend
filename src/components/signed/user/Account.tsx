@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { Form, Input, Button,  Typography, Switch, message } from 'antd';
+import { Form, Input, Button,  Typography, Switch } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, SmileOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router';
 import { MenuContext } from '../../../context/MenuContext';
@@ -23,7 +23,7 @@ const Account: FC = () => {
 
     const { collapsedMenu } = useContext(MenuContext);
 
-    const { name, lastname, username, email, id } = useSelector((state: RootState) => state.auth);
+    const { name, lastname, username, email, id, google } = useSelector((state: RootState) => state.auth);
 
     useHideMenu(false, path, collapsedMenu);
 
@@ -65,18 +65,19 @@ const Account: FC = () => {
 
     const onFinish = async (values: any) => {
 
-        setloading(true);
+        //setloading(true);
 
         await dispatch(startSetUpdateDataAction(id as string, {
             name: values.name,
             lastname: values.lastname,
+            username: values.username,
             password: values.password,
             password2: values.password2
-        }));
+        }, setloading));
 
-        message.success('Actualizado correctamente');
+        
 
-        setloading(false);
+        //setloading(false);
     };
 
     const onChangeSwitch = (checked: boolean) => {
@@ -143,6 +144,19 @@ const Account: FC = () => {
                 
                 </Form.Item>
 
+                <Form.Item            
+                    label="Nombre usuario"         
+                    name="username"
+                >
+                    <Input 
+                        type="text" 
+                        prefix={<UserOutlined className="site-form-item-icon" />} 
+                        placeholder="Nombre de usuario" 
+                        maxLength={ 20 }
+                    />
+                
+                </Form.Item> 
+
                 <Form.Item                    
                     label="Correo" 
                     name="email"
@@ -153,55 +167,49 @@ const Account: FC = () => {
                         placeholder="Correo" 
                         disabled
                     />
-                </Form.Item>
-
-                <Form.Item            
-                    label="Nombre usuario"         
-                    name="username"
-                >
-                    <Input 
-                        type="text" 
-                        prefix={<UserOutlined className="site-form-item-icon" />} 
-                        placeholder="Nombre de usuario" 
-                        maxLength={ 15 }
-                        disabled
-                    />
-                
-                </Form.Item>               
-
-                <Form.Item
-                    label="Contraseña actual"
-                    name="password"
-                    rules={[
-                        { 
-                            required: true, 
-                            message: 'Por favor ingresa tu contraseña' 
-                        },
-                        { 
-                            min: 6, 
-                            message: 'La contraseña debe tener a lo menos 6 caracteres' 
-                        }
-                    ]}
-                    hasFeedback
-                >
-                    <Input.Password
-                        prefix={<LockOutlined className="site-form-item-icon" />}
-                        type="password"
-                        placeholder="Contraseña actual"
-
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label="Cambiar contraseña"
-                    name="switch" 
-                    valuePropName="checked"
-                >
-                    <Switch onChange={ onChangeSwitch }/>
-                </Form.Item>
+                </Form.Item>              
 
                 {
-                    showSectionPassword && (
+                    !google && (
+                        <Form.Item
+                            label="Contraseña actual"
+                            name="password"
+                            rules={[
+                                { 
+                                    required: true, 
+                                    message: 'Por favor ingresa tu contraseña' 
+                                },
+                                { 
+                                    min: 6, 
+                                    message: 'La contraseña debe tener a lo menos 6 caracteres' 
+                                }
+                            ]}
+                            hasFeedback
+                        >
+                            <Input.Password
+                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                type="password"
+                                placeholder="Contraseña actual"
+
+                            />
+                        </Form.Item>
+                    )
+                }
+
+                {
+                    !google && (
+                        <Form.Item
+                            label="Cambiar contraseña"
+                            name="switch" 
+                            valuePropName="checked"
+                        >
+                            <Switch onChange={ onChangeSwitch }/>
+                        </Form.Item>
+                    )
+                }
+
+                {
+                    showSectionPassword && !google && (
                         <div>                         
 
                             <Form.Item

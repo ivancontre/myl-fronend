@@ -156,18 +156,16 @@ export const startRegister = (name: string, lastname: string, email: string, use
 
                 message.success('Registrado correctamente. Revisa tu bandeja de entrada de tu correo para verificar la cuenta', 5);
 
-            } else {
-                if (respJson.errors) {
+            } else if (respJson.errors) {
 
                     for (let [, value] of Object.entries(respJson.errors)) {
                         message.warn((value as any).msg);
                         console.log((value as any).msg);
                     }
 
-                } else {
+            } else {
                     message.warn(respJson.msg, 5);
-                    console.log(respJson.msg);
-                }
+                    console.log(respJson.msg);          
                 
             }
         } catch (error) {
@@ -331,8 +329,10 @@ export const startSetDetailAction = () => {
     }
 };
 
-export const startSetUpdateDataAction = (id: string, data: any) => {
+export const startSetUpdateDataAction = (id: string, data: any, setloading: Function) => {
     return async (dispatch: Dispatch<AuthActionTypes>) => {
+
+        setloading(true);
 
         try {
 
@@ -341,17 +341,28 @@ export const startSetUpdateDataAction = (id: string, data: any) => {
             const respJson = await resp.json();
 
             if (resp.status === 200) {
-                
-                dispatch(setUpdateData(respJson.name as string, respJson.lastname as string));
+                setloading(false);
+                dispatch(setUpdateData(respJson.name as string, respJson.lastname as string, respJson.username as string));
+                message.success('Actualizado correctamente');
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+                setloading(false);
 
             } else {
-                message.warn(respJson.msg);
-                console.log(respJson.msg);                
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);  
+                setloading(false);        
             }
 
         } catch (error) {
             message.error('Error interno, consulte con el administrador');
             console.log(error);
+            setloading(false);
         }
         
     }
@@ -407,12 +418,13 @@ export const startUpdateBoolenasUserAction = (id: string, username: string, key:
     }
 };
 
-const setUpdateData = (name: string, lastname: string): AuthActionTypes  => {
+const setUpdateData = (name: string, lastname: string, username: string): AuthActionTypes  => {
     return {
         type: authStartUpdateData,
         payload: {
             name,
-            lastname
+            lastname,
+            username
         }
     }
 };

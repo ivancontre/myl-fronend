@@ -214,16 +214,11 @@ export const SingedRouter: FC = () => {
                             </Link>
                         </Menu.Item>
 
-                        {
-                            !google && (
-                                <Menu.Item key="account" icon={<UserOutlined />}>
-                                    <Link to="/account">
-                                        Mi Cuenta
-                                    </Link>
-                                </Menu.Item>
-                            )
-                        }
-                        
+                        <Menu.Item key="account" icon={<UserOutlined />}>
+                            <Link to="/account">
+                                Mi Cuenta
+                            </Link>
+                        </Menu.Item>                        
 
                         {
                             role === 'ADMIN_ROLE' && (
@@ -279,11 +274,7 @@ export const SingedRouter: FC = () => {
                                 
                                 <Route exact path="/decks/new" component={ NewDeck } />
 
-                                {
-                                    !google && (
-                                        <Route exact path="/account" component={ Account } />
-                                    )
-                                }
+                                <Route exact path="/account" component={ Account } />
 
                                 <Route exact path="/decks/:id/edit" component={ NewDeck } />
 

@@ -42,7 +42,8 @@ export const authReducer = (state: typeof initialState = initialState, action: A
             return {
                 ...state,
                 name: action.payload.name,
-                lastname: action.payload.lastname
+                lastname: action.payload.lastname,
+                username: action.payload.username
             };
     
         default:

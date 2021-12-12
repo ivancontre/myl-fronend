@@ -266,7 +266,7 @@ const Play: FC = () => {
 
 
     const haveDecks = () => {
-        return decks ? true : false;
+        return decks?.length ? true : false;
     };
 
     const isCorrectDeckDefault = () => {
