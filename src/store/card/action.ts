@@ -12,11 +12,20 @@ export const startAddNewCard = (card: any) => {
             let respJson = await resp.json();
 
             if (resp.status === 201) {
+
                 dispatch(addNewCard(respJson));                
                 message.success(`Carta "${respJson.name}" creada correctamente`);
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
             } else {
-                console.log(resp);
-                message.error('Error al crear carta');
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
             }
 
         } catch (error) {
@@ -36,11 +45,20 @@ export const startUpdateCard = (id: string, card: any) => {
             let respJson = await resp.json();
 
             if (resp.status === 200) {
+
                 dispatch(updateCard(respJson));
                 message.success(`Carta "${respJson.name}" actualizada correctamente`);
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
             } else {
-                console.log(resp);
-                message.error('Error al actualizar carta');
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
             }
 
         } catch (error) {
@@ -82,9 +100,19 @@ export const startLoadCardUpdating = (id: string) => {
             const respJson = await resp.json();
 
             if (resp.status === 200) {
+
                 dispatch(loadCardUpdating(respJson));
+
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
             } else {
-                console.log(resp)
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
             }
 
         } catch (error) {
@@ -102,9 +130,19 @@ export const startLoadCardByEdition = (editionId: string) => {
             const respJson = await resp.json();
 
             if (resp.status === 200) {
+
                 dispatch(loadCardsByEdition(respJson));
+                
+            } else if (respJson.errors) {
+
+                for (let [, value] of Object.entries(respJson.errors)) {
+                    message.warn((value as any).msg);
+                    console.log((value as any).msg);
+                }
+
             } else {
-                message.error('Error al obtener cartas');
+                message.warn(respJson.msg, 5);
+                console.log(respJson.msg);
             }
 
         } catch (error) {

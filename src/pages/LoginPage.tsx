@@ -27,6 +27,7 @@ const LoginPage: FC = () => {
     };  
 
     const onFailure = (error: any) => {
+        console.log(error)
         message.error('Hubo un problema al iniciar sesión con Google');
     };
 

@@ -639,7 +639,7 @@ const MatchPage: FC = () => {
                         <Col span={4} className="content-actions">
 
                             <Row gutter={[8, 8]}>
-                                <Col span={24} style={{width: '100%', textAlign: 'center'}} >
+                                <Col span={24} className="name-opponent" >
                                     <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
                                 </Col>
                             </Row>    

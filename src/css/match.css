@@ -124,3 +124,12 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   position: absolute;
   bottom: 0;
 }
+
+.name-opponent {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align:center;
+
+}
