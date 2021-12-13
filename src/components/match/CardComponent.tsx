@@ -735,6 +735,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         if (card.vibrate) {
             return 'animate__animated animate__flash';
         }
+
+        return'animate__animated animate__flipInX';
     };
 
     const content = (
@@ -948,7 +950,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         </div>
                     </Popover>
                 ) : (
-                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } >
+                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'animate__animated animate__flipInX movable-item'} data-handler-id={ handlerId } >
                         { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                             <img
                                 width={ width }
