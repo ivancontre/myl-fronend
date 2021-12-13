@@ -40,6 +40,20 @@ const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOV
 
 const MatchPage: FC = () => {
 
+    const onContextMenu = (e: MouseEvent) => {
+        e.preventDefault()
+    };
+
+    useEffect(() => {
+        window.addEventListener('contextmenu', onContextMenu);
+
+        return () => {
+            window.removeEventListener("contextmenu", onContextMenu);
+        };
+
+    }, []);
+
+
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
