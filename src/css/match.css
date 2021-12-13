@@ -1,7 +1,7 @@
 .zone {
-  height: 85px;
+  height: 100px;
   width: 100%;
-  margin: 5px;
+  margin: 2px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);  
 }
@@ -36,9 +36,9 @@
   border-radius: 10px;
   /* position: absolute; */
   background-color: #fff3f3;
-  height: 50px;
-  width: 33px;
-  margin: 5px auto;
+  height: 65px;
+  width: 45px;
+  margin: 4px auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,6 +123,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 .row-buttons {
   position: absolute;
   bottom: 0;
+  width: 100%;
 }
 
 .name-opponent {

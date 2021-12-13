@@ -48,6 +48,6 @@
     text-align: right;
 }
 
-.font-bold {
-    font-weight: bold;
+.font-action {
+    font-style: italic;
 }

@@ -477,9 +477,9 @@ const MatchPage: FC = () => {
 
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
-                    <Row gutter={[8, 8]}>
+                    <Row gutter={[3, 3]}>
                         <Col span={ 20 }>
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
 
                                     <Col span={ 10 }> 
                                         <Zone title={ UNPAID_GOLD_ZONE + ': ' + (opponentMatch[UNPAID_GOLD_ZONE] ? opponentMatch[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex ' isOpponent>
@@ -500,7 +500,7 @@ const MatchPage: FC = () => {
                                     </Col>
                                 </Row> 
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
                                     
                                     <Col span={ 10 }> 
                                         <Zone title={ GOLDS_PAID_ZONE + ': ' + (opponentMatch[GOLDS_PAID_ZONE] ? opponentMatch[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' isOpponent>
@@ -515,7 +515,7 @@ const MatchPage: FC = () => {
                                     </Col>
                                 </Row>  
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
                                     <Col span={ 2 }>
                                         <Zone title={ REMOVAL_ZONE } className='stack' isOpponent >
                                             { opponentMatch[REMOVAL_ZONE] && returnItemsForZoneOpponent(REMOVAL_ZONE) }
@@ -535,7 +535,7 @@ const MatchPage: FC = () => {
                                     </Col>
                                 </Row>
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
                                     <Col span={ 2 }>
                                         <Zone title={ EXILE_ZONE } className='stack' isOpponent >
                                             { opponentMatch[EXILE_ZONE] && returnItemsForZoneOpponent(EXILE_ZONE) }
@@ -557,7 +557,7 @@ const MatchPage: FC = () => {
 
                                 <Divider/>   
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
 
                                     <Col span={ 2 }>
                                         <Zone title={ EXILE_ZONE } className='stack' >
@@ -579,7 +579,7 @@ const MatchPage: FC = () => {
 
                                 </Row>
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
 
                                     <Col span={ 2 }>
                                         <Zone title={ REMOVAL_ZONE } className='stack'>
@@ -601,9 +601,9 @@ const MatchPage: FC = () => {
 
                                 </Row>
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
 
-                                <Col span={ 10 }> 
+                                    <Col span={ 10 }> 
                                         <Zone title={ GOLDS_PAID_ZONE + ': ' + (match[GOLDS_PAID_ZONE] ? match[GOLDS_PAID_ZONE].length : '0') } className='zone-flex' >
                                             { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE) }
                                         </Zone>
@@ -618,7 +618,7 @@ const MatchPage: FC = () => {
 
                                 </Row>  
 
-                                <Row gutter={[8, 8]}>
+                                <Row gutter={[3, 3]}>
 
                                     <Col span={ 10 }> 
                                         <Zone title={ UNPAID_GOLD_ZONE + ': ' + (match[UNPAID_GOLD_ZONE] ? match[UNPAID_GOLD_ZONE].length : '0') } className='zone-flex' >

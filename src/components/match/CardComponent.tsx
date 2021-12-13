@@ -31,6 +31,9 @@ export interface CardProps {
     card: Card;
 };
 
+const height = 65;
+const width = 45;
+
 const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOpponent }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
@@ -921,8 +924,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={`${getClassName()} movable-item`} data-handler-id={ handlerId } onContextMenu={ detail } >
                             { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                                 <img
-                                    width={ 33 }
-                                    height={ 50 }
+                                    width={ width }
+                                    height={ height }
                                     alt={ card.name }
                                     src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
                                     className={isOpponent ? 'img-180-deg' : ''}
@@ -934,8 +937,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                                     {card.bearerId && <UserOutlined className="icon-arm" height={ 10 } width={ 10 } />}
                                     
                                     <Image
-                                        width={ 33 }
-                                        height={ 50 }
+                                        width={ width }
+                                        height={ height }
                                         src={ card.img }
                                         className={isOpponent ? 'img-180-deg' : ''}
                                     />   
@@ -948,16 +951,16 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'movable-item'} data-handler-id={ handlerId } >
                         { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
                             <img
-                                width={ 33 }
-                                height={ 50 }
+                                width={ width }
+                                height={ height }
                                 alt={ card.name }
                                 src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
                                 className={isOpponent ? 'img-180-deg' : ''}
                             />
                             : 
                             <Image
-                                width={ 33 }
-                                height={ 50 }
+                                width={ width }
+                                height={ height }
                                 src={ card.img }
                                 className={isOpponent ? 'img-180-deg' : ''}
                             />

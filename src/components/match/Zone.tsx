@@ -194,6 +194,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
     return (
         <>
             <div ref={ drop } className={ `zone ${getClassAnimated()}`} style={ { backgroundColor: getBackgroundColor() } } >
+                
                         
                     <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
                         <span>{ title }</span>
@@ -238,8 +239,9 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
                         }
                         
                     </div>
-
+                    
                     <div className={className}>
+                        
                         { children }
                     </div>
                     
