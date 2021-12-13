@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, message, notification, Popconfirm } from 'antd';
+import { Button, Layout, Menu, message, Modal, notification, Popconfirm } from 'antd';
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
@@ -7,7 +7,8 @@ import {
     PlayCircleOutlined,
     AppstoreOutlined,
     LogoutOutlined,
-    TeamOutlined
+    TeamOutlined,
+    ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { useGoogleLogout } from 'react-google-login';
 
@@ -21,7 +22,7 @@ import Users from '../components/signed/admin/Users';
 import { useHistory, useLocation } from 'react-router';
 import '../css/signed.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { startLogout } from '../store/auth/action';
+import { startLogout, startSetDetailAction } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
@@ -37,20 +38,63 @@ import { playReset } from '../store/play/action';
 import Account from '../components/signed/user/Account';
 
 const { Content, Sider } = Layout;
+const { confirm } = Modal;
 
 export const SingedRouter: FC = () => {
 
     const { hiddenMenu, selectedOption, collapsedOn, collapsedOff, collapsedMenu } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
 
-    const { pathname } = useLocation();
-    const path = pathname.replace('/', '');
+    const { matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
 
     const dispatch = useDispatch();
 
     const history = useHistory();
 
     const { role, username, google } = useSelector((state: RootState) => state.auth);
+
+    const { pathname } = useLocation();
+    const path = pathname.replace('/', '');
+
+    const finishMatch = useCallback(() => {
+        dispatch(startSetDetailAction());
+        Modal.destroyAll();
+        dispatch(resetMatch());
+        dispatch(resetChatAction());
+        history.replace('/play');
+
+        }, [history, dispatch],
+    );
+
+    const finishMutualMatchModal = useCallback(
+        (text: string) => {
+
+            confirm({
+                title: text,
+                icon: <ExclamationCircleOutlined />,
+                cancelButtonProps: { hidden: true },
+                okButtonProps: { hidden: true }
+            });
+
+        }, [],
+    );
+
+    useEffect(() => {
+
+        if (path !== 'match' && matchId && Object.keys(opponentMatch).length > 0) {
+            socket?.emit('i-missed-match', {
+                opponentId,
+                matchId
+            });
+
+            finishMutualMatchModal('Perdiste :(');
+
+            setTimeout(() => {
+                finishMatch();
+            }, 2000);
+        }
+
+    }, [path, matchId, opponentMatch, finishMatch, finishMutualMatchModal, opponentId, socket]);
 
     const onLogoutGoogleSuccess = () => {
         handleLogout();
@@ -78,7 +122,7 @@ export const SingedRouter: FC = () => {
         dispatch(playReset());
     };   
 
-    const confirm = () => {
+    const onConfirm = () => {
         google ? signOut() : handleLogout();
     };
 
@@ -247,7 +291,7 @@ export const SingedRouter: FC = () => {
                                 title="¿Salir?"
                                 okText="Sí"
                                 placement="right"
-                                onConfirm={ confirm }
+                                onConfirm={ onConfirm }
                                 onCancel={ cancel }
                                 cancelText="No"
                             >

@@ -8,6 +8,7 @@ type ProtectedRouteProps = RouteProps & {
 
 export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, component, ...rest}: ProtectedRouteProps) => {
 
+    
     localStorage.openpages = Date.now();
 
     const onLocalStorageEvent = (e: StorageEvent) => {
@@ -32,6 +33,7 @@ export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, c
         };
 
     }, []);
+
 
     const Component: React.ComponentType<any> = component as React.ComponentType<any>;
 
