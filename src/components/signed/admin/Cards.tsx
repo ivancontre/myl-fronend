@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { Button, Input, Popconfirm, Space, Tooltip, Table } from 'antd';
+import { Button, Input, Popconfirm, Space, Tooltip, Table, Tag } from 'antd';
 
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -228,6 +228,9 @@ const Cards: FC = () => {
             <Tooltip title="Agregar carta">
                 <Button onClick={ addNewCard } type="primary" shape="circle" icon={<PlusOutlined />} />
             </Tooltip>
+
+            <p style={{ paddingTop: 20}}><Tag color="green">{ `Total: ${cards.length}`}</Tag></p>
+            
 
             <Table<Card>
                 pagination={{ defaultPageSize: 15 }}
