@@ -51,11 +51,11 @@ const Chat = () => {
         <div className="chat">
             <div className={ animated ? "animate__animated animate__headShake messages" : "messages" } id="messages">
                 {
-                    chats.map((message: Message, index: number) => (
+                    chats.length > 0 ? chats.map((message: Message, index: number) => (
                         ( message.id === opponentId )
                             ? <OpponentMessage key={index} message={ message } />
                             : <MyMessage key={index} message={ message } />
-                    ))
+                    )) : <p style={{textAlign: 'center'}}>Chat vacío</p>
                 }
             </div>
 

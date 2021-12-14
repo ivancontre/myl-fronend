@@ -680,7 +680,7 @@ const MatchPage: FC = () => {
                             <Divider/>                     
                             
                             <Row gutter={[1, 1]} justify="space-around" align="middle">
-                                <Col span={24} style={{width: '100%', backgroundColor: 'white'}} >
+                                <Col span={24} style={{width: '100%', backgroundColor: 'white', borderRadius: 2}} >
                                     <Chat />
                                 </Col>
                             </Row>   
