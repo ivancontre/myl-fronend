@@ -655,12 +655,6 @@ const MatchPage: FC = () => {
                         </Col>
                         <Col span={4} className="content-actions">
 
-                            <Row gutter={[8, 8]}>
-                                <Col span={24} className="name-opponent" >
-                                    <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
-                                </Col>
-                            </Row>    
-
                             <Row gutter={[16, 8]} justify="end">
                                 <Col style={{width: '100%'}}>
                                     <Popover
@@ -673,21 +667,29 @@ const MatchPage: FC = () => {
                                         <Button style={{backgroundColor: '#780F0F'}} block icon={<CloseCircleOutlined />} >Salir</Button>
                                     </Popover>
                                 </Col> 
-                            </Row>
+                            </Row>     
 
-                            <Divider/>                            
-                            
+                            <Divider/>  
+
                             <Row gutter={[8, 8]}>
-                                <Col span={24} style={{width: '100%'}} >
+                                <Col span={24} className="name-opponent" >
+                                    <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
+                                </Col>
+                            </Row>     
+
+                            <Divider/>                     
+                            
+                            <Row gutter={[1, 1]} justify="space-around" align="middle">
+                                <Col span={24} style={{width: '100%', backgroundColor: 'white'}} >
                                     <Chat />
                                 </Col>
-                            </Row>             
+                            </Row>   
 
-                            <Row gutter={[8, 8]} justify="end" align="bottom" className="row-buttons">
+                            <Row gutter={[3, 3]} className="row-buttons">
                                 <Col>
                                     <Buttons />
                                 </Col>
-                            </Row>
+                            </Row> 
 
                         </Col>
                     </Row>

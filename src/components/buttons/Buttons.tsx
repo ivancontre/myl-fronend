@@ -55,11 +55,11 @@ const Buttons: FC = () => {
                 Stop!
             </Button>
             
-            <Button type="primary" block onClick={ () => sendMessage('TU TURNO!!!') } icon={ <CheckCircleOutlined /> }>
+            <Button type="primary" block onClick={ () => sendMessage('TU TURNO!!!') } icon={ <CheckCircleOutlined /> } style={{marginBottom: 3}}>
                 Tu turno!
             </Button>
 
-            <Button type="default" block onClick={ () => sendMessage('Pensando...') } icon={ <MessageOutlined /> }>
+            <Button type="default" block onClick={ () => sendMessage('Pensando...') } icon={ <MessageOutlined /> } style={{marginBottom: 3, backgroundColor: 'green'}}>
                 Pensando...
             </Button>
         </div>

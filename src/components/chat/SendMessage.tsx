@@ -1,6 +1,8 @@
 import { Input, Form } from 'antd';
 import React, { FC, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { SendOutlined } from '@ant-design/icons';
+
 import { SocketContext } from '../../context/SocketContext';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { RootState } from '../../store';
@@ -25,18 +27,11 @@ const SendMessage: FC = () => {
 
     const dispatch = useDispatch();
 
-    const onFinish = (values: any) => {
-
-        const { message } = values;
-
-        if ( message.length === 0 ){ 
-            return; 
-        }
-
+    const sendMessage = (text: string) => {
         const newMessage: Message = {
             id: id as string,
             username: username as string,
-            text: message,
+            text,
             isAction: false
         };
 
@@ -47,13 +42,38 @@ const SendMessage: FC = () => {
             newMessage.date = data;
             dispatch(addMessageAction(newMessage));
             scrollToBottom('messages');
-        });        
+        });   
+    };
+
+    const onFinish = (values: any) => {
+
+        const { message } = values;
+
+        if ( message.length === 0 ){ 
+            return; 
+        }
+
+        sendMessage(message);  
 
         setFields([{
             name: 'message',
             value: ''
         }]);
 
+    };
+
+    const onSearch = (value: string) => {
+
+        if ( value.length === 0 ){ 
+            return; 
+        }
+
+        sendMessage(value);
+
+        setFields([{
+            name: 'message',
+            value: ''
+        }]);
     };
 
     return (
@@ -68,11 +88,13 @@ const SendMessage: FC = () => {
             >
 
                 <Form.Item
-                    style={{paddingBottom: 0}}
+                    style={{paddingBottom: 0, marginBottom: 2}}
                     name="message"
                 >
-                    <Input 
-                        
+                    <Input.Search
+                        enterButton={<SendOutlined />}
+                        size="large"
+                        onSearch={ onSearch }
                         placeholder="Escribir mensaje..." 
                     />
                 </Form.Item>

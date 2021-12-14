@@ -5,7 +5,7 @@
 
 .messages {
     border-radius: 2px;
-    height: 50vh;
+    height: 520px;
     overflow: auto;
     margin-bottom: 5px;
     background-color: #ffffff;
@@ -13,10 +13,10 @@
     color: black;
 }
 
-/* .button-send {
-    position: absolute;
-    bottom: 0;
-} */
+.button-send > form > div > div > div > div > span {
+    background-color: black;
+    padding-top: 1px;
+}
 
 .message-text {
     word-wrap: break-word;
