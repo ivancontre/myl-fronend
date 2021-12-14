@@ -48,8 +48,8 @@ const Chat = () => {
 
     return (
 
-        <div className="chat">
-            <div className={ animated ? "animate__animated animate__headShake messages" : "messages" } id="messages">
+        <div className={ animated ? "animate__animated animate__shakeY chat" : "chat" }>
+            <div className="messages" id="messages">
                 {
                     chats.length > 0 ? chats.map((message: Message, index: number) => (
                         ( message.id === opponentId )
