@@ -181,7 +181,7 @@ const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, 
         <span ref={ ref } style={{ opacity, padding: 3 }} data-handler-id={ handlerId } >
             
             <Image
-                width={ 45 }
+                width={ 65 }
                 src={ card.img }
             />
 

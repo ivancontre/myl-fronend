@@ -286,8 +286,7 @@ const AssingWeaponModal: FC = () => {
                                                     match[ATTACK_ZONE].map((card: Card, index: number) => (
                                                         <Radio value={ ATTACK_ZONE + '_' + index + '_' + card.idx} key={ index }>
                                                             <Image
-                                                                width={ 33 }
-                                                                height={ 50 }
+                                                                width={ 65 }
                                                                 src={ card.img }
                                                             />
                                                         </Radio> 
@@ -309,8 +308,7 @@ const AssingWeaponModal: FC = () => {
                                                     match[DEFENSE_ZONE].map((card: Card, index: number) => (
                                                         <Radio value={ DEFENSE_ZONE + '_' + index + '_' + card.idx } key={ index }>
                                                             <Image
-                                                                width={ 33 }
-                                                                height={ 50 }
+                                                                width={ 65 }
                                                                 src={ card.img }
                                                             />
                                                         </Radio> 
@@ -340,8 +338,7 @@ const AssingWeaponModal: FC = () => {
                                                     opponentMatch[ATTACK_ZONE].map((card: Card, index: number) => (
                                                         <Radio value={ ATTACK_ZONE + '_' + index + '_' + card.idx} key={ index }>
                                                             <Image
-                                                                width={ 33 }
-                                                                height={ 50 }
+                                                                width={ 65 }
                                                                 src={ card.img }
                                                             />
                                                         </Radio> 
@@ -363,8 +360,7 @@ const AssingWeaponModal: FC = () => {
                                                     opponentMatch[DEFENSE_ZONE].map((card: Card, index: number) => (
                                                         <Radio value={ DEFENSE_ZONE + '_' + index + '_' + card.idx} key={ index }>
                                                             <Image
-                                                                width={ 33 }
-                                                                height={ 50 }
+                                                                width={ 65 }
                                                                 src={ card.img }
                                                             />
                                                         </Radio> 
