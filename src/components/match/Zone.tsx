@@ -53,58 +53,6 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
             }
 
             return true;
-            
-                /*(currentZone === title) ||
-
-                (currentZone === ATTACK_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === ATTACK_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === ATTACK_ZONE && title === EXILE_ZONE) ||
-                (currentZone === ATTACK_ZONE && title === HAND_ZONE) ||
-                (currentZone === ATTACK_ZONE && title === REMOVAL_ZONE) ||
-                (currentZone === ATTACK_ZONE && title === SUPPORT_ZONE) ||
-
-                (currentZone === DEFENSE_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === DEFENSE_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === DEFENSE_ZONE && title === EXILE_ZONE) ||
-                (currentZone === DEFENSE_ZONE && title === HAND_ZONE) ||
-                (currentZone === DEFENSE_ZONE && title === REMOVAL_ZONE) ||     
-                (currentZone === DEFENSE_ZONE && title === SUPPORT_ZONE) ||             
-
-                (currentZone === CEMETERY_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === CEMETERY_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === CEMETERY_ZONE && title === EXILE_ZONE) ||
-                (currentZone === CEMETERY_ZONE && title === HAND_ZONE) ||
-                (currentZone === CEMETERY_ZONE && title === REMOVAL_ZONE) ||
-                (currentZone === CEMETERY_ZONE && title === SUPPORT_ZONE) ||
-
-                (currentZone === EXILE_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === EXILE_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === EXILE_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === EXILE_ZONE && title === HAND_ZONE) ||
-                (currentZone === EXILE_ZONE && title === REMOVAL_ZONE) || 
-                (currentZone === EXILE_ZONE && title === SUPPORT_ZONE) || 
-
-                (currentZone === REMOVAL_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === REMOVAL_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === REMOVAL_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === REMOVAL_ZONE && title === EXILE_ZONE) ||
-                (currentZone === REMOVAL_ZONE && title === HAND_ZONE) ||
-                (currentZone === REMOVAL_ZONE && title === SUPPORT_ZONE) ||
-
-                (currentZone === SUPPORT_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === SUPPORT_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === SUPPORT_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === SUPPORT_ZONE && title === EXILE_ZONE) ||
-                (currentZone === SUPPORT_ZONE && title === HAND_ZONE) ||
-                (currentZone === SUPPORT_ZONE && title === REMOVAL_ZONE) ||
-
-                (currentZone === HAND_ZONE && title === ATTACK_ZONE) ||
-                (currentZone === HAND_ZONE && title === CEMETERY_ZONE) ||
-                (currentZone === HAND_ZONE && title === DEFENSE_ZONE) ||
-                (currentZone === HAND_ZONE && title === EXILE_ZONE) ||
-                (currentZone === HAND_ZONE && title === REMOVAL_ZONE) ||
-                (currentZone === HAND_ZONE && title === SUPPORT_ZONE)*/
-                
         }
     });
 

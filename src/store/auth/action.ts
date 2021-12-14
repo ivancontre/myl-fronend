@@ -456,7 +456,7 @@ const setUpdateData = (name: string, lastname: string, username: string): AuthAc
     }
 };
 
-const setDetail = (playing: boolean, victories: number, defeats: number): AuthActionTypes => {
+export const setDetail = (playing: boolean, victories: number, defeats: number): AuthActionTypes => {
     return {
         type: authStartSetDetail,
         payload: {

@@ -1,4 +1,4 @@
-import { Alert, Button, Input, Modal, Space, Table, Tag } from 'antd';
+import { Alert, Button, Input, message, Modal, Space, Table, Tag } from 'antd';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import { SocketContext } from '../../../context/SocketContext';
 import { startLoadDeck } from '../../../store/deck/action';
 import { MenuContext } from '../../../context/MenuContext';
 import { Link } from 'react-router-dom';
+import { setDetail } from '../../../store/auth/action';
 
 const Play: FC = () => {    
 
@@ -29,6 +30,7 @@ const Play: FC = () => {
     const { activeUsersForPlay } = useSelector((state: RootState) => state.play);
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
     const { victories, defeats, playing } = useSelector((state: RootState) => state.auth);  
+    const { matchId, opponentId } = useSelector((state: RootState) => state.match);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -183,6 +185,33 @@ const Play: FC = () => {
         countDown(username, opponentId, key);
     };
 
+    const haveDecks = () => {
+        return decks?.length ? true : false;
+    };
+
+    const isCorrectDeckDefault = () => {
+
+
+        if (deckDefault?.cards.length === 50) {
+            return true;
+        }
+        
+        return false;
+    };
+
+    const forceMatchExit = () => {
+        socket?.emit('force-match-exit', {
+            opponentId,
+            matchId
+        }, (error: any, result: any) => {
+
+            if (result) {
+                dispatch(setDetail(false, victories ? victories : 0, defeats ? defeats : 0));
+                message.success('Se forzó la salida de la partida correctamente');
+            }
+        });
+    };
+
     const columns: ColumnsType<User> = [
         {
             title: 'Usuario',
@@ -264,24 +293,13 @@ const Play: FC = () => {
         },
     ];
 
-
-    const haveDecks = () => {
-        return decks?.length ? true : false;
-    };
-
-    const isCorrectDeckDefault = () => {
-
-
-        if (deckDefault?.cards.length === 50) {
-            return true;
-        }
-        
-        return false;
-    };
-
     return (
         <>
-             <Alert style={{ width: "100%", marginBottom: 10 }} message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado con 50 cartas y posee alguno seleccionado por defecto" type="info" showIcon/>
+             <Alert 
+                style={{ width: "100%", marginBottom: 10 }} 
+                message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado con 50 cartas y posee alguno seleccionado por defecto" 
+                type="info" showIcon
+            />
  
             {
                 !haveDecks() && (
@@ -314,7 +332,15 @@ const Play: FC = () => {
             }
 
             {
-                playing && <Alert style={{ width: "100%", marginBottom: 10 }} message="Ya te encuentras en una partida. Debes finalizarla para poder jugar desde aquí" type="warning" showIcon/>
+                playing && <Alert 
+                    style={{ width: "100%", marginBottom: 10 }} 
+                    message="Ya te encuentras en una partida. Debes finalizarla para poder jugar desde aquí" 
+                    type="warning" 
+                    showIcon
+                    action={
+                        <Button onClick={ forceMatchExit } type="link" >Forzar salida de partida</Button>
+                    }
+                />
             }
 
             <p><Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag></p>
