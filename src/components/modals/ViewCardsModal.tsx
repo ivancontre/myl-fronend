@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import update from 'immutability-helper';
+import { ArrowDownOutlined } from '@ant-design/icons';
 
 import { ZONE_NAMES } from "../../constants";
 import { RootState } from '../../store';
@@ -291,11 +292,18 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                         </Select>
                     )
                 }
-                { !onlyRead && optionSelect !== '' && (
-                    <CardComponentContainer title={ optionSelect } >
-                        { viewCardsDestiny && returnItemsForZoneDestiny(optionSelect, false)}
-                    </CardComponentContainer>
-                )}
+                {
+                    !onlyRead && optionSelect !== '' && (
+                        <Alert style={{marginBottom: 20}} message={`Arrastra las cartas hacia el recuadro de abajo`} type="info" showIcon icon={<ArrowDownOutlined />}/>
+                    )
+                }
+                { 
+                    !onlyRead && optionSelect !== '' && (
+                        <CardComponentContainer title={ optionSelect } >
+                            { viewCardsDestiny && returnItemsForZoneDestiny(optionSelect, false)}
+                        </CardComponentContainer>
+                    )
+                }
 
             </DndProvider>
             

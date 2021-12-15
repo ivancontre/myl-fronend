@@ -67,14 +67,6 @@ const MatchPage: FC = () => {
    
     const [visiblePopover, setVisiblePopover] = useState(false);
     
-    useEffect(() => {
-
-        if (!matchId) {
-            history.replace('/play');
-        }
-
-    }, [matchId, history]);
-
     const { 
             modalOpenThrowXcards, 
             modalOpenViewCastle, 
@@ -98,14 +90,21 @@ const MatchPage: FC = () => {
 
     const { socket } = useContext(SocketContext);
 
+    useEffect(() => {
+
+        if (!matchId) {
+            history.replace('/play');
+        }
+
+    }, [matchId, history]);
+
+
     const finishMatch = useCallback(() => {
         dispatch(startSetDetailAction());
-        Modal.destroyAll();
-        dispatch(resetMatch());
+        Modal.destroyAll();        
         dispatch(resetChatAction());
-        history.replace('/play');
-
-        }, [history, dispatch],
+        dispatch(resetMatch());
+        }, [dispatch],
     );
 
     const openLeaveMatchModal = () => {
