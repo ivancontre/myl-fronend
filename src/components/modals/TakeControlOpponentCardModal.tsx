@@ -65,7 +65,7 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Tomando control de "${card.name}" oponente y enviándola a mi "${optionSelect}"`,
+            text: `Tomando control de "${card.name}" oponente y enviándola a mi <strong>${optionSelect}</strong>`,
             isAction: true
         };
 

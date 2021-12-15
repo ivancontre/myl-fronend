@@ -14,8 +14,7 @@ const MyMessage: FC<MyMessageProps>  = ({ message }) => {
                 <span className="my-username">
                    { `Yo: ` }
                 </span>
-                <span className={ message.isAction ? 'font-action' : ''}>
-                    { message.text }
+                <span className={ message.isAction ? 'font-action' : ''} dangerouslySetInnerHTML={{__html: message.text }}>
                 </span>
             </p>
             <p className="message-date">{ horaMes(message.date) }</p>

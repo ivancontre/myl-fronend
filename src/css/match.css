@@ -41,16 +41,15 @@
 }
 
 .movable-item {
-  border-radius: 10px;
-  /* position: absolute; */
+  border-radius: 2px;
   background-color: #fff3f3;
   height: 65px;
   width: 45px;
-  margin: 4px auto;
+  margin: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
   position: relative;
 }
 

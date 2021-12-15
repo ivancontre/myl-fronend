@@ -339,7 +339,7 @@ const Play: FC = () => {
                     type="warning" 
                     showIcon
                     action={
-                        <Button onClick={ forceMatchExit } type="link" >Forzar salida de partida</Button>
+                        <Button onClick={ forceMatchExit } type="link" >Forzar abandono de partida</Button>
                     }
                 />
             }

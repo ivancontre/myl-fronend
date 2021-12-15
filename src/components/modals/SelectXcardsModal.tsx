@@ -39,7 +39,7 @@ const SelectXcardsModal: FC<SelectXcardsModalProps> = ({ toOpponent }) => {
             const newMessage: Message = {
                 id: myUserId as string,
                 username: username as string,
-                text: `Viendo las primeras "${amountCardsView}" carta(s) del "${CASTLE_ZONE}"`,
+                text: `Viendo las primeras "${amountCardsView}" carta(s) del <strong>${CASTLE_ZONE}</strong>`,
                 isAction: true
             };
     
@@ -64,7 +64,7 @@ const SelectXcardsModal: FC<SelectXcardsModalProps> = ({ toOpponent }) => {
             const newMessage: Message = {
                 id: myUserId as string,
                 username: username as string,
-                text: `Mostrando al oponente las primeras "${amountCardsView}" carta(s) del "${CASTLE_ZONE}"`,
+                text: `Mostrando al oponente las primeras "${amountCardsView}" carta(s) del <strong>${CASTLE_ZONE}</strong>`,
                 isAction: true
             };
     

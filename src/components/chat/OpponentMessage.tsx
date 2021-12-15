@@ -14,8 +14,7 @@ const OpponentMessage: FC<OpponentMessageProps> = ({ message }) => {
                 <span className="opponent-username">
                     { message.username + ': ' } 
                 </span>
-                <span className={ message.isAction ? 'font-action' : ''}>
-                    { message.text }
+                <span className={ message.isAction ? 'font-action' : ''} dangerouslySetInnerHTML={{__html: message.text }}>
                 </span>
             </p>
             <p className="message-date">{ horaMes(message.date) }</p>

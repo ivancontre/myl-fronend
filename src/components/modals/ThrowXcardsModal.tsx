@@ -36,7 +36,7 @@ const ThrowXcardsModal: FC = () => {
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Botando "${amountThrowXcards}" carta(s) del "${CASTLE_ZONE}" a "${CEMETERY_ZONE}"`,
+            text: `Botando "${amountThrowXcards}" carta(s) del <strong>${CASTLE_ZONE}</strong> a <strong>${CEMETERY_ZONE}</strong>`,
             isAction: true
         };
 

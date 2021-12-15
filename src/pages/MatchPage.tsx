@@ -502,7 +502,7 @@ const MatchPage: FC = () => {
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
                     <Row gutter={[3, 3]}>
-                        <Col span={ 20 }>
+                        <Col span={ 19 }>
                                 <Row gutter={[3, 3]}>
 
                                     <Col span={ 10 }> 
@@ -663,7 +663,7 @@ const MatchPage: FC = () => {
                                 </Row>
                             
                         </Col>
-                        <Col span={4} className="content-actions">
+                        <Col span={ 5 } className="content-actions">
 
                             <Row gutter={[16, 8]} justify="end">
                                 <Col style={{width: '100%'}}>

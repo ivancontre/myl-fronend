@@ -97,6 +97,12 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
     const sendMessage = (text: string) => {
 
+        for (let [, value] of Object.entries(ZONE_NAMES)) {
+            if (text.includes('"' + value + '"')) {
+                text = text.replace('"' + value + '"', '<strong>' + value + '</strong>');
+            } 
+        }
+
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
