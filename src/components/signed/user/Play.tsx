@@ -169,6 +169,7 @@ const Play: FC = () => {
         });
 
         return () => {
+            socket?.off('go-match');
             clearInterval(timer);
         }
 

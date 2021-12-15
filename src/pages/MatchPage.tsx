@@ -128,9 +128,7 @@ const MatchPage: FC = () => {
                 setVisiblePopover(false); 
             },
         });
-    };
-
-    
+    };    
 
     const leaveMutualMatchModal = useCallback(
         () => {
@@ -396,28 +394,41 @@ const MatchPage: FC = () => {
         }
 
     }, [socket, finishMutualMatchModal, youWinModal, finishMatch]);
+    
+
+    /*useEffect(() => {
+        
+        if (matchId && !flag) {
+            console.log('opponentMatch no charged. Getting...');
+
+            socket?.emit('opponent-match-not-charged', {
+                opponentId,
+                matchId
+            });
+        }
+
+    }, [flag, matchId, socket]);*/
+
+    
+
+    // useEffect(() => {
+
+    //     socket?.on('get-opponent-match-not-charged', () => {
+    //         socket?.emit('changing', {
+    //             match,
+    //             matchId
+    //         });
+    //     });
+
+    //     return () => {
+    //         socket?.off('get-opponent-match-not-charged');
+    //     }
+        
+    // }, [socket, match, matchId]);
 
 
     const moveCard = useCallback(
-        (dragIndex: number, hoverIndex: number, zoneName: string) => {
-            return; // para evitar que ordene
-            // const dragCard = match[zoneName][dragIndex];
-
-            // if (!match[zoneName][dragIndex]) { // Significa que quiere ordenar cards de distintas zonas
-            //     return;
-            // }
-
-            // let newCards = {...match};
-
-            // newCards[zoneName] = update(match[zoneName], {
-            //     $splice: [
-            //         [dragIndex, 1],
-            //         [hoverIndex, 0, dragCard],
-            //     ],
-            // });
-
-            // dispatch(changeMatch(newCards));
-        },
+        (dragIndex: number, hoverIndex: number, zoneName: string) => {},
         [],
     );
 

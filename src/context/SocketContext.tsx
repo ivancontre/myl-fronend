@@ -39,10 +39,11 @@ export const SocketProvider = ({ children }: Props) => {
     }, [ logged, conectarSocket ]);
 
     useEffect(() => {
-        console.log('logged', logged)
+
         if ( !logged ) {
             desconectarSocket();
         }
+        
     }, [ logged, desconectarSocket ]);
 
     useEffect(() => {
