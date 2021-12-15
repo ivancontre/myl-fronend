@@ -736,18 +736,6 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     };
 
-    const getClassName = () => {
-        if (animated) {
-            return 'animate__animated animate__shakeY';
-        }
-
-        if (card.vibrate) {
-            return 'animate__animated animate__flash';
-        }
-
-        return'animate__animated animate__flipInX';
-    };
-
     const content = (
         <div>            
             
@@ -909,6 +897,34 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         </div>
     );
 
+    const getClassName = () => {
+        let className = 'movable-item';
+
+        if (isPrivate) {
+
+            className += ' private-card';
+
+        } else {
+
+            className += card.user === myUserId ? ' my-card': ' opponent-card';
+            
+        }
+        
+
+        if (animated) {
+            className += ' animate__animated animate__shakeY';
+            return className;
+        }
+
+        if (card.vibrate) {
+            className += ' animate__animated animate__flash';
+        }
+
+        className += ' animate__animated animate__flipInX';
+
+        return className;
+    };
+
     return (
         <>
 
@@ -923,7 +939,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         visible={ visiblePopover }
                         onVisibleChange={ handleVisibleChangePopever }
                     >
-                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={`${getClassName()} movable-item`} data-handler-id={ handlerId } onContextMenu={ detail } >
+                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={ getClassName() } data-handler-id={ handlerId } onContextMenu={ detail } >
                             { isPrivate ?
                                 <img
                                     width={ width }
@@ -950,7 +966,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         </div>
                     </Popover>
                 ) : (
-                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'animate__animated animate__flipInX movable-item'} data-handler-id={ handlerId } >
+                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={ getClassName() } data-handler-id={ handlerId } >
                         { isPrivate ?
                             <img
                                 width={ width }

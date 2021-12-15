@@ -41,16 +41,32 @@
 }
 
 .movable-item {
-  border-radius: 2px;
-  background-color: #fff3f3;
+  border-radius: 5px;
+  margin: 4px;
   height: 65px;
   width: 45px;
-  margin: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
   position: relative;
+}
+
+.my-card {
+  background-color: #780f0f;
+  height: 71px;
+  width: 51px;
+}
+
+.opponent-card {
+  background-color: rgb(23, 17, 104);
+  height: 71px;
+  width: 51px;
+}
+
+.card-private {
+  height: 65px;
+  width: 45px;
 }
 
 span.icon-arm {
