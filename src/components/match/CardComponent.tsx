@@ -901,15 +901,11 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         let className = 'movable-item';
 
         if (isPrivate) {
-
             className += ' private-card';
 
         } else {
-
             className += card.user === myUserId ? ' my-card': ' opponent-card';
-            
         }
-        
 
         if (animated) {
             className += ' animate__animated animate__shakeY';
@@ -939,7 +935,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         visible={ visiblePopover }
                         onVisibleChange={ handleVisibleChangePopever }
                     >
-                        <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={ getClassName() } data-handler-id={ handlerId } onContextMenu={ detail } >
+                        <div ref={ ref }  style={{ opacity }} className={ getClassName() } data-handler-id={ handlerId } onContextMenu={ detail } >
                             { isPrivate ?
                                 <img
                                     width={ width }
@@ -966,8 +962,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         </div>
                     </Popover>
                 ) : (
-                    <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={ getClassName() } data-handler-id={ handlerId } >
-                        { isPrivate ?
+                    <div ref={ ref }  style={{ opacity }} className={ getClassName() } data-handler-id={ handlerId } >
+                        { isPrivate && isOpponent ?
                             <img
                                 width={ width }
                                 height={ height }
