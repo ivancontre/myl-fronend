@@ -20,17 +20,17 @@ interface ZoneProps {
     className: string;
     title: string;
     isOpponent?: boolean;
-    withPopover?: boolean
+    withCount?: boolean
 };
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
 
-const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
+const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount }) => {
 
     const [visiblePopover, setVisiblePopover] = useState(false);
 
-    const { match, matchId } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentMatch } = useSelector((state: RootState) => state.match);
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const { socket } = useContext(SocketContext);
@@ -39,7 +39,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
 
     const [{isOver, canDrop}, drop] = useDrop({
         accept: 'card',
-        drop: () => ({ name: title.split(":")[0] }),
+        drop: () => ({ name: title }),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
@@ -139,22 +139,34 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent }) => {
         </div>        
     );
 
+    const getTitle = () => {
+        if (withCount) {
+            if (isOpponent) {
+                return `${title}: ${opponentMatch[title] ? opponentMatch[title].length : '0'}`;
+            } 
+
+            return `${title}: ${match[title] ? match[title].length : '0'}`;
+        } else {
+            return title;
+        }
+    };
+
     return (
         <>
             <div ref={ drop } className={ `zone ${getClassAnimated()}`} style={ { backgroundColor: getBackgroundColor() } } >
                 
                         
                     <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
-                        <span>{ title }</span>
+                        <span>{ getTitle() }</span>
 
                         {
-                            (!isOpponent && title.split(":")[0] === UNPAID_GOLD_ZONE) && (
+                            (!isOpponent && title === UNPAID_GOLD_ZONE) && (
                                 <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
                             )
                         }
 
                         {
-                            (!isOpponent && title.split(":")[0] === GOLDS_PAID_ZONE) && (
+                            (!isOpponent && title === GOLDS_PAID_ZONE) && (
                                 <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white',height: 15, width: 15, float: 'right' }} />
                             )
                         }
