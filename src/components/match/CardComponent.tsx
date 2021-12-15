@@ -900,9 +900,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
     const getClassName = () => {
         let className = 'movable-item';
 
-        if (isPrivate) {
+        if ((isPrivate && zone === CASTLE_ZONE ) || (isPrivate && zone === HAND_ZONE && isOpponent)) {
             className += ' private-card';
-
         } else {
             className += card.user === myUserId ? ' my-card': ' opponent-card';
         }
@@ -914,6 +913,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
         if (card.vibrate) {
             className += ' animate__animated animate__flash';
+            return className;
         }
 
         className += ' animate__animated animate__flipInX';
