@@ -92,7 +92,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Moviendo todas las cartas de "${origin}" a "${destiny}"`,
+            text: `Moviendo todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`,
             isAction: true
         };
 
