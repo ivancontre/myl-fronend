@@ -431,8 +431,8 @@ const MatchPage: FC = () => {
         [],
     );
 
-    const returnItemsForZone = (zoneName: string) => {
-        return match[zoneName]
+    const returnItemsForZone = (zoneName: string, withPopover: boolean, isPrivate: boolean, isOpponent: boolean) => {
+        return (!isOpponent ? match[zoneName] : opponentMatch[zoneName])
             .map((card: Card, index: number) => (
                 <CardComponent
                     key={ index }
@@ -440,20 +440,9 @@ const MatchPage: FC = () => {
                     moveCard={(dragIndex: number, hoverIndex: number, zoneName: string) => moveCard(dragIndex, hoverIndex, zoneName)}
                     zone={ zoneName }
                     card={ card }
-                />
-            ));
-    };
-
-    const returnItemsForZoneOpponent = (zoneName: string) => {
-        return opponentMatch[zoneName]
-            .map((card: Card, index: number) => (
-                <CardComponent
-                    key={ index }
-                    isOpponent={ true }
-                    index={ index }
-                    moveCard={(dragIndex: number, hoverIndex: number, zoneName: string) => moveCard(dragIndex, hoverIndex, zoneName)}
-                    zone={ zoneName }
-                    card={ card }
+                    withPopover={ withPopover }
+                    isPrivate={ isPrivate }
+                    isOpponent={ isOpponent }
                 />
             ));
     };
@@ -507,19 +496,19 @@ const MatchPage: FC = () => {
 
                                     <Col span={ 10 }> 
                                         <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex' isOpponent withCount >
-                                            { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZoneOpponent(UNPAID_GOLD_ZONE) }
+                                            { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
 
                                     
                                     <Col span={ 2 }>
                                         <Zone title={ AUXILIARY_ZONE } className='stack' isOpponent >
-                                            { opponentMatch[AUXILIARY_ZONE] && returnItemsForZoneOpponent(AUXILIARY_ZONE) }
+                                            { opponentMatch[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
                                     <Col span={ 12 }>
                                         <Zone title={ HAND_ZONE } className='zone-flex' isOpponent withCount >
-                                            { opponentMatch[HAND_ZONE] && returnItemsForZoneOpponent(HAND_ZONE) }
+                                            { opponentMatch[HAND_ZONE] && returnItemsForZone(HAND_ZONE, false, true, true) }
                                         </Zone>
                                     </Col>
                                 </Row> 
@@ -528,13 +517,13 @@ const MatchPage: FC = () => {
                                     
                                     <Col span={ 10 }> 
                                         <Zone title={ GOLDS_PAID_ZONE } className='zone-flex' isOpponent withCount >
-                                            { opponentMatch[GOLDS_PAID_ZONE] && returnItemsForZoneOpponent(GOLDS_PAID_ZONE) }
+                                            { opponentMatch[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 14 }> 
                                         <Zone title={ SUPPORT_ZONE } className='zone-flex' isOpponent >
-                                            { opponentMatch[SUPPORT_ZONE] && returnItemsForZoneOpponent(SUPPORT_ZONE) }
+                                            { opponentMatch[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
                                 </Row>  
@@ -542,19 +531,19 @@ const MatchPage: FC = () => {
                                 <Row gutter={[3, 3]}>
                                     <Col span={ 2 }>
                                         <Zone title={ REMOVAL_ZONE } className='stack' isOpponent withCount>
-                                            { opponentMatch[REMOVAL_ZONE] && returnItemsForZoneOpponent(REMOVAL_ZONE) }
+                                            { opponentMatch[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 2 }>                                    
                                         <Zone title={ CASTLE_ZONE } className='stack' isOpponent withCount >
-                                            { opponentMatch[CASTLE_ZONE] && returnItemsForZoneOpponent(CASTLE_ZONE) }
+                                            { opponentMatch[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE, false, true, true) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 20 }> 
                                         <Zone title={ DEFENSE_ZONE } className='zone-flex' isOpponent >
-                                            { opponentMatch[DEFENSE_ZONE] && returnItemsForZoneOpponent(DEFENSE_ZONE) }
+                                            { opponentMatch[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
                                 </Row>
@@ -562,19 +551,19 @@ const MatchPage: FC = () => {
                                 <Row gutter={[3, 3]}>
                                     <Col span={ 2 }>
                                         <Zone title={ EXILE_ZONE } className='stack' isOpponent withCount>
-                                            { opponentMatch[EXILE_ZONE] && returnItemsForZoneOpponent(EXILE_ZONE) }
+                                            { opponentMatch[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 2 }>
                                         <Zone title={ CEMETERY_ZONE } className='stack' isOpponent withCount>
-                                            { opponentMatch[CEMETERY_ZONE] && returnItemsForZoneOpponent(CEMETERY_ZONE) }
+                                            { opponentMatch[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 20 }> 
                                         <Zone title={ ATTACK_ZONE } className='zone-flex' isOpponent >
-                                            { opponentMatch[ATTACK_ZONE] && returnItemsForZoneOpponent(ATTACK_ZONE) }
+                                            { opponentMatch[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE, true, false, true) }
                                         </Zone> 
                                     </Col>
                                 </Row>
@@ -585,19 +574,19 @@ const MatchPage: FC = () => {
 
                                     <Col span={ 2 }>
                                         <Zone title={ EXILE_ZONE } className='stack' withCount >
-                                            { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE) }
+                                            { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 2 }>
                                         <Zone title={ CEMETERY_ZONE } className='stack' withCount >
-                                            { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE) }
+                                            { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 20 }> 
                                         <Zone title={ ATTACK_ZONE } className='zone-flex' >
-                                            { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE) }
+                                            { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE, true, false, false) }
                                         </Zone> 
                                     </Col>
 
@@ -607,19 +596,19 @@ const MatchPage: FC = () => {
 
                                     <Col span={ 2 }>
                                         <Zone title={ REMOVAL_ZONE } className='stack' withCount>
-                                            { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE) }
+                                            { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 2 }>                                    
                                         <Zone title={ CASTLE_ZONE } className='stack' withCount >
-                                            { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE) }
+                                            { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE, true, true, false) }
                                         </Zone>
                                     </Col>
 
                                     <Col span={ 20 }> 
                                         <Zone title={ DEFENSE_ZONE } className='zone-flex'>
-                                            { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE) }
+                                            { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
@@ -629,14 +618,14 @@ const MatchPage: FC = () => {
 
                                     <Col span={ 10 }> 
                                         <Zone title={ GOLDS_PAID_ZONE } className='zone-flex' withCount>
-                                            { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE) }
+                                            { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
                                     
                                     <Col span={ 14 }> 
                                         <Zone title={ SUPPORT_ZONE } className='zone-flex'>
-                                            { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE) }
+                                            { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
 
@@ -646,18 +635,18 @@ const MatchPage: FC = () => {
 
                                     <Col span={ 10 }> 
                                         <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex' withCount >
-                                            { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE) }
+                                            { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
                                     
                                     <Col span={ 2 }>
                                         <Zone title={ AUXILIARY_ZONE } className='stack'>
-                                            { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE) }
+                                            { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE, true, false, false) }
                                         </Zone>
                                     </Col>
                                     <Col span={ 12 }>
                                         <Zone title={ HAND_ZONE } className='zone-flex' withCount >
-                                            { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE) }
+                                            { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE, false, true, false) }
                                         </Zone>
                                     </Col>
                                 </Row>

@@ -54,12 +54,23 @@
 }
 
 span.icon-arm {
+  border-radius: 6px;
   color: chartreuse;
   position: absolute;
   right: 0;
   z-index: 3;
   background-color: black;
-  bottom: 00;
+  bottom: 0;
+}
+
+span.icon-arm-opponent {
+  border-radius: 6px;
+  color: chartreuse;
+  position: absolute;
+  z-index: 3;
+  background-color: black;
+  top: 0;
+  left: 0;
 }
   
 .stack {

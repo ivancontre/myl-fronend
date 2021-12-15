@@ -55,7 +55,7 @@ const Chat = () => {
                         ( message.id === opponentId )
                             ? <OpponentMessage key={index} message={ message } />
                             : <MyMessage key={index} message={ message } />
-                    )) : <p style={{textAlign: 'center'}}>Chat vacío</p>
+                    )) : <p style={{textAlign: 'center'}}>Chat vacío, escribe algo para iniciar la conversación...</p>
                 }
             </div>
 

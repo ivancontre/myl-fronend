@@ -27,6 +27,8 @@ export interface CardProps {
     index: number;
     moveCard?: (dragIndex: number, hoverIndex: number, zoneName: string) => void;
     zone: string;
+    withPopover?: boolean;
+    isPrivate: boolean;
     isOpponent?: boolean;
     card: Card;
 };
@@ -34,7 +36,7 @@ export interface CardProps {
 const height = 65;
 const width = 45;
 
-const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOpponent }) => {
+const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOpponent, withPopover, isPrivate }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
 
@@ -911,17 +913,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         <>
 
             {
-                (   (zone === CASTLE_ZONE && !isOpponent)|| 
-                    zone === CEMETERY_ZONE || 
-                    zone === EXILE_ZONE || 
-                    zone === REMOVAL_ZONE || 
-                    (zone === DEFENSE_ZONE) || 
-                    (zone === ATTACK_ZONE) ||
-                    (zone === SUPPORT_ZONE) ||
-                    (zone === GOLDS_PAID_ZONE) ||
-                    (zone === UNPAID_GOLD_ZONE) ||
-                    (zone === AUXILIARY_ZONE)
-                ) ? (
+                withPopover 
+                
+                ? (
                     <Popover 
                         placement="right" 
                         trigger="click"
@@ -929,9 +923,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         visible={ visiblePopover }
                         onVisibleChange={ handleVisibleChangePopever }
                     >
-                        {/* animate__flash */}
                         <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={`${getClassName()} movable-item`} data-handler-id={ handlerId } onContextMenu={ detail } >
-                            { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
+                            { isPrivate ?
                                 <img
                                     width={ width }
                                     height={ height }
@@ -942,8 +935,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                                 : 
 
                                 <>
-                                    {card.armsId && card.armsId.length > 0 && <ToolOutlined className="icon-arm" height={ 10 } width={ 10 } />}
-                                    {card.bearerId && <UserOutlined className="icon-arm" height={ 10 } width={ 10 } />}
+                                    {card.armsId && card.armsId.length > 0 && <ToolOutlined className={isOpponent ? 'img-180-deg icon-arm-opponent' : 'icon-arm'} height={ 10 } width={ 10 } />}
+                                    {card.bearerId && <UserOutlined className={isOpponent ? 'img-180-deg icon-arm-opponent' : 'icon-arm'} height={ 10 } width={ 10 } />}
                                     
                                     <Image
                                         width={ width }
@@ -958,7 +951,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     </Popover>
                 ) : (
                     <div ref={ ref }  style={{ opacity, borderRadius: 2 }} className={animated ? 'animate__animated animate__shakeY movable-item' : 'animate__animated animate__flipInX movable-item'} data-handler-id={ handlerId } >
-                        { (zone === CASTLE_ZONE || (zone === HAND_ZONE && isOpponent)) ?
+                        { isPrivate ?
                             <img
                                 width={ width }
                                 height={ height }
