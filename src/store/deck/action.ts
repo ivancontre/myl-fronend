@@ -5,10 +5,10 @@ import { resetMySelection } from "../card/action";
 import { CardActionTypes } from "../card/types";
 import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault, deckReset } from "./types";
 
-export const startAddNewDeck = (deck: any, history: any, setLoadingSave: Function) => {
+export const startAddNewDeck = (deck: any, history: any, showLoading: Function, hideLoading: Function) => {
     return async (dispatch: Dispatch<DeckActionTypes | CardActionTypes>) => {
 
-        setLoadingSave(true);
+        showLoading();
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -16,7 +16,7 @@ export const startAddNewDeck = (deck: any, history: any, setLoadingSave: Functio
             let respJson = await resp.json();
 
             if (resp.status === 201) {
-
+                hideLoading();
                 dispatch(addNewDeck(respJson));
                 dispatch(resetMySelection());
                 message.success(`Mazo "${respJson.name}" creado correctamente`);
@@ -29,28 +29,28 @@ export const startAddNewDeck = (deck: any, history: any, setLoadingSave: Functio
                     console.log((value as any).msg);
                 }
 
-                setLoadingSave(false);
+                hideLoading();
 
             } else {
                 message.warn(respJson.msg, 5);
                 console.log(respJson.msg);
-                setLoadingSave(false);
+                hideLoading();
             }
             
 
         } catch (error) {
             console.log(error);
             message.error('Error al crear mazo!');
-            setLoadingSave(false);
+            hideLoading();
         }
     }
 };
 
-export const startUpdateDeck = (id: string, deck: any, isDefault: boolean, lengthSelectMyCards: number, setLoadingSave: Function) => {
+export const startUpdateDeck = (id: string, deck: any, isDefault: boolean, lengthSelectMyCards: number, showLoading: Function, hideLoading: Function) => {
 
     return async (dispatch: Dispatch<DeckActionTypes | Function>) => {
 
-        setLoadingSave(true);
+        showLoading();
 
         try {
 
@@ -76,7 +76,7 @@ export const startUpdateDeck = (id: string, deck: any, isDefault: boolean, lengt
     
                 }
 
-                setLoadingSave(false);
+                hideLoading();
                 message.success(`Mazo "${respJson.name}" actualizado correctamente`);
 
             } else if (respJson.errors) {
@@ -86,19 +86,19 @@ export const startUpdateDeck = (id: string, deck: any, isDefault: boolean, lengt
                     console.log((value as any).msg);
                 }
 
-                setLoadingSave(false);
+                hideLoading();
 
             } else {
                 message.warn(respJson.msg, 5);
                 console.log(respJson.msg);
-                setLoadingSave(false);
+                hideLoading();
             }
             
 
         } catch (error) {
             console.log(error);
             message.error('Error al actualizar mazo!');
-            setLoadingSave(false);
+            hideLoading();
         }
     }
 

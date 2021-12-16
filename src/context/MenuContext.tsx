@@ -10,6 +10,10 @@ type GlobalContentUI = {
     showMenu: Function;
     hideMenu: Function;
 
+    loading: boolean;
+    showLoading: Function;
+    hideLoading: Function;
+
     collapsedMenu: boolean;
     collapsedOn: Function;
     collapsedOff: Function;
@@ -23,6 +27,10 @@ export const MenuContext = createContext<GlobalContentUI>({
     showMenu: () => {},
     hideMenu: () => {},
 
+    loading: false,
+    showLoading: () => {},
+    hideLoading: () => {},
+
     collapsedMenu: false,
     collapsedOn:  () => {},
     collapsedOff:  () => {},
@@ -34,6 +42,7 @@ export const MenuContext = createContext<GlobalContentUI>({
 export const MenuProvider = ({ children }: Props) => {
 
     const [hiddenMenu, setHiddenMenu] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [collapsedMenu, setCollapsedMenu] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<string>('');
 
@@ -43,6 +52,14 @@ export const MenuProvider = ({ children }: Props) => {
 
     const hideMenu = () => {
         setHiddenMenu(true);
+    };
+
+    const showLoading = () => {
+        setLoading(true);
+    };
+
+    const hideLoading = () => {
+        setLoading(false);
     };
 
     const collapsedOn = () => {
@@ -58,7 +75,7 @@ export const MenuProvider = ({ children }: Props) => {
     }
 
     return (
-        <MenuContext.Provider value={ { hiddenMenu, showMenu, hideMenu, selectedOption, setOptionMenu, collapsedMenu, collapsedOn, collapsedOff } }>
+        <MenuContext.Provider value={ { hiddenMenu, showMenu, hideMenu, selectedOption, setOptionMenu, collapsedMenu, collapsedOn, collapsedOff, loading, showLoading, hideLoading } }>
             { children }
         </MenuContext.Provider>
     )

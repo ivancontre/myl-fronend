@@ -36,7 +36,7 @@ const NewDeck: FC = () => {
 
     const params: any = useParams();
 
-    const { collapsedMenu } = useContext(MenuContext);
+    const { collapsedMenu, showLoading, hideLoading } = useContext(MenuContext);
     useHideMenu(false, 'decks', collapsedMenu);
 
     const { cardsByEdition, selectMyCards } = useSelector((state: RootState) => state.cards);
@@ -52,7 +52,6 @@ const NewDeck: FC = () => {
     const [searchTextInMyCards, setSearchTextInMyCards] = useState<string>('');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [loadingSave, setLoadingSave] = useState<boolean>(false);
     const [tags, setTags] = useState<string[]>([])
     const [races, setRaces] = useState<RaceCard[]>([]);
 
@@ -224,11 +223,11 @@ const NewDeck: FC = () => {
 
         if (!deckUpdating) {
             
-            await dispatch(startAddNewDeck(body, history, setLoadingSave));
+            await dispatch(startAddNewDeck(body, history, showLoading, hideLoading));
             
         } else {
 
-            await dispatch(startUpdateDeck(deckUpdating.id as string, body, deckUpdating.byDefault, selectMyCards.length, setLoadingSave));
+            await dispatch(startUpdateDeck(deckUpdating.id as string, body, deckUpdating.byDefault, selectMyCards.length, showLoading, hideLoading));
             
         }
 
@@ -412,7 +411,7 @@ const NewDeck: FC = () => {
                                     <Form.Item 
                                         style={{width: '100%'}}
                                     >
-                                        <Button loading={ loadingSave } htmlType="submit" type="primary" style={{float: 'right'}} >{params.id ? 'Actualizar' : 'Guardar'}</Button>
+                                        <Button htmlType="submit" type="primary" style={{float: 'right'}} >{params.id ? 'Actualizar' : 'Guardar'}</Button>
                                     </Form.Item>
 
                                 </Form>

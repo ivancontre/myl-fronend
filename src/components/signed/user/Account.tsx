@@ -21,7 +21,7 @@ const Account: FC = () => {
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
-    const { collapsedMenu } = useContext(MenuContext);
+    const { collapsedMenu, showLoading, hideLoading } = useContext(MenuContext);
 
     const { name, lastname, username, email, id, google } = useSelector((state: RootState) => state.auth);
 
@@ -29,7 +29,6 @@ const Account: FC = () => {
 
     const dispatch = useDispatch();
 
-    const [loading, setloading] = useState(false);
     const [fields, setFields] = useState<FieldData[]>([]);
     const [showSectionPassword, setShowSectionPassword] = useState(false);
 
@@ -73,7 +72,7 @@ const Account: FC = () => {
             username: values.username,
             password: values.password,
             password2: values.password2
-        }, setloading));
+        }, showLoading, hideLoading));
 
         
 
@@ -269,7 +268,7 @@ const Account: FC = () => {
                 }
 
                 <Form.Item className="label-custom" label="." >
-                    <Button loading={ loading } type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>
+                    <Button type="primary" htmlType="submit" className="login-form-button" block style={{marginBottom: 20}}>
                         Actualizar
                     </Button>
                 </Form.Item>

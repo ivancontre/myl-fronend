@@ -329,10 +329,10 @@ export const startSetDetailAction = () => {
     }
 };
 
-export const startSetUpdateDataAction = (id: string, data: any, setloading: Function) => {
+export const startSetUpdateDataAction = (id: string, data: any, showLoading: Function, hideLoading: Function) => {
     return async (dispatch: Dispatch<AuthActionTypes>) => {
 
-        setloading(true);
+        showLoading();
 
         try {
 
@@ -341,7 +341,7 @@ export const startSetUpdateDataAction = (id: string, data: any, setloading: Func
             const respJson = await resp.json();
 
             if (resp.status === 200) {
-                setloading(false);
+                hideLoading();
                 dispatch(setUpdateData(respJson.name as string, respJson.lastname as string, respJson.username as string));
                 message.success('Actualizado correctamente');
 
@@ -351,18 +351,18 @@ export const startSetUpdateDataAction = (id: string, data: any, setloading: Func
                     message.warn((value as any).msg);
                     console.log((value as any).msg);
                 }
-                setloading(false);
+                hideLoading();
 
             } else {
                 message.warn(respJson.msg, 5);
                 console.log(respJson.msg);  
-                setloading(false);        
+                hideLoading();        
             }
 
         } catch (error) {
             message.error('Error interno, consulte con el administrador');
             console.log(error);
-            setloading(false);
+            hideLoading();
         }
         
     }

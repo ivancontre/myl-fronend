@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, message, Modal, notification, Popconfirm } from 'antd';
+import { Button, Layout, Menu, message, Modal, notification, Popconfirm, Spin } from 'antd';
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
@@ -42,7 +42,7 @@ const { confirm } = Modal;
 
 export const SingedRouter: FC = () => {
 
-    const { hiddenMenu, selectedOption, collapsedOn, collapsedOff, collapsedMenu } = useContext(MenuContext);
+    const { hiddenMenu, selectedOption, collapsedOn, collapsedOff, collapsedMenu, loading } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
 
     const { matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
@@ -240,6 +240,7 @@ export const SingedRouter: FC = () => {
     };
 
     return (
+        <Spin spinning={ loading } tip="Espere por favor...">
             <Layout>
                 <Sider
                     hidden={ hiddenMenu }
@@ -370,6 +371,7 @@ export const SingedRouter: FC = () => {
                         </div>
                     </Content>
                 </Layout>
-            </Layout>            
+            </Layout>   
+        </Spin>         
     )
 };
