@@ -130,7 +130,6 @@ const NewDeck: FC = () => {
         setTypeId(typeId);
 
         if (getNameType(typeId) !== 'Aliado') {
-            console.log('lala')
             setRaceId(undefined);
         }
        
