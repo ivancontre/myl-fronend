@@ -227,15 +227,15 @@ export const SingedRouter: FC = () => {
     const getStyle = () => {
         if (path === 'match') {
             return {
-                'margin': 0,
-                'overflow': 'initial',
-                'overflow-x': 'hidden'
+                margin: 0,
+                overflow: 'initial',
+                overflowX: undefined
             }
         }
 
         return {
-            'margin': 20,
-            'overflow': 'initial'
+            margin: 20,
+            overflow: 'initial'
         }
     };
 

@@ -3,13 +3,13 @@ import React, { FC, ReactNode, useContext, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { CaretDownOutlined, CaretUpOutlined, MoreOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretUpOutlined, MoreOutlined, ReloadOutlined } from '@ant-design/icons';
 
 
 import { ZONE_NAMES } from '../../constants';
 import { SocketContext } from '../../context/SocketContext';
 import { RootState } from '../../store';
-import { changeMatch } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch } from '../../store/match/action';
 import { DragCard  } from '../../store/match/types';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
@@ -151,6 +151,14 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         }
     };
 
+    const reloadOpponentMatch = () => {
+        socket?.emit('opponent-match-not-charged', {
+            matchId
+        }, (data: any) => {
+            dispatch(changOpponenteMatch(data));
+        });
+    };
+
     return (
         <>
             <div ref={ drop } className={ `zone ${getClassAnimated()}`} style={ { backgroundColor: getBackgroundColor() } } >
@@ -184,6 +192,12 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                         }
 
                         {
+                            (isOpponent && title === CASTLE_ZONE && Object.keys(opponentMatch).length === 0) && (
+                                <Button type="link" onClick={ reloadOpponentMatch } icon={<ReloadOutlined />} size="small" style={{ color: 'white', height: 12, width: 12, float: 'right', marginRight: 1 }} />
+                            )
+                        }
+
+                        {
                             (!isOpponent && title === HAND_ZONE) && (
                                 <Popover 
                                     placement="right" 
@@ -202,7 +216,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                     
                     <div className={className}>
                         
-                        { children }
+                        { isOpponent && title === CASTLE_ZONE && Object.keys(opponentMatch).length === 0 ? ' not loaded' : children }
                     </div>
                     
             </div>      

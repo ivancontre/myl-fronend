@@ -410,20 +410,20 @@ const MatchPage: FC = () => {
 
     
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     socket?.on('get-opponent-match-not-charged', () => {
-    //         socket?.emit('changing', {
-    //             match,
-    //             matchId
-    //         });
-    //     });
+        socket?.on('get-opponent-match-not-charged', () => {
+            socket?.emit('changing2', {
+                match,
+                matchId
+            });
+        });
 
-    //     return () => {
-    //         socket?.off('get-opponent-match-not-charged');
-    //     }
+        return () => {
+            socket?.off('get-opponent-match-not-charged');
+        }
         
-    // }, [socket, match, matchId]);
+    }, [socket, match, matchId]);
 
 
     const moveCard = useCallback(
