@@ -28,3 +28,14 @@ ul.menu-myl{
 .ant-layout-sider-trigger {
     background: #0F0F23;
 }
+
+.content-layout {
+    margin: 20px;
+    overflow: initial;
+}
+
+.content-layout-match {
+    margin: 0;
+    overflow: initial;
+    overflow-x: hidden;
+}

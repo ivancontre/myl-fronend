@@ -224,21 +224,6 @@ export const SingedRouter: FC = () => {
         return 200;
     };
 
-    const getStyle = () => {
-        if (path === 'match') {
-            return {
-                margin: 0,
-                overflow: 'initial',
-                overflowX: undefined
-            }
-        }
-
-        return {
-            margin: 20,
-            overflow: 'initial'
-        }
-    };
-
     return (
         <Spin spinning={ loading } tip="Espere por favor...">
             <Layout>
@@ -322,7 +307,7 @@ export const SingedRouter: FC = () => {
                 
                 <Layout className="site-layout" style={{ marginLeft: getWidthContent() }} >
 
-                    <Content style={ getStyle() } >
+                    <Content className={ path === 'match' ? 'content-layout-match' : 'content-layout'} >
                         <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 20 }} >
                             <Switch>
 
