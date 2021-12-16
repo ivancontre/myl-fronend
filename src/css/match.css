@@ -1,5 +1,5 @@
 .zone {
-  height: 100px;
+  height: 106px;
   width: 100%;
   margin: 2px;
   border-radius: 2px;
@@ -56,12 +56,14 @@
   background-color: #780f0f;
   height: 71px;
   width: 51px;
+  min-width: 51px;
 }
 
 .opponent-card {
   background-color: rgb(23, 17, 104);
   height: 71px;
   width: 51px;
+  min-width: 51px;
 }
 
 .card-private {

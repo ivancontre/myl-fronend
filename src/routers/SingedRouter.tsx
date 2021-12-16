@@ -224,6 +224,21 @@ export const SingedRouter: FC = () => {
         return 200;
     };
 
+    const getStyle = () => {
+        if (path === 'match') {
+            return {
+                'margin': 0,
+                'overflow': 'initial',
+                'overflow-x': 'hidden'
+            }
+        }
+
+        return {
+            'margin': 20,
+            'overflow': 'initial'
+        }
+    };
+
     return (
             <Layout>
                 <Sider
@@ -306,7 +321,7 @@ export const SingedRouter: FC = () => {
                 
                 <Layout className="site-layout" style={{ marginLeft: getWidthContent() }} >
 
-                    <Content style={{ margin: '20px', overflow: 'initial' }} >
+                    <Content style={ getStyle() } >
                         <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 20 }} >
                             <Switch>
 
