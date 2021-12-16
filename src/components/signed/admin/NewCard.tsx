@@ -213,42 +213,11 @@ const NewCard = () => {
             }
         }
 
-        setFields([{name: 'race', value: ''}])
-
-        /*if (cardUpdating) {
-            console.log(fields)
-            setFields((fields) => {
-                return fields.map(item => {
-                    if (item.name === 'race') {
-                        return {
-                            ...item,
-                            value: ''
-                        }
-                    } else {
-                        return item;
-                    }
-                })
-            });
-        } else {
-            setFields([{name: 'race', value: ''}])
-        }*/
-
+        setFields([{name: 'race', value: ''}]);
         
     };
 
-    // const getEditionName = (editionId: string) => {
-
-    //     for (const edition of editions) {
-    //         if (edition.id === editionId) {
-    //             return edition.name;
-    //         }
-    //     }
-    // }
-
     const back = () => {
-        if (cardUpdating?.id && !cardUpdating?.img) {
-
-        }
         history.push('/cards');
     };
 

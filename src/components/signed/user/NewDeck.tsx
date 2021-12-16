@@ -21,6 +21,7 @@ import { isTouchDevice } from '../../../helpers/touch';
 
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
+import { RaceCard } from '../../../store/description/types';
 
 interface FieldData {
     name: string | number | (string | number)[];
@@ -43,14 +44,17 @@ const NewDeck: FC = () => {
     const { deckUpdating, decks } = useSelector((state: RootState) => state.decks); 
 
     const [typeId, setTypeId] = useState<string | undefined>(undefined);
+    const [raceId, setRaceId] = useState<string | undefined>(undefined);
+
     const [search, setSearch] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
-
     const [searchInMyCards, setSearchInMyCards] = useState<string>('');
+    const [searchTextInMyCards, setSearchTextInMyCards] = useState<string>('');
     const [fields, setFields] = useState<FieldData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingSave, setLoadingSave] = useState<boolean>(false);
     const [tags, setTags] = useState<string[]>([])
+    const [races, setRaces] = useState<RaceCard[]>([]);
 
     const dispatch = useDispatch();
 
@@ -85,9 +89,16 @@ const NewDeck: FC = () => {
 
     }, [deckUpdating, dispatch]);
 
+    useEffect(() => {
+        if (deckUpdating?.cards) {
+            dispatch(loadCardsMySelection(deckUpdating?.cards as Card[]));
+        }
+
+    }, [dispatch, deckUpdating?.cards]);
+
     const handleSelectEdition = async (editionId: string) => {
         setLoading(true);
-        await dispatch(startLoadCardByEdition(editionId));
+        
 
         setSearchText('');
         setSearch('');
@@ -95,20 +106,39 @@ const NewDeck: FC = () => {
         setTags([]);
 
         setTypeId(undefined);
+        setRaceId(undefined);
+
+        for (const edition of editions) {
+            if (edition.id === editionId) {
+                setRaces(edition.races);
+                break;
+            }
+        }
+
+        await dispatch(startLoadCardByEdition(editionId));
+
 
         setLoading(false);
     };
 
-    const handleSelectType = (typeId: string) => {
-        setTypeId(typeId);
+    const getNameType = (id: string) => {
+        const type = types.find(card => card.id === id);
+        return type?.name;
     };
 
-    useEffect(() => {
-        if (deckUpdating?.cards) {
-            dispatch(loadCardsMySelection(deckUpdating?.cards as Card[]));
-        }
+    const handleSelectType = (typeId: string) => {
+        setTypeId(typeId);
 
-    }, [dispatch, deckUpdating?.cards])
+        if (getNameType(typeId) !== 'Aliado') {
+            console.log('lala')
+            setRaceId(undefined);
+        }
+       
+    };
+
+    const handleSelectRace = (raceId: string) => {
+        setRaceId(raceId);
+    };
 
     const moveCard = useCallback(
         (dragIndex: number, hoverIndex: number, zoneName: string) => {
@@ -139,6 +169,7 @@ const NewDeck: FC = () => {
             return cardsByEdition
                     .filter(card => {
                         return  (typeId !== undefined ? card.type === typeId : true) && 
+                                (raceId !== undefined ? card.race === raceId : true) && 
                                 (search ? card.name.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1 : true) &&
                                 (tags ? tags.every( tag => card.ability?.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(tag.toUpperCase())) : true)
                        
@@ -175,11 +206,6 @@ const NewDeck: FC = () => {
              
     };
 
-    const getNameType = (id: string) => {
-        const type = types.find(card => card.id === id);
-        return type?.name;
-    };
-
     const confirm = (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
         dispatch(resetMySelection());
         history.push('/decks');
@@ -207,7 +233,11 @@ const NewDeck: FC = () => {
             
         }
 
-    };     
+    };   
+
+    const onChangeTags = (tags: string[]) => {
+        setTags(tags);
+    };
 
     const onSearch = (value: string) => {
         if (!value) {
@@ -227,16 +257,21 @@ const NewDeck: FC = () => {
         setSearchInMyCards(value);
     };
 
-    const onChangeTags = (tags: string[]) => {
-        setTags(tags);
-    };
-
     const onChangeSearchText = (event: any) => {
         if (event.target.value) {
             setSearchText(event.target.value as string)
         } else {
             setSearchText('');
             setSearch('');
+        }
+    };
+
+    const onChangeSearchTextInMyCards = (event: any) => {
+        if (event.target.value) {
+            setSearchTextInMyCards(event.target.value as string)
+        } else {
+            setSearchTextInMyCards('');
+            setSearchInMyCards('');
         }
     };
 
@@ -279,7 +314,7 @@ const NewDeck: FC = () => {
             </Row>
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
-                <Col span={ 24 } >
+                <Col span={ 12 } >
                     <Select
                         placeholder="Seleccione un tipo"
                         style={{ width: "100%" }}
@@ -294,16 +329,28 @@ const NewDeck: FC = () => {
                         }
                     </Select>
                 </Col>
-            </Row>
-
-            <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
-                <Col span={ 24 } >
-                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ onChangeSearchText }/>
+                <Col span={ 12 } >
+                    <Select
+                        placeholder="Seleccione una raza"
+                        style={{ width: "100%" }}
+                        onChange={ handleSelectRace }
+                        disabled={ !cardsByEdition.length }
+                        value={ raceId }
+                    >
+                        {
+                            races.length > 0 && races.map(race => (
+                                <Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>
+                            ))
+                        }
+                    </Select>
                 </Col>
             </Row>
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
-                <Col span={ 24 } className={!cardsByEdition.length ? 'disabled': 'not-disabled'}>
+                <Col span={ 12 } >
+                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ onChangeSearchText }/>
+                </Col>
+                <Col span={ 12 } className={!cardsByEdition.length ? 'disabled': 'not-disabled'}>
                     <ReactTagInput 
                         placeholder="Escribe una palabra clave para buscar en la habilidad de la carta y luego presiona enter"
                         tags={tags} 
@@ -384,7 +431,7 @@ const NewDeck: FC = () => {
 
                                 <Divider />
 
-                                <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearchInMyCards } disabled={ !selectMyCards.length } style={{paddingBottom: 15}} />
+                                <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearchInMyCards } disabled={ !selectMyCards.length } style={{paddingBottom: 15}} value={ searchTextInMyCards } onChange={ onChangeSearchTextInMyCards } />
 
                                 <NewDeckCardContainer title="my-cards" >
                                     { selectMyCards && returnItemsForZone('my-cards')}
