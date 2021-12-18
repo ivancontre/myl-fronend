@@ -33,6 +33,7 @@ import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
 import Buttons from '../components/buttons/Buttons';
 import { startSetDetailAction } from '../store/auth/action';
+import Phases from '../components/phases/Phases';
 
 const { confirm } = Modal;
 
@@ -189,6 +190,38 @@ const MatchPage: FC = () => {
             });
         }, [],
     );
+
+    const moveCard = useCallback(
+        (dragIndex: number, hoverIndex: number, zoneName: string) => {},
+        [],
+    );
+
+    const returnItemsForZone = (zoneName: string, withPopover: boolean, isPrivate: boolean, isOpponent: boolean) => {
+        return (!isOpponent ? match[zoneName] : opponentMatch[zoneName])
+            .map((card: Card, index: number) => (
+                <CardComponent
+                    key={ index }
+                    index={ index }
+                    moveCard={(dragIndex: number, hoverIndex: number, zoneName: string) => moveCard(dragIndex, hoverIndex, zoneName)}
+                    zone={ zoneName }
+                    card={ card }
+                    withPopover={ withPopover }
+                    isPrivate={ isPrivate }
+                    isOpponent={ isOpponent }
+                />
+            ));
+    };
+
+    const content = (
+        <div>
+            <Button type="link" onClick={ openLeaveMatchModal }>Abandonar</Button><br/>
+            <Button type="link" onClick={ leaveMutualMatch }>Abandono mutuo</Button>
+        </div>        
+    );
+
+    const handleVisibleChangePopever = (visible: boolean) => {
+        setVisiblePopover(visible); 
+    };
 
     useEffect(() => {
 
@@ -413,7 +446,7 @@ const MatchPage: FC = () => {
     useEffect(() => {
 
         socket?.on('get-opponent-match-not-charged', () => {
-            socket?.emit('changing2', {
+            socket?.emit('changing', {
                 match,
                 matchId
             });
@@ -426,37 +459,7 @@ const MatchPage: FC = () => {
     }, [socket, match, matchId]);
 
 
-    const moveCard = useCallback(
-        (dragIndex: number, hoverIndex: number, zoneName: string) => {},
-        [],
-    );
-
-    const returnItemsForZone = (zoneName: string, withPopover: boolean, isPrivate: boolean, isOpponent: boolean) => {
-        return (!isOpponent ? match[zoneName] : opponentMatch[zoneName])
-            .map((card: Card, index: number) => (
-                <CardComponent
-                    key={ index }
-                    index={ index }
-                    moveCard={(dragIndex: number, hoverIndex: number, zoneName: string) => moveCard(dragIndex, hoverIndex, zoneName)}
-                    zone={ zoneName }
-                    card={ card }
-                    withPopover={ withPopover }
-                    isPrivate={ isPrivate }
-                    isOpponent={ isOpponent }
-                />
-            ));
-    };
-
-    const content = (
-        <div>
-            <Button type="link" onClick={ openLeaveMatchModal }>Abandonar</Button><br/>
-            <Button type="link" onClick={ leaveMutualMatch }>Abandono mutuo</Button>
-        </div>        
-    );
-
-    const handleVisibleChangePopever = (visible: boolean) => {
-        setVisiblePopover(visible); 
-    };
+    
 
     return (
         <>
@@ -567,8 +570,8 @@ const MatchPage: FC = () => {
                                         </Zone> 
                                     </Col>
                                 </Row>
-
-                                <Divider/>   
+                                
+                                <Phases />
 
                                 <Row gutter={[3, 3]}>
 
@@ -685,7 +688,7 @@ const MatchPage: FC = () => {
                             </Row>   
 
                             <Row gutter={[3, 3]} className="row-buttons">
-                                <Col>
+                                <Col span={24}>
                                     <Buttons />
                                 </Col>
                             </Row> 

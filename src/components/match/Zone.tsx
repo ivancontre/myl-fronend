@@ -14,6 +14,7 @@ import { DragCard  } from '../../store/match/types';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { Message } from '../../store/chat/types';
+import { shuffle } from '../../helpers/shuffle';
 
 interface ZoneProps {
     children: ReactNode;
@@ -92,7 +93,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Moviendo todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`,
+            text: `Moviendo ${ destiny === CASTLE_ZONE ? 'y barajando' : '' } todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`,
             isAction: true
         };
 
@@ -106,14 +107,19 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         });
 
 
-        const newMatch = { ...match };        
+        let newMatch = { ...match };        
         if (!newMatch[origin].length) {
             message.warn(`No hay cartas en la zona de ${origin}` );
             setVisiblePopover(false);
             return;
-        }
+        }    
 
         newMatch[destiny] = [...newMatch[destiny], ...newMatch[origin]];
+
+        if (destiny === CASTLE_ZONE) {
+            newMatch = shuffle(newMatch, CASTLE_ZONE);
+        }
+
         newMatch[origin] = [];
         dispatch(changeMatch(newMatch));
         setVisiblePopover(false);

@@ -8,7 +8,7 @@ import { addMessageAction } from '../../store/chat/action';
 import { Message } from '../../store/chat/types';
 
 
-import { QuestionCircleOutlined, ExclamationCircleOutlined, CheckCircleOutlined, MessageOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, MessageOutlined } from '@ant-design/icons';
 
 const Buttons: FC = () => {
 
@@ -54,12 +54,8 @@ const Buttons: FC = () => {
             <Button type="primary" block danger onClick={ () => sendMessage('STOP!!!') } icon={ <ExclamationCircleOutlined /> } style={{marginBottom: 3}} >
                 Stop!
             </Button>
-            
-            <Button type="primary" block onClick={ () => sendMessage('TU TURNO!!!') } icon={ <CheckCircleOutlined /> } style={{marginBottom: 3}}>
-                Tu turno!
-            </Button>
 
-            <Button type="default" block onClick={ () => sendMessage('Pensando...') } icon={ <MessageOutlined /> } style={{marginBottom: 3, backgroundColor: 'green'}}>
+            <Button type="primary" block onClick={ () => sendMessage('Pensando...') } icon={ <MessageOutlined /> } style={{marginBottom: 3}}>
                 Pensando...
             </Button>
         </div>

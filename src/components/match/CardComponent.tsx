@@ -44,7 +44,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const { socket } = useContext(SocketContext);
 
-    const { match,matchId, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const [visiblePopover, setVisiblePopover] = useState(false);
@@ -917,7 +917,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         }
 
         if (zone !== CASTLE_ZONE) {
-            className += ' animate__flipInX';
+            className += ' animate__zoomInDown';
         }
         
 

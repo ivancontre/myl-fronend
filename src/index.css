@@ -8,3 +8,7 @@ body {
 .ant-layout {
     background: unset;
 }
+
+.animate__animated.animate__zoomInDown {
+    --animate-duration: 0.3s;
+  }

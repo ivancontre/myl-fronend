@@ -1,0 +1,24 @@
+.phase {
+    border: 1px solid rgb(60, 31, 31);
+    height: 50px;
+    background-image: linear-gradient(to top, #000000, #060002, #0a0006, #0c000c, #0b0012, #0b0012, #0b0012, #0b0012, #0c000c, #0a0006, #060002, #000000);
+
+    font-size: 13px;
+    padding-left: 0.5px;
+    padding-right: 0.5px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.div-button {
+    text-align: center;
+    font-weight: bold;
+}
+
+.active-phase {
+    background-image: linear-gradient(to right, #000000, #4f231c, #865109, #8f9500, #2ae13b);
+    z-index: 2;
+}
