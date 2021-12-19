@@ -470,7 +470,7 @@ const MatchPage: FC = () => {
             { modalOpenSelectXcards && <SelectXcardsModal /> }
             { modalOpenSelectXcardsOpponent && <SelectXcardsModal toOpponent />}
             { modalOpenViewXcards && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView }/> }
-            { modalOpenXViewCastleToOpponent && <ViewCardsModal origin={ match } zone={ CASTLE_ZONE } amount={ amountCardsView } onlyRead />}
+            { modalOpenXViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } amount={ amountCardsView } onlyRead />}
 
             { modalOpenViewCastleToOpponent && <ViewCardsModal origin={ opponentMatch } zone={ CASTLE_ZONE } onlyRead /> }
             
