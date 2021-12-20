@@ -181,8 +181,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                 }
 
             } else {
-
-                sendMessage(`Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`);
+                const message = zoneName === HAND_ZONE ? `Moviendo carta de "${item.zone}" a "${zoneName}"` : `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`
+                sendMessage(message);
                 dispatch(changeMatch(newCards));
 
                 if (haveOpponentArm) {
