@@ -336,6 +336,7 @@ const NewCard = () => {
                     >
                     <Select
                             placeholder="Seleccione una opción"
+                            listHeight={300}
                             style={{ width: "100%" }}
                             onChange={ handleEdition }
                         

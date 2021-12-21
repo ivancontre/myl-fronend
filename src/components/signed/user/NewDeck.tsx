@@ -298,6 +298,7 @@ const NewDeck: FC = () => {
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
                     <Select
+                        listHeight={300}
                         placeholder="Seleccione una edición"
                         style={{ width: "100%" }}
                         onChange={ handleSelectEdition }                    
