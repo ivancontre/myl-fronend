@@ -44,7 +44,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
 
     const { socket } = useContext(SocketContext);
 
-    const { match, matchId, opponentId, opponentMatch } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentId, opponentMatch, playOpenHand } = useSelector((state: RootState) => state.match);
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const [visiblePopover, setVisiblePopover] = useState(false);
@@ -924,6 +924,16 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         return className;
     };
 
+    const conditionShowPirvateCards = () => {
+        if (zone === HAND_ZONE) {
+            if (isPrivate && isOpponent && playOpenHand) {
+                return false
+            }
+        }
+
+        return isOpponent && isPrivate;
+    };
+
     return (
         <>
 
@@ -966,7 +976,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     </Popover>
                 ) : (
                     <div ref={ ref }  style={{ opacity }} className={ getClassName() } data-handler-id={ handlerId } >
-                        { isPrivate && isOpponent ?
+                        { conditionShowPirvateCards() ?
                             <img
                                 width={ width }
                                 height={ height }

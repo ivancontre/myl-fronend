@@ -15,7 +15,7 @@ import { SocketContext } from '../context/SocketContext';
 import useHideMenu from '../hooks/useHideMenu';
 import { RootState } from '../store';
 import { Card } from '../store/card/types';
-import { changeMatch, changOpponenteMatch, resetMatch, setAmountCardsViewAction } from '../store/match/action';
+import { changeMatch, changOpponenteMatch, resetMatch, setAmountCardsViewAction, setPlayOpenHandAction } from '../store/match/action';
 import Zone from '../components/match/Zone';
 import { Dictionary } from '../store/match/types';
 
@@ -270,6 +270,18 @@ const MatchPage: FC = () => {
         }        
 
     }, [socket, match, matchId, emmitChange]);
+
+    useEffect(() => {
+        
+        socket?.on('playing-open-hand', (data) => {
+            dispatch(setPlayOpenHandAction(data.playOpenHand))
+        });
+
+        return () => {
+            socket?.off('playing-open-hand');
+        }
+        
+    }, [socket, dispatch]);
 
     useEffect(() => {
         

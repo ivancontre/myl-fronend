@@ -1,5 +1,21 @@
 import { Card } from "../card/types";
-import { change, MatchActionTypes, setMatchId, resetMatchValues, Dictionary, setOpponentId, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon, setOpponentUsername } from "./types";
+import {    change, 
+            MatchActionTypes, 
+            setMatchId, 
+            resetMatchValues, 
+            Dictionary, 
+            setOpponentId, 
+            changeOpponent, 
+            setCardsOrigin, 
+            setCardsDestiny, 
+            setAmountCardsView, 
+            setTakeControlOpponentCard, 
+            setWeapon, 
+            setOpponentUsername,
+            setPlayOpenHand
+} from "./types";
+
+
 
 export const changeMatch = (match: Dictionary<Card[] | []>, emmitChange: boolean = true): MatchActionTypes => {
     return {
@@ -81,5 +97,12 @@ export const setWeaponAction = (data: any) => {
     return {
         type: setWeapon,
         payload: data
+    }
+};
+
+export const setPlayOpenHandAction = (open: boolean) => {
+    return {
+        type: setPlayOpenHand,
+        payload: open
     }
 };

@@ -3,7 +3,7 @@ import React, { FC, ReactNode, useContext, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { CaretDownOutlined, CaretUpOutlined, MoreOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretUpOutlined, MoreOutlined, ReloadOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 
 import { ZONE_NAMES } from '../../constants';
@@ -30,8 +30,9 @@ const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPA
 const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount }) => {
 
     const [visiblePopover, setVisiblePopover] = useState(false);
+    const [visibleButtonPlayOpenHand, setVisibleButtonPlayOpenHand] = useState(false);
 
-    const { match, matchId, opponentMatch } = useSelector((state: RootState) => state.match);
+    const { match, matchId, opponentMatch, playOpenHand } = useSelector((state: RootState) => state.match);
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const { socket } = useContext(SocketContext);
@@ -138,10 +139,32 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         setVisiblePopover(false);
     };
 
+    const onClickPlayOpenHand = (open: boolean) => {
+        setVisibleButtonPlayOpenHand(open)
+        socket?.emit('play-open-hand', {
+            matchId,
+            playOpenHand: open
+        });
+
+        setVisiblePopover(false);
+    };
+
     const content = (
         <div>
             <Button type="link" onClick={ showHandToOpponent }>Mostrar mano</Button><br/>
-            <Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button>
+            <Button type="link" onClick={ () => sendToZone(HAND_ZONE, CASTLE_ZONE) }>Devolver mano</Button><br/>
+            {
+                !visibleButtonPlayOpenHand ? 
+                (
+                    <Button type="link" onClick={ () => onClickPlayOpenHand(true) }>Jugar mano descubierta</Button>
+                    
+                )
+                :
+                (
+                    <Button type="link" onClick={ () => onClickPlayOpenHand(false) }>Jugar mano cubierta</Button>
+                )
+            }
+             
         </div>        
     );
 
@@ -168,9 +191,22 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
     return (
         <>
             <div ref={ drop } className={ `zone ${getClassAnimated()}`} style={ { backgroundColor: getBackgroundColor() } } >
-                
+                    
                         
                     <div className={isOpponent ? "title-zone-opponent" : "title-zone"}>
+
+                        {
+                            (!isOpponent && title === HAND_ZONE && (
+                                visibleButtonPlayOpenHand ? <EyeOutlined style={{ color: 'white', float: 'left', marginTop: 3, marginLeft: 2}} /> : <EyeInvisibleOutlined style={{ color: 'white', float: 'left', marginTop: 3, marginLeft: 2}} />
+                            ))
+                        }
+
+                        {
+                            (isOpponent && title === HAND_ZONE && (
+                                playOpenHand ? <EyeOutlined style={{ color: 'white', float: 'left', marginTop: 3, marginLeft: 2}} /> : <EyeInvisibleOutlined style={{ color: 'white', float: 'left', marginTop: 3, marginLeft: 2}} />
+                            ))
+                        }
+
                         <span>{ getTitle() }</span>
 
                         {
@@ -221,7 +257,6 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                     </div>
                     
                     <div className={className}>
-                        
                         { isOpponent && title === CASTLE_ZONE && Object.keys(opponentMatch).length === 0 ? ' not loaded' : children }
                     </div>
                     
