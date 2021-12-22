@@ -23,7 +23,7 @@ import '../css/match.css';
 import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
 import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
-import { openModalViewCastleOpponent, openModalViewHandOpponent, openModalViewXCastleOpponent } from '../store/ui-modal/action';
+import { openModalViewCastleOpponent, openModalViewHandOpponent, openModalViewXCastleOpponent, resetModal } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
@@ -105,6 +105,7 @@ const MatchPage: FC = () => {
         Modal.destroyAll();        
         dispatch(resetChatAction());
         dispatch(resetMatch());
+        dispatch(resetModal());
         }, [dispatch],
     );
 

@@ -2,22 +2,24 @@ import { Row, Col } from 'antd'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
+import { ZONE_NAMES } from '../../constants';
 
 import '../../css/phases.css';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { RootState } from '../../store';
 import { addMessageAction } from '../../store/chat/action';
 import { Message } from '../../store/chat/types';
+import { changeMatch } from '../../store/match/action';
 
+const { DEFENSE_ZONE, ATTACK_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE } = ZONE_NAMES;
 
 const Phases: FC = () => {
 
     const dispatch = useDispatch();
     const { socket } = useContext(SocketContext);
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
-    const { matchId } = useSelector((state: RootState) => state.match);
+    const { matchId, match } = useSelector((state: RootState) => state.match);
     const [active, setActive] = useState('');
-
 
     useEffect(() => {
         
@@ -51,6 +53,25 @@ const Phases: FC = () => {
 
     };
 
+    const groupCards = () => {
+
+        let newMatch = { ...match };        
+        if (newMatch[ATTACK_ZONE].length) {
+            newMatch[DEFENSE_ZONE] = [...newMatch[DEFENSE_ZONE], ...newMatch[ATTACK_ZONE]];        
+            newMatch[ATTACK_ZONE] = [];
+        }
+
+        if (newMatch[GOLDS_PAID_ZONE].length) {
+            newMatch[UNPAID_GOLD_ZONE] = [...newMatch[UNPAID_GOLD_ZONE], ...newMatch[GOLDS_PAID_ZONE]];        
+            newMatch[GOLDS_PAID_ZONE] = [];
+        }
+        
+
+        
+
+        dispatch(changeMatch(newMatch));
+    };
+
     const sendPhase = (phase: string) => {
         socket?.emit('setting-phase', {
             matchId,
@@ -67,7 +88,11 @@ const Phases: FC = () => {
     return (
         <>
             <Row gutter={[1, 1]} style={{ paddingTop: 2}}>
-                <Col span={ 3 } className={ 'phase-1' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-1', 'Pasando a Fase Agrupación')}>
+                <Col span={ 3 } className={ 'phase-1' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => {
+                    onClick('phase-1', 'Pasando a Fase Agrupación');
+                    groupCards();
+                    
+                }}>
                     <div className="div-button">
                         Fase Agrupación
                     </div>                    

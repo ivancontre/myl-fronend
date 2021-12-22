@@ -61,6 +61,7 @@ export const SingedRouter: FC = () => {
         Modal.destroyAll();
         dispatch(resetMatch());
         dispatch(resetChatAction());
+        dispatch(resetModal());
         history.replace('/play');
 
         }, [history, dispatch],
