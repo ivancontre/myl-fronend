@@ -11,9 +11,10 @@ import {
     Upload,
     Image,
     message,
-    Divider
+    Divider,
+    Space
 } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useHideMenu from '../../../hooks/useHideMenu';
@@ -25,6 +26,7 @@ import { useHistory, useParams } from 'react-router';
 import '../../../css/new-card.css'
 import { RaceCard } from '../../../store/description/types';
 import { MenuContext } from '../../../context/MenuContext';
+import { Card } from '../../../store/card/types';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -221,6 +223,22 @@ const NewCard = () => {
         history.push('/cards');
     };
 
+    const nextCard = () => {
+        const index = cards.findIndex((card: Card) => params.id === card.id);
+        if (index < cards.length) {
+            const nextId = cards[index + 1].id;
+            history.push(`/cards/${nextId}/edit`)
+        }
+    };
+
+    const prevCard = () => {
+        const index = cards.findIndex((card: Card) => params.id === card.id);
+        if (index >= 0) {
+            const nextId = cards[index - 1].id;
+            history.push(`/cards/${nextId}/edit`)
+        }
+    }
+
     return (
         <>
             <Tooltip title="Volver al listado">
@@ -230,6 +248,16 @@ const NewCard = () => {
             <Divider />
 
             <Title level={ 1 }>{!cardUpdating ?  'Crear Carta' : 'Modificar Carta'}</Title>
+
+            {
+                cardUpdating && (
+                    <Space>
+                        <Button onClick={ prevCard } type="primary" shape="circle" icon={<ArrowLeftOutlined />} />
+                        <Button onClick={ nextCard } type="primary" shape="circle" icon={<ArrowRightOutlined />} />
+                    </Space>
+                )
+            }
+            
             
             <Form
                 labelCol={{ span: 7}}
