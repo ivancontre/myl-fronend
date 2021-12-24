@@ -28,6 +28,7 @@ const Cards: FC = () => {
     const dispatch = useDispatch();
 
     const { cards } = useSelector((state: RootState) => state.cards);
+    const { eras, editions, types, races, frecuencies } = useSelector((state: RootState) => state.description);
 
     useEffect(() => {
         
@@ -56,10 +57,6 @@ const Cards: FC = () => {
 
     const ref0 = useRef();
     const ref1 = useRef();
-    const ref2 = useRef();
-    const ref3 = useRef();
-    const ref4 = useRef();
-    const ref5 = useRef();
 
     const getColumnSearchProps = (dataIndex: string, ref: any) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
@@ -160,64 +157,94 @@ const Cards: FC = () => {
             dataIndex: 'era',
             key: 'era',
             width: '20%',
-            ...getColumnSearchProps('era', ref5),
             sortDirections: ['descend', 'ascend'],
-            sorter: (a: Card, b: Card) => { 
+            sorter: (a: any, b: any) => { 
                 if(a.era < b.era) { return -1; }
                 if(a.era > b.era) { return 1; }
                 return 0;
             },
+            filters: eras.map(e => {
+                return {
+                    text: e.name,
+                    value: e.name
+                }
+            }),
+            onFilter: (text, row) => row.era?.indexOf(text as string) === 0,
         },
         {
             title: 'Edición',
             dataIndex: 'edition',
             key: 'edition',
             width: '20%',
-            ...getColumnSearchProps('edition', ref2),
             sortDirections: ['descend', 'ascend'],
             sorter: (a: Card, b: Card) => { 
                 if(a.edition < b.edition) { return -1; }
                 if(a.edition > b.edition) { return 1; }
                 return 0;
             },
+            filters: editions.map(e => {
+                return {
+                    text: e.name,
+                    value: e.name
+                }
+            }),
+            onFilter: (text, row) => row.edition?.indexOf(text as string) === 0,
         },
         {
             title: 'Tipo',
             dataIndex: 'type',
             key: 'type',
             width: '20%',
-            ...getColumnSearchProps('type', ref3),
             sortDirections: ['descend', 'ascend'],
             sorter: (a: Card, b: Card) => { 
                 if(a.type < b.type) { return -1; }
                 if(a.type > b.type) { return 1; }
                 return 0;
             },
+            filters: types.map(e => {
+                return {
+                    text: e.name,
+                    value: e.name
+                }
+            }),
+            onFilter: (text, row) => row.type?.indexOf(text as string) === 0,
         },
         {
             title: 'Raza',
             dataIndex: 'race',
             key: 'race',
             width: '20%',
-            ...getColumnSearchProps('race', ref3),
             sortDirections: ['descend', 'ascend'],
             sorter: (a: any, b: any) => { 
                 if(a.race < b.race) { return -1; }
                 if(a.race > b.race) { return 1; }
                 return 0;
             },
+            filters: races.map(r => {
+                return {
+                    text: r.name,
+                    value: r.name
+                }
+            }),
+            onFilter: (text, row) => row.race?.indexOf(text as string) === 0,
         },
         {
             title: 'Frecuencia',
             dataIndex: 'frecuency',
             key: 'frecuency',
-            ...getColumnSearchProps('frecuency', ref4),
             sortDirections: ['descend', 'ascend'],
             sorter: (a: any, b: any) => { 
                 if(a.frecuency < b.frecuency) { return -1; }
                 if(a.frecuency > b.frecuency) { return 1; }
                 return 0;
             },
+            filters: frecuencies.map(f => {
+                return {
+                    text: f.name,
+                    value: f.name
+                }
+            }),
+            onFilter: (text, row) => row.frecuency?.indexOf(text as string) === 0,
             
         },
         {

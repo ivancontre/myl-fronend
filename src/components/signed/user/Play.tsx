@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
 import { useLocation } from 'react-router';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, TeamOutlined } from '@ant-design/icons';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { RootState } from '../../../store';
 import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
@@ -31,6 +31,7 @@ const Play: FC = () => {
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
     const { victories, defeats, playing } = useSelector((state: RootState) => state.auth);  
     const { matchId, opponentId } = useSelector((state: RootState) => state.match);
+    const { eras } = useSelector((state: RootState) => state.description);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -278,8 +279,15 @@ const Play: FC = () => {
             },
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
-                return (<Tag color="blue">{row.era}</Tag>) 
-            }
+                return (<Tag color={row.era === 'Segunda era' ? 'blue': 'cyan' }>{row.era}</Tag>) 
+            },
+            filters: eras.map(e => {
+                return {
+                    text: e.name,
+                    value: e.name
+                }
+            }),
+            onFilter: (text, row) => row.era?.indexOf(text as string) === 0,
         },
         {
             title: '¿Jugando?',
@@ -303,7 +311,7 @@ const Play: FC = () => {
             render: (text, row) => {
 
                 if (!playing && !row.playing && row.online && haveDecks() && isCorrectDeckDefault()) {
-                    return <Button onClick={ () => invite(row.id, row.username) } ghost>Invitar a jugar</Button>
+                    return <Button onClick={ () => invite(row.id, row.username) } ghost icon={<TeamOutlined />}>Invitar a jugar</Button>
                 }
             },
         },
@@ -370,7 +378,7 @@ const Play: FC = () => {
                         type="success" 
                         showIcon
                         action={
-                            <Link to="decks">Cambiar mazo</Link>
+                            <Link to="decks">¿Cambiar mazo?</Link>
                         }
                     />
                 )

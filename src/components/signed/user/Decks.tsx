@@ -27,6 +27,7 @@ const Decks: FC = () => {
     const dispatch = useDispatch();
 
     const { decks, deckDefault } = useSelector((state: RootState) => state.decks);
+    const { eras } = useSelector((state: RootState) => state.description);
 
     const handleNewDesk = () => {
         history.push(`/decks/new`);
@@ -118,7 +119,6 @@ const Decks: FC = () => {
     };
 
     const ref0 = useRef();
-    const ref1 = useRef();
 
     const columns: ColumnsType<Deck> = [
         
@@ -141,14 +141,20 @@ const Decks: FC = () => {
             dataIndex: 'era',
             key: 'era',
             width: '60%',
-            ...getColumnSearchProps('era', ref1),
             sorter: (a: any, b: any) => { 
                 if(a.name < b.name) { return -1; }
                 if(a.name > b.name) { return 1; }
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
-            render: (text, row) => <Tag color="blue">{text}</Tag>
+            render: (text, row) => <Tag color="blue">{text}</Tag>,
+            filters: eras.map(r => {
+                return {
+                    text: r.name,
+                    value: r.name
+                }
+            }),
+            onFilter: (text, row) => row.era?.indexOf(text as string) === 0,
         },
         {
             title: 'N° Cartas',
