@@ -671,7 +671,7 @@ const MatchPage: FC = () => {
                         <Col span={ 5 } className="content-actions">
 
                             <Row gutter={[8, 8]}>
-                                <Col style={{width: '100%', padding: 5}}>
+                                <Col style={{width: '100%', padding: 8}}>
                                     <Alert message="Si recargas o navegas con las flechas del navegador perderás la partida" type="warning" showIcon/>
                                 </Col> 
                             </Row>
@@ -691,7 +691,7 @@ const MatchPage: FC = () => {
                             </Row>     
 
                             <Divider style={{ fontSize: 20 }}>{`vs ${opponentUsername}`} </Divider>
-                            
+
                             <Row gutter={[1, 1]} justify="space-around" align="middle">
                                 <Col span={24} style={{backgroundColor: 'white', borderRadius: 2}} >
                                     <Chat />

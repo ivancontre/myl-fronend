@@ -147,7 +147,9 @@ const Decks: FC = () => {
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
-            render: (text, row) => <Tag color="blue">{text}</Tag>,
+            render: (text, row) => {
+                return (<Tag color={row.era === 'Segunda era' ? 'blue': 'cyan' }>{row.era}</Tag>)
+            },
             filters: eras.map(r => {
                 return {
                     text: r.name,
