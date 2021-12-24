@@ -89,12 +89,11 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         setVisiblePopover(visible); 
     };
 
-    const sendToZone = (origin: string, destiny: string) => {
-
+    const sendMessage = (text: string) => {
         const newMessage: Message = {
             id: myUserId as string,
             username: username as string,
-            text: `Moviendo ${ destiny === CASTLE_ZONE ? 'y barajando' : '' } todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`,
+            text,
             isAction: true
         };
 
@@ -106,7 +105,11 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
             dispatch(addMessageAction(newMessage));
             scrollToBottom('messages');
         });
+    };
 
+    const sendToZone = (origin: string, destiny: string) => {
+
+        sendMessage(`Moviendo ${ destiny === CASTLE_ZONE ? 'y barajando' : '' } todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`);
 
         let newMatch = { ...match };        
         if (!newMatch[origin].length) {
@@ -140,7 +143,9 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
     };
 
     const onClickPlayOpenHand = (open: boolean) => {
-        setVisibleButtonPlayOpenHand(open)
+        setVisibleButtonPlayOpenHand(open);
+
+        sendMessage(`Jugando con la mano ${open ? 'descubierta' : 'cubierta'}`)
         socket?.emit('play-open-hand', {
             matchId,
             playOpenHand: open

@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Popover, Modal, Row, Button, Divider } from 'antd';
+import { Col, Popover, Modal, Row, Button, Divider, Alert } from 'antd';
 
 import { CloseCircleOutlined } from '@ant-design/icons';
 
@@ -670,6 +670,12 @@ const MatchPage: FC = () => {
                         </Col>
                         <Col span={ 5 } className="content-actions">
 
+                            <Row gutter={[8, 8]}>
+                                <Col style={{width: '100%', padding: 5}}>
+                                    <Alert message="Si recargas o navegas con las flechas del navegador perderás la partida" type="warning" showIcon/>
+                                </Col> 
+                            </Row>
+
                             <Row gutter={[16, 8]} justify="end">
                                 <Col style={{width: '100%'}}>
                                     <Popover
@@ -684,18 +690,10 @@ const MatchPage: FC = () => {
                                 </Col> 
                             </Row>     
 
-                            <Divider/>  
-
-                            <Row gutter={[8, 8]}>
-                                <Col span={24} className="name-opponent" >
-                                    <span style={{ fontSize: 20 }}>{`vs ${opponentUsername}`}</span>
-                                </Col>
-                            </Row>     
-
-                            <Divider/>                     
+                            <Divider style={{ fontSize: 20 }}>{`vs ${opponentUsername}`} </Divider>
                             
                             <Row gutter={[1, 1]} justify="space-around" align="middle">
-                                <Col span={24} style={{width: '100%', backgroundColor: 'white', borderRadius: 2}} >
+                                <Col span={24} style={{backgroundColor: 'white', borderRadius: 2}} >
                                     <Chat />
                                 </Col>
                             </Row>   
