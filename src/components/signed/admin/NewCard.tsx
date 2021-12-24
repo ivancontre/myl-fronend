@@ -22,11 +22,11 @@ import { RootState } from '../../../store';
 import { startAddNewCard, loadCardUpdating, startUpdateCard, startLoadCard } from '../../../store/card/action';
 import { useHistory, useParams } from 'react-router';
 
+import '../../../css/new-card.css';
 
-import '../../../css/new-card.css'
-import { RaceCard } from '../../../store/description/types';
 import { MenuContext } from '../../../context/MenuContext';
 import { Card } from '../../../store/card/types';
+import { EditionCard, EraCard } from '../../../store/description/types';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -54,11 +54,12 @@ const NewCard = () => {
     const [checkIsUnique, setCheckIsUnique] = useState<boolean>(false);
     const [disableMachinery, setDisableMachinery] = useState<boolean>(true);
     const [fileList, setFileList] = useState<any>();
-    const [editionName, setEditionName] = useState<string>('');
-    const [races, setRaces] = useState<RaceCard[]>([]);
+    const [eraId, setEraId] = useState<string>('');
+    const [editionId, setEditionId] = useState<string>('');
     const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
-    const { types, frecuencies, editions } = useSelector((state: RootState) => state.description);    
+    const { types, frecuencies, eras } = useSelector((state: RootState) => state.description);
+
 
     const history = useHistory();
 
@@ -103,6 +104,9 @@ const NewCard = () => {
                 name: 'edition',
                 value: cardUpdating.edition
             },{
+                name: 'era',
+                value: cardUpdating.era
+            },{
                 name: 'race',
                 value: cardUpdating.race
             },{
@@ -112,15 +116,21 @@ const NewCard = () => {
                 name: 'strength',
                 value: cardUpdating.strength
             }];
+            
+            const era = eras.find(e => e.name === cardUpdating.era) as EraCard;
+            setEraId(era.id);
+
+            const edition = era.editions.find(e => e.name === cardUpdating.edition) as EditionCard;
+            setEditionId(edition.id);
 
             setFields(fields);
+            
             if (cardUpdating.isMachinery) setDisableMachinery(false);
             setCheckIsMachinery(cardUpdating.isMachinery);
             setCheckIsUnique(cardUpdating.isUnique);
-            setEditionName(cardUpdating.edition);
         }
 
-    }, [cardUpdating]);
+    }, [cardUpdating, eras]);
 
     const onFinish = async (values: any) => {
         let formData = new FormData();
@@ -132,10 +142,10 @@ const NewCard = () => {
                 armTypeId = type.id;
                 break;
             }
-        }        
+        }
 
         for (let key in values) {
-            if (values[key] || values['strength'] === 0 ) formData.append(key, values[key]);                  
+            formData.append(key, values[key]);               
         }     
         
         if (values.type !== armTypeId){
@@ -205,18 +215,14 @@ const NewCard = () => {
         setCheckIsUnique(checked);
     };
 
-    const handleEdition = (editionId: string) => {
-        
-        for (const edition of editions) {
-            if (edition.id === editionId) {
-                setEditionName(edition.name);
-                setRaces(edition.races);
-                break;
-            }
-        }
+    const handleEra = (eraId: string) => {
+        setEraId(eraId);
+        setFields([{ name: 'edition', value: undefined}, { name: 'race', value: undefined}]);
+    };
 
-        setFields([{name: 'race', value: ''}]);
-        
+    const handleEdition = (editionId: string) => {
+        setEditionId(editionId);
+        setFields([{ name: 'race', value: undefined}]);
     };
 
     const back = () => {
@@ -237,7 +243,7 @@ const NewCard = () => {
             const nextId = cards[index - 1].id;
             history.push(`/cards/${nextId}/edit`)
         }
-    }
+    };
 
     return (
         <>
@@ -326,7 +332,73 @@ const NewCard = () => {
 
                 <Form.Item label="¿Es maquinaria?" valuePropName="isMachinery">
                     <Switch disabled={ disableMachinery } onChange={ handleSwitchMaquinery } checked={ checkIsMachinery }/>
-                </Form.Item>  
+                </Form.Item> 
+
+                <Form.Item 
+                    label="Era" 
+                    name="era"
+                    rules={[{
+                        required: true,
+                        message: 'Por favor seleccione la era de la carta'
+                        }
+                    ]}
+                    
+                    
+                    >
+                    <Select
+                            placeholder="Seleccione una opción"
+                            listHeight={300}
+                            style={{ width: "100%" }}
+                            onChange={ handleEra }
+                        
+                        >
+                        {
+                            eras.length > 0 && eras.map(era => (
+                                <Select.Option key={ era.id } value={ era.id }>{ era.name }</Select.Option>
+                            ))
+                        }                    
+                        
+                    </Select>
+                </Form.Item>
+
+                <Form.Item 
+                    label="Edición" 
+                    name="edition"
+                    rules={[{
+                        required: true,
+                        message: 'Por favor seleccione la edición de la carta'
+                        }
+                    ]}
+                    >
+                    <Select
+                            placeholder="Seleccione una opción"
+                            listHeight={300}
+                            style={{ width: "100%" }}
+                            onChange={ handleEdition }
+                        
+                        >
+                        {
+                            eras.find(era => era.id === eraId)?.editions.map(edition => (
+                                <Select.Option key={ edition.id } value={ edition.id }>{ edition.name }</Select.Option>
+                            ))
+                        }                    
+                        
+                    </Select>
+                </Form.Item>
+
+                <Form.Item label="Raza" name="race">
+                    <Select
+                            placeholder="Seleccione una opción"
+                            style={{ width: "100%" }}                
+                        >
+                        {
+                            eras.find(era => era.id === eraId)?.editions.find(edition => edition.id === editionId)?.races.map(race => (
+                                <Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>
+                            ))                            
+                        }                    
+                        
+                    </Select>
+                </Form.Item>
 
                 <Form.Item 
                     label="Frecuencia" 
@@ -351,53 +423,12 @@ const NewCard = () => {
                     </Select>
                 </Form.Item>
 
-                <Form.Item 
-                    label="Edición" 
-                    name="edition"
-                    rules={[{
-                        required: true,
-                        message: 'Por favor seleccione la edición de la carta'
-                        }
-                    ]}
-                    
-                    
-                    >
-                    <Select
-                            placeholder="Seleccione una opción"
-                            listHeight={300}
-                            style={{ width: "100%" }}
-                            onChange={ handleEdition }
-                        
-                        >
-                        {
-                            editions.length > 0 && editions.map(edition => (
-                                <Select.Option key={ edition.id } value={ edition.id }>{ edition.name }</Select.Option>
-                            ))
-                        }                    
-                        
-                    </Select>
-                </Form.Item>
-
-                <Form.Item label="Raza" name="race">
-                    <Select
-                            placeholder="Seleccione una opción"
-                            style={{ width: "100%" }}                        
-                        >
-                        {
-                            editionName && races.map(race => (
-                                <Select.Option key={ race.id } value={ race.id }>{ race.name }</Select.Option>
-                            ))                            
-                        }                    
-                        
-                    </Select>
-                </Form.Item>
-
                 <Form.Item label="Coste" name="cost">
-                    <InputNumber style={{width: '100%'}} min={ 0 } />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item label="Fuerza" name="strength">
-                    <InputNumber style={{width: '100%'}} min={ 0 } />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item label="¿Es única?" valuePropName="isUnique">

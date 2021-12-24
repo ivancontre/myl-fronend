@@ -37,6 +37,14 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
 
         if (zoneName === 'my-cards') {
             //mover hacia "my-cards"
+
+            if (selectMyCards.length) {
+                const c = selectMyCards[0];
+                if (c.era !== item.era){
+                    return message.warn(`No puedes hacer un mazo con Eras diferentes`);
+                }
+            }
+
             const card = cardsByEdition.find((card: Card) => card.id === item.id) as Card;
 
             const filter = selectMyCards.filter((card: Card) => card.id === item.id) as Card[];

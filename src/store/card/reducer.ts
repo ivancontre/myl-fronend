@@ -1,4 +1,4 @@
-import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card, cardByEdition, selectMyCards, cardsResetMySelection } from "./types";
+import { CardActionTypes, cardAddNew, cardLoad, CardState, cardLoadUpdating, cardResetUpdating, cardUpdate, Card, cardByEdition, selectMyCards, cardsResetMySelection, cardDelete } from "./types";
 
 const initialState: CardState = {
     cards: [],
@@ -26,6 +26,11 @@ export const cardReducer = (state: typeof initialState = initialState, action: C
                 )
             };
 
+        case cardDelete:
+            return {
+                ...state,
+                cards: state.cards.filter((e: Card) => e.id !== action.payload) as Card[],
+            };
 
         case cardLoad:
             return {

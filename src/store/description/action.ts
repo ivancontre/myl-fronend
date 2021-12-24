@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { DescriptionCardActionTypes, RaceCard, TypeCard, typesCardLoad, racesCardLoad, FrecuencyCard, frecuenciesCardLoad, EditionCard, editionsCardLoad, resetDescription } from "./types";
+import { DescriptionCardActionTypes, RaceCard, TypeCard, typesCardLoad, racesCardLoad, FrecuencyCard, frecuenciesCardLoad, EditionCard, editionsCardLoad, resetDescription, erasCardLoad, EraCard } from "./types";
 
 export const startLoadTypeCard = () => {
     return async (dispatch: Dispatch<DescriptionCardActionTypes>) => {
@@ -82,6 +82,26 @@ export const startLoadEditionCard = () => {
     }
 };
 
+export const startLoadEraCard = () => {
+    return async (dispatch: Dispatch<DescriptionCardActionTypes>) => {
+
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/era', {}, 'GET', token);
+            const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                dispatch(loadEraCard(respJson));
+            } else {
+                console.log(resp)
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+};
+
 export const resetAllDescription = () => {
     return {
         type: resetDescription
@@ -113,6 +133,13 @@ const loadEditionCard = (editionsCard: EditionCard[]): DescriptionCardActionType
     return {
         type: editionsCardLoad,
         payload: editionsCard
+    }
+};
+
+const loadEraCard = (erasCard: EraCard[]): DescriptionCardActionTypes => {
+    return {
+        type: erasCardLoad,
+        payload: erasCard
     }
 };
 

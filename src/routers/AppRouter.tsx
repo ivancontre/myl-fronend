@@ -9,7 +9,7 @@ import {
 import { RootState } from '../store';
 import { startChecking } from '../store/auth/action';
 import { startLoadCard } from '../store/card/action';
-import { startLoadEditionCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../store/description/action';
+import { startLoadEditionCard, startLoadEraCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../store/description/action';
 import { AuthRouter } from './AuthRouter';
 import { PrivateRouter } from './PrivateRouter';
 import { PublicRouter } from './PublicRouter';
@@ -32,6 +32,7 @@ const AppRouter: FC = () => {
             dispatch(startLoadFrecuencyCard());
             dispatch(startLoadRaceCard());
             dispatch(startLoadEditionCard());
+            dispatch(startLoadEraCard());
             dispatch(startLoadCard());       
         }
         

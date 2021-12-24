@@ -10,7 +10,7 @@ import useHideMenu from '../../../hooks/useHideMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '../../../store/card/types';
 import { RootState } from '../../../store';
-import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
+import { resetCardUpdating, resetMySelection, startDeleteCard } from '../../../store/card/action';
 import { Link } from 'react-router-dom';
 import { MenuContext } from '../../../context/MenuContext';
 
@@ -51,7 +51,7 @@ const Cards: FC = () => {
     };
 
     const handleDelete = (id?: string) => {
-
+        dispatch(startDeleteCard(id as string));
     };
 
     const ref0 = useRef();
@@ -59,7 +59,7 @@ const Cards: FC = () => {
     const ref2 = useRef();
     const ref3 = useRef();
     const ref4 = useRef();
-    //const ref5 = useRef();
+    const ref5 = useRef();
 
     const getColumnSearchProps = (dataIndex: string, ref: any) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
@@ -154,6 +154,19 @@ const Cards: FC = () => {
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => <Link to={`/cards/${row.id}/edit`}>{ text }</Link>           
             
+        },
+        {
+            title: 'Era',
+            dataIndex: 'era',
+            key: 'era',
+            width: '20%',
+            ...getColumnSearchProps('era', ref5),
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a: Card, b: Card) => { 
+                if(a.era < b.era) { return -1; }
+                if(a.era > b.era) { return 1; }
+                return 0;
+            },
         },
         {
             title: 'Edición',

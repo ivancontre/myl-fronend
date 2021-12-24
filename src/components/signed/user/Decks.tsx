@@ -118,6 +118,7 @@ const Decks: FC = () => {
     };
 
     const ref0 = useRef();
+    const ref1 = useRef();
 
     const columns: ColumnsType<Deck> = [
         
@@ -127,6 +128,20 @@ const Decks: FC = () => {
             key: 'name',
             width: '60%',
             ...getColumnSearchProps('name', ref0),
+            sorter: (a: any, b: any) => { 
+                if(a.name < b.name) { return -1; }
+                if(a.name > b.name) { return 1; }
+                return 0;
+            },
+            sortDirections: ['descend', 'ascend'],
+            render: (text, row) => <Link to={`/decks/${row.id}/edit`}>{ text }</Link>  
+        },
+        {
+            title: 'Era',
+            dataIndex: 'era',
+            key: 'era',
+            width: '60%',
+            ...getColumnSearchProps('era', ref1),
             sorter: (a: any, b: any) => { 
                 if(a.name < b.name) { return -1; }
                 if(a.name > b.name) { return 1; }

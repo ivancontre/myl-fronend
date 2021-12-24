@@ -3,6 +3,7 @@ export const cardLoad = '[card] Load';
 export const cardLoadUpdating = '[card] Load updating';
 export const cardResetUpdating = '[card] Reset updating';
 export const cardUpdate = '[card] Update';
+export const cardDelete = '[card] Delete';
 export const cardByEdition = '[card] By edition';
 export const selectMyCards = '[card] My select';
 export const cardsToMySelection = '[card] To my selection';
@@ -19,9 +20,10 @@ export type Card = {
     type: string;
     frecuency: string;
     edition: string;
+    era: string;
     race?: string;
     cost?: number;
-    strength?: number;
+    strength?: string;
     isMachinery: boolean;
     img: string;
     isUnique: boolean;
@@ -48,6 +50,11 @@ type CardAddNewAction = {
 type CardUpdateAction = {    
     type: typeof cardUpdate,
     payload: Card
+};
+
+type CardDeleteAction = {    
+    type: typeof cardDelete,
+    payload: string
 };
 
 type CardLoadAction = {    
@@ -100,4 +107,5 @@ CardByEditionAction |
 SelectMyCardsAction |
 CardsToMySelection |
 CardsToOrigin | 
-CardResetMySelectionAction;
+CardResetMySelectionAction |
+CardDeleteAction;

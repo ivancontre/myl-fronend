@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
-import { Card, CardActionTypes, cardAddNew, cardByEdition, cardLoad, cardLoadUpdating, cardResetUpdating, cardsResetMySelection, cardUpdate, selectMyCards } from "./types";
+import { Card, CardActionTypes, cardAddNew, cardByEdition, cardDelete, cardLoad, cardLoadUpdating, cardResetUpdating, cardsResetMySelection, cardUpdate, selectMyCards } from "./types";
 
 export const startAddNewCard = (card: any) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
@@ -80,6 +80,27 @@ export const startLoadCard = () => {
 
             if (resp.status === 200) {
                 dispatch(loadCards(respJson));
+            } else {
+                message.error('Error al obtener cartas');
+            }
+
+        } catch (error) {
+            console.log(error);
+            message.error('Error al obtener cartas!');
+        }
+    }
+};
+
+export const startDeleteCard = (id: string) => {
+    return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/card/'+id, {}, 'DELETE', token);
+            //const respJson = await resp.json();
+
+            if (resp.status === 200) {
+                dispatch(deleteCard(id));
             } else {
                 message.error('Error al obtener cartas');
             }
@@ -186,6 +207,14 @@ const updateCard = (card: Card): CardActionTypes => {
         payload: card
     }
 };
+
+const deleteCard = (id: string): CardActionTypes => {
+    return {
+        type: cardDelete,
+        payload: id
+    }
+};
+
 
 export const loadCardsByEdition = (cards: Card[]): CardActionTypes => {
     return {

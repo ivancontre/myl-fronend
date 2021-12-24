@@ -6,7 +6,7 @@ import update from 'immutability-helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import NewDeckCardContainer from './NewDeckCardContainer';
-import {  loadCardsMySelection, resetMySelection, startLoadCardByEdition } from '../../../store/card/action';
+import {  loadCardsByEdition, loadCardsMySelection, resetMySelection, startLoadCardByEdition } from '../../../store/card/action';
 import NewDeckCard from './NewDeckCard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -40,11 +40,12 @@ const NewDeck: FC = () => {
     useHideMenu(false, 'decks', collapsedMenu);
 
     const { cardsByEdition, selectMyCards } = useSelector((state: RootState) => state.cards);
-    const { types, editions } = useSelector((state: RootState) => state.description); 
+    const { types, eras, editions } = useSelector((state: RootState) => state.description); 
     const { deckUpdating, decks } = useSelector((state: RootState) => state.decks); 
 
     const [typeId, setTypeId] = useState<string | undefined>(undefined);
     const [raceId, setRaceId] = useState<string | undefined>(undefined);
+    const [editionId, setEditionId] = useState<string | undefined>(undefined);
 
     const [search, setSearch] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
@@ -54,6 +55,8 @@ const NewDeck: FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [tags, setTags] = useState<string[]>([])
     const [races, setRaces] = useState<RaceCard[]>([]);
+
+    const [eraId, setEraId] = useState<string>('');
 
     const dispatch = useDispatch();
 
@@ -95,17 +98,18 @@ const NewDeck: FC = () => {
 
     }, [dispatch, deckUpdating?.cards]);
 
+    const handleSelectEra = (eraId: string) => {
+        setEraId(eraId);
+        setRaceId(undefined);
+        setEditionId(undefined);
+        dispatch(loadCardsByEdition([]));
+    };
+
     const handleSelectEdition = async (editionId: string) => {
         setLoading(true);
-        
 
-        setSearchText('');
-        setSearch('');
-
-        setTags([]);
-
-        setTypeId(undefined);
         setRaceId(undefined);
+        setEditionId(editionId)
 
         for (const edition of editions) {
             if (edition.id === editionId) {
@@ -115,7 +119,6 @@ const NewDeck: FC = () => {
         }
 
         await dispatch(startLoadCardByEdition(editionId));
-
 
         setLoading(false);
     };
@@ -216,10 +219,15 @@ const NewDeck: FC = () => {
             return;
         }
 
-        const body = {
+        let body: any = {
             name: values.name,
             cards: selectMyCards.map(card => card.id)
         };
+
+
+        if (selectMyCards.length) {
+            body.era = selectMyCards[0].era;
+        }
 
         if (!deckUpdating) {
             
@@ -289,11 +297,28 @@ const NewDeck: FC = () => {
                 cardsByEdition.length === 0 && (
                     <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                         <Col span={ 24 } >
-                            <Alert message="Busque por edición" type="info" showIcon icon={<ArrowDownOutlined />}  />
+                            <Alert message="Busque por era" type="info" showIcon icon={<ArrowDownOutlined />}  />
                         </Col>
                     </Row>
                 )
-            }   
+            }  
+
+            <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
+                <Col span={ 24 } >
+                    <Select
+                        listHeight={300}
+                        placeholder="Seleccione una era"
+                        style={{ width: "100%" }}
+                        onChange={ handleSelectEra }                    
+                    >
+                        {
+                            eras.length > 0 && eras.map(era => (
+                                <Select.Option key={ era.id } value={ era.id }>{ era.name }</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Col>
+            </Row> 
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 24 } >
@@ -301,10 +326,12 @@ const NewDeck: FC = () => {
                         listHeight={300}
                         placeholder="Seleccione una edición"
                         style={{ width: "100%" }}
-                        onChange={ handleSelectEdition }                    
+                        onChange={ handleSelectEdition }
+                        value={ editionId }   
+                        disabled={ !eraId }               
                     >
                         {
-                            editions.length > 0 && editions.map(edition => (
+                            eras.find(era => era.id === eraId)?.editions.map(edition => (
                                 <Select.Option key={ edition.id } value={ edition.id }>{ edition.name }</Select.Option>
                             ))
                         }
