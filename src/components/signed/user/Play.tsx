@@ -267,6 +267,21 @@ const Play: FC = () => {
             }
         },
         {
+            title: 'Era',
+            dataIndex: 'era',
+            key: 'era',
+            width: '30%',
+            sorter: (a: any, b: any) => { 
+                if(a.era < b.era) { return -1; }
+                if(a.era > b.era) { return 1; }
+                return 0;
+            },
+            sortDirections: ['descend', 'ascend'],
+            render: (text, row) => {
+                return (<Tag color="blue">{row.era}</Tag>) 
+            }
+        },
+        {
             title: '¿Jugando?',
             dataIndex: 'playing',
             key: 'playing',

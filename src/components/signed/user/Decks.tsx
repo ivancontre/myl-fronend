@@ -148,7 +148,7 @@ const Decks: FC = () => {
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
-            render: (text, row) => <Link to={`/decks/${row.id}/edit`}>{ text }</Link>  
+            render: (text, row) => <Tag color="blue">{text}</Tag>
         },
         {
             title: 'N° Cartas',

@@ -28,6 +28,7 @@ export type User = {
     victories?: number;
     defeats?: number;
     decks?: Deck[];
+    era?: string;
 };
 
 export type AuthState = Partial<User> & {
