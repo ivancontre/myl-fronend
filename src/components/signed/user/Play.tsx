@@ -362,6 +362,20 @@ const Play: FC = () => {
             <p><Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag></p>
             <p><Tag color="red" style={{fontSize: 14}}>{`Mis derrotas: ${defeats ? defeats : '0'}`}</Tag></p>
 
+            {
+                deckDefault?.era && (
+                    <Alert 
+                        style={{ width: "100%", marginBottom: 10 }} 
+                        message={`Tu mazo por defecto es: ${deckDefault.name} (${deckDefault.era})`}
+                        type="success" 
+                        showIcon
+                        action={
+                            <Link to="decks">Cambiar mazo</Link>
+                        }
+                    />
+                )
+            }
+
             <Table<User>
                  pagination={{ defaultPageSize: 15 }}
                  rowKey="id" 
