@@ -11,7 +11,6 @@ import useHideMenu from '../../../hooks/useHideMenu';
 import { resetCardUpdating, resetMySelection } from '../../../store/card/action';
 import { User } from '../../../store/auth/types';
 import { RootState } from '../../../store';
-import { Deck } from '../../../store/deck/types';
 import moment from 'moment';
 import { deleteUserPermanently, startUpdateBoolenasUserAction } from '../../../store/auth/action';
 import { Link } from 'react-scroll';
@@ -199,10 +198,7 @@ const Users: FC = () => {
             key: 'decks',
             width: '10%',
             render: (text, row) => {
-
-                const defaultDeck = row.decks?.find((deck: Deck) => deck.byDefault === true);
-
-                return defaultDeck ? <Tag color="lime">Sí</Tag> : <Tag color="magneta">No</Tag>
+                return row.defaultDeck ? <Tag color="lime">Sí</Tag> : <Tag color="magneta">No</Tag>
             }
         },
         {

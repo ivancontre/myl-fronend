@@ -89,7 +89,7 @@ const Phases: FC = () => {
         <>
             <Row gutter={[1, 1]} style={{ paddingTop: 2}}>
                 <Col span={ 3 } className={ 'phase-1' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => {
-                    onClick('phase-1', 'Pasando a Fase Agrupación');
+                    onClick('phase-1', 'Pasando a <strong>Fase Agrupación</strong>');
                     groupCards();
                     
                 }}>
@@ -97,32 +97,32 @@ const Phases: FC = () => {
                         Fase Agrupación
                     </div>                    
                 </Col>
-                <Col span={ 3 } className={ 'phase-2' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-2', 'Pasando a Fase Vigilia')}>
+                <Col span={ 3 } className={ 'phase-2' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-2', 'Pasando a <strong>Fase Vigilia</strong>')}>
                     <div className="div-button">
                         Fase Vigilia
                     </div>
                 </Col>
-                <Col span={ 3 } className={ 'phase-3' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-3', 'Pasando a Fase Ataque')}>
+                <Col span={ 3 } className={ 'phase-3' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-3', 'Pasando a <strong>Fase Ataque</strong>')}>
                     <div className="div-button">
                         Fase Ataque
                     </div>
                 </Col>
-                <Col span={ 3 } className={ 'phase-4' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-4', 'Pasando a Fase Bloqueo')}>
+                <Col span={ 3 } className={ 'phase-4' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-4', 'Pasando a <strong>Fase Bloqueo</strong>')}>
                     <div className="div-button">
                         Fase Bloqueo
                     </div>
                 </Col>
-                <Col span={ 3 } className={ 'phase-5' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-5', 'Pasando a Fase Guerrra Talismanes')}>
+                <Col span={ 3 } className={ 'phase-5' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-5', 'Pasando a <strong>Fase Guerrra Talismanes</strong>')}>
                     <div className="div-button">
                         Fase Guerrra Talismanes
                     </div>
                 </Col>
-                <Col span={ 3 } className={ 'phase-6' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-6', 'Pasando a Fase Asignación de Daño')}>
+                <Col span={ 3 } className={ 'phase-6' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-6', 'Pasando a <strong>Fase Asignación de Daño</strong>')}>
                     <div className="div-button">
                         Fase Asignación de Daño
                     </div>                    
                 </Col>
-                <Col span={ 3 } className={ 'phase-7' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-7', 'Pasando a Fase Final')}>
+                <Col span={ 3 } className={ 'phase-7' === active ? 'phase active-phase animate__animated animate__heartBeat' : 'phase' } onClick={ () => onClick('phase-7', 'Pasando a <strong>Fase Final</strong>')}>
                     <div className="div-button">
                         Fase Final
                     </div>                    
