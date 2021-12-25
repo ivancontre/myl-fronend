@@ -671,12 +671,12 @@ const MatchPage: FC = () => {
                         <Col span={ 5 } className="content-actions">
 
                             <Row gutter={[8, 8]}>
-                                <Col style={{width: '100%', padding: 8}}>
-                                    <Alert message="Si recargas o navegas con las flechas del navegador perderás la partida" type="warning" showIcon/>
+                                <Col style={{width: '100%', padding: 15}}>
+                                    <Alert className="animate__animated animate__pulse animate__infinite" message="Si recargas o te mueves con las flechas del navegador perderás la partida" type="warning" showIcon/>
                                 </Col> 
                             </Row>
 
-                            <Row gutter={[16, 8]} justify="end">
+                            <Row gutter={[16, 16]} justify="end">
                                 <Col style={{width: '100%'}}>
                                     <Popover
                                         placement="leftTop" 
@@ -692,7 +692,7 @@ const MatchPage: FC = () => {
 
                             <Divider style={{ fontSize: 20 }}>{`vs ${opponentUsername}`} </Divider>
 
-                            <Row gutter={[1, 1]} justify="space-around" align="middle">
+                            <Row justify="space-around" align="middle">
                                 <Col span={24} style={{backgroundColor: 'white', borderRadius: 2}} >
                                     <Chat />
                                 </Col>

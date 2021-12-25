@@ -219,7 +219,7 @@ const Play: FC = () => {
             title: 'Usuario',
             dataIndex: 'username',
             key: 'username',
-            width: '30%',
+            width: '20%',
             ...getColumnSearchProps('username', ref0),
             sorter: (a: any, b: any) => { 
                 if(a.username < b.username) { return -1; }
@@ -229,7 +229,7 @@ const Play: FC = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Victorias',
+            title: 'V',
             dataIndex: 'victories',
             key: 'victories',
             width: '10%',
@@ -241,7 +241,7 @@ const Play: FC = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Derrotas',
+            title: 'D',
             dataIndex: 'defeats',
             key: 'defeats',
             width: '10%',
@@ -256,7 +256,7 @@ const Play: FC = () => {
             title: 'Estado',
             dataIndex: 'online',
             key: 'online',
-            width: '30%',
+            width: '15%',
             sorter: (a: any, b: any) => { 
                 if(a.online < b.online) { return -1; }
                 if(a.online > b.online) { return 1; }
@@ -271,7 +271,7 @@ const Play: FC = () => {
             title: 'Era',
             dataIndex: 'era',
             key: 'era',
-            width: '30%',
+            width: '15%',
             sorter: (a: any, b: any) => { 
                 if(a.era < b.era) { return -1; }
                 if(a.era > b.era) { return 1; }
@@ -293,7 +293,7 @@ const Play: FC = () => {
             title: '¿Jugando?',
             dataIndex: 'playing',
             key: 'playing',
-            width: '30%',
+            width: '15%',
             sorter: (a: any, b: any) => { 
                 if(a.playing < b.playing) { return -1; }
                 if(a.playing > b.playing) { return 1; }
@@ -308,6 +308,7 @@ const Play: FC = () => {
             title: '',
             dataIndex: '',
             key: 'x',
+            width: '15%',
             render: (text, row) => {
 
                 if (!playing && !row.playing && row.online && haveDecks() && isCorrectDeckDefault()) {
@@ -367,8 +368,8 @@ const Play: FC = () => {
                 />
             }
 
-            <p><Tag color="green" style={{fontSize: 14}}>{`Mis victorias: ${victories ? victories : '0'}`}</Tag></p>
-            <p><Tag color="red" style={{fontSize: 14}}>{`Mis derrotas: ${defeats ? defeats : '0'}`}</Tag></p>
+            <p><Tag color="green" style={{fontSize: 14}}>{`N° victorias: ${victories ? victories : '0'}`}</Tag></p>
+            <p><Tag color="red" style={{fontSize: 14}}>{`N° derrotas: ${defeats ? defeats : '0'}`}</Tag></p>
 
             {
                 deckDefault?.era && (
