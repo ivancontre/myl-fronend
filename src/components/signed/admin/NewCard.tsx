@@ -52,6 +52,7 @@ const NewCard = () => {
 
     const [checkIsMachinery, setCheckIsMachinery] = useState<boolean>(false);
     const [checkIsUnique, setCheckIsUnique] = useState<boolean>(false);
+    const [checkStatus, setCheckStatus] = useState<boolean>(false);
     const [disableMachinery, setDisableMachinery] = useState<boolean>(true);
     const [fileList, setFileList] = useState<any>();
     const [eraId, setEraId] = useState<string>('');
@@ -128,6 +129,7 @@ const NewCard = () => {
             if (cardUpdating.isMachinery) setDisableMachinery(false);
             setCheckIsMachinery(cardUpdating.isMachinery);
             setCheckIsUnique(cardUpdating.isUnique);
+            setCheckStatus(cardUpdating.status);
         }
 
     }, [cardUpdating, eras]);
@@ -160,7 +162,13 @@ const NewCard = () => {
             formData.append('isUnique', 'false');
         }
 
-        setLoadingSave(true)
+        if (checkStatus) {
+            formData.append('status', 'true');
+        } else {
+            formData.append('status', 'false');
+        }
+
+        setLoadingSave(true);
 
         if (!cardUpdating) {      
             
@@ -213,6 +221,10 @@ const NewCard = () => {
 
     const handleSwitchUnique = (checked: boolean) => {
         setCheckIsUnique(checked);
+    };
+
+    const handleSwitchStatus = (checked: boolean) => {
+        setCheckStatus(checked);
     };
 
     const handleEra = (eraId: string) => {
@@ -422,6 +434,10 @@ const NewCard = () => {
                     
                     </Select>
                 </Form.Item>
+
+                <Form.Item label="Estado" valuePropName="status">
+                    <Switch checked={ checkStatus } onChange={ handleSwitchStatus }/>
+                </Form.Item>  
 
                 <Form.Item label="Coste" name="cost">
                     <Input />

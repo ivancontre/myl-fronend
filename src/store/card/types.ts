@@ -27,6 +27,7 @@ export type Card = {
     isMachinery: boolean;
     img: string;
     isUnique: boolean;
+    status: boolean;
     user: string;
 
     isOpponent?: boolean;    
