@@ -278,22 +278,22 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                 {
                     !onlyRead && (
                         <Select
+                        virtual={false}
                             placeholder="Mover a..."
                             style={{ width: "100%", marginTop: 20, marginBottom: 20 }}
                             onChange={ handleSelect }                      
                         >
+                            { zone !== CASTLE_ZONE && (<Select.Option key={ CASTLE_ZONE } value={ CASTLE_ZONE }>{ CASTLE_ZONE }</Select.Option>  )}
+                            { zone !== CEMETERY_ZONE && (<Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option> )} 
+                            { zone !== EXILE_ZONE && (<Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  )} 
+                            { zone !== REMOVAL_ZONE && (<Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  )} 
+
                             <Select.Option key={ HAND_ZONE } value={ HAND_ZONE }>{ HAND_ZONE }</Select.Option>
                             <Select.Option key={ DEFENSE_ZONE } value={ DEFENSE_ZONE }>{ DEFENSE_ZONE }</Select.Option>
                             <Select.Option key={ ATTACK_ZONE } value={ ATTACK_ZONE }>{ ATTACK_ZONE }</Select.Option>
                             <Select.Option key={ GOLDS_PAID_ZONE } value={ GOLDS_PAID_ZONE }>{ GOLDS_PAID_ZONE }</Select.Option>  
                             <Select.Option key={ UNPAID_GOLD_ZONE } value={ UNPAID_GOLD_ZONE }>{ UNPAID_GOLD_ZONE }</Select.Option>
-                            { zone !== AUXILIARY_ZONE && (<Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  )} 
-
-                            { zone !== CEMETERY_ZONE && (<Select.Option key={ CEMETERY_ZONE } value={ CEMETERY_ZONE }>{ CEMETERY_ZONE }</Select.Option> )} 
-                            { zone !== EXILE_ZONE && (<Select.Option key={ EXILE_ZONE } value={ EXILE_ZONE }>{ EXILE_ZONE }</Select.Option>  )} 
-                            { zone !== REMOVAL_ZONE && (<Select.Option key={ REMOVAL_ZONE } value={ REMOVAL_ZONE }>{ REMOVAL_ZONE }</Select.Option>  )} 
-
-                            { zone !== CASTLE_ZONE && (<Select.Option key={ CASTLE_ZONE } value={ CASTLE_ZONE }>{ CASTLE_ZONE }</Select.Option>  )} 
+                            { zone !== AUXILIARY_ZONE && (<Select.Option key={ AUXILIARY_ZONE } value={ AUXILIARY_ZONE }>{ AUXILIARY_ZONE }</Select.Option>  )}
                                 
                         </Select>
                     )

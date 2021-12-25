@@ -33,7 +33,7 @@ const AppRouter: FC = () => {
             dispatch(startLoadRaceCard());
             dispatch(startLoadEditionCard());
             dispatch(startLoadEraCard());
-            dispatch(startLoadCard());       
+            dispatch(startLoadCard());
         }
         
     }, [dispatch, logged]);
