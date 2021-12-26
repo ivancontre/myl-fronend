@@ -91,17 +91,13 @@ const MatchPage: FC = () => {
 
     const { socket } = useContext(SocketContext);
 
-    useEffect(() => {
+    const finishMatch = useCallback(() => {
 
-        if (!matchId) {
-            history.replace('/play');
+        async function getDetailFromAPI() {
+            await dispatch(startSetDetailAction());
         }
 
-    }, [matchId, history]);
-
-
-    const finishMatch = useCallback(() => {
-        dispatch(startSetDetailAction());
+        getDetailFromAPI();
         Modal.destroyAll();        
         dispatch(resetChatAction());
         dispatch(resetMatch());
@@ -223,6 +219,14 @@ const MatchPage: FC = () => {
     const handleVisibleChangePopever = (visible: boolean) => {
         setVisiblePopover(visible); 
     };
+
+    useEffect(() => {
+
+        if (!matchId) {
+            history.replace('/play');
+        }
+
+    }, [matchId, history]);
 
     useEffect(() => {
 
@@ -439,22 +443,6 @@ const MatchPage: FC = () => {
         }
 
     }, [socket, finishMutualMatchModal, youWinModal, finishMatch]);
-    
-
-    /*useEffect(() => {
-        
-        if (matchId && !flag) {
-            console.log('opponentMatch no charged. Getting...');
-
-            socket?.emit('opponent-match-not-charged', {
-                opponentId,
-                matchId
-            });
-        }
-
-    }, [flag, matchId, socket]);*/
-
-    
 
     useEffect(() => {
 
@@ -470,9 +458,6 @@ const MatchPage: FC = () => {
         }
         
     }, [socket, match, matchId]);
-
-
-    
 
     return (
         <>
@@ -670,13 +655,13 @@ const MatchPage: FC = () => {
                         </Col>
                         <Col span={ 5 } className="content-actions">
 
-                            <Row gutter={[8, 8]}>
-                                <Col style={{width: '100%', padding: 15}}>
+                            <Row gutter={[16, 16]} justify="center" style={{paddingTop: 3}}>
+                                <Col style={{width: '95%', textAlign: 'center'}}>
                                     <Alert className="animate__animated animate__pulse animate__infinite" message="Si recargas o te mueves con las flechas del navegador perderás la partida" type="warning" showIcon/>
                                 </Col> 
                             </Row>
 
-                            <Row gutter={[16, 16]} justify="end">
+                            <Row gutter={[16, 16]} style={{paddingTop: 5}}>
                                 <Col style={{width: '100%'}}>
                                     <Popover
                                         placement="leftTop" 

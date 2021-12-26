@@ -41,7 +41,7 @@ export const cardReducer = (state: typeof initialState = initialState, action: C
         case cardLoadUpdating:
             return {
                 ...state,
-                cardUpdating: state.cards.find((e: Card) => e.id === action.payload) as Card
+                cardUpdating: action.payload
             };
 
         case cardResetUpdating:

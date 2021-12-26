@@ -10,7 +10,7 @@ import useHideMenu from '../../../hooks/useHideMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '../../../store/card/types';
 import { RootState } from '../../../store';
-import { resetCardUpdating, resetMySelection, startDeleteCard } from '../../../store/card/action';
+import { resetCardUpdating, resetMySelection, startDeleteCard, startLoadCard } from '../../../store/card/action';
 import { Link } from 'react-router-dom';
 import { MenuContext } from '../../../context/MenuContext';
 
@@ -34,6 +34,7 @@ const Cards: FC = () => {
         
         dispatch(resetCardUpdating());
         dispatch(resetMySelection());
+        dispatch(startLoadCard());
 
     }, [dispatch]);
 

@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom';
 import { RootState } from '../store';
 import { startChecking } from '../store/auth/action';
-import { startLoadCard } from '../store/card/action';
 import { startLoadEditionCard, startLoadEraCard, startLoadFrecuencyCard, startLoadRaceCard, startLoadTypeCard } from '../store/description/action';
 import { AuthRouter } from './AuthRouter';
 import { PrivateRouter } from './PrivateRouter';
@@ -33,7 +32,7 @@ const AppRouter: FC = () => {
             dispatch(startLoadRaceCard());
             dispatch(startLoadEditionCard());
             dispatch(startLoadEraCard());
-            dispatch(startLoadCard());
+            //dispatch(startLoadCard());
         }
         
     }, [dispatch, logged]);

@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import useHideMenu from '../../../hooks/useHideMenu';
 import { RootState } from '../../../store';
-import { startAddNewCard, loadCardUpdating, startUpdateCard, startLoadCard } from '../../../store/card/action';
+import { startAddNewCard, startUpdateCard, startLoadCardUpdating } from '../../../store/card/action';
 import { useHistory, useParams } from 'react-router';
 
 import '../../../css/new-card.css';
@@ -38,7 +38,7 @@ interface FieldData {
 
 const NewCard = () => {
 
-    const { collapsedMenu } = useContext(MenuContext);
+    const { collapsedMenu, showLoading, hideLoading } = useContext(MenuContext);
 
     useHideMenu(false, 'cards', collapsedMenu);
 
@@ -57,28 +57,21 @@ const NewCard = () => {
     const [fileList, setFileList] = useState<any>();
     const [eraId, setEraId] = useState<string>('');
     const [editionId, setEditionId] = useState<string>('');
-    const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
     const { types, frecuencies, eras } = useSelector((state: RootState) => state.description);
-
 
     const history = useHistory();
 
     useEffect(() => {
         async function getFromAPI() {
-            await dispatch(startLoadCard());
-            await dispatch(loadCardUpdating(params.id));
+            await dispatch(startLoadCardUpdating(params.id));
         }
 
         if (params.id && params.id !== 'undefined') {
-            if (cards.length === 0) {
-                getFromAPI();
-            } else {
-                dispatch(loadCardUpdating(params.id));   
-            }
+            getFromAPI();
         }
 
-    }, [params.id, dispatch, cards.length]);
+    }, [params.id, dispatch]);
 
     useEffect(() => {
         
@@ -117,12 +110,16 @@ const NewCard = () => {
                 name: 'strength',
                 value: cardUpdating.strength
             }];
-            
-            const era = eras.find(e => e.name === cardUpdating.era) as EraCard;
-            setEraId(era.id);
 
-            const edition = era.editions.find(e => e.name === cardUpdating.edition) as EditionCard;
-            setEditionId(edition.id);
+            if (eras) {
+                const era = eras.find(e => e.name === cardUpdating.era) as EraCard;
+                era && setEraId(era.id);
+
+                if (era) {
+                    const edition = era.editions.find(e => e.name === cardUpdating.edition) as EditionCard;
+                    edition && setEditionId(edition.id);
+                }
+            }
 
             setFields(fields);
             
@@ -168,8 +165,6 @@ const NewCard = () => {
             formData.append('status', 'false');
         }
 
-        setLoadingSave(true);
-
         if (!cardUpdating) {      
             
             if (!fileList) {
@@ -178,7 +173,7 @@ const NewCard = () => {
             }
 
             formData.append('files[]', fileList);
-            await dispatch(startAddNewCard(formData));
+            await dispatch(startAddNewCard(formData, showLoading, hideLoading));
             history.replace(`/cards`);
 
         } else {
@@ -196,11 +191,9 @@ const NewCard = () => {
     
             }
 
-            await dispatch(startUpdateCard(cardUpdating?.id as string, formData));
+            await dispatch(startUpdateCard(cardUpdating?.id as string, formData, showLoading, hideLoading));
               
         }
-
-        setLoadingSave(false);
 
     };
 
@@ -481,7 +474,7 @@ const NewCard = () => {
                 </Form.Item>
             
                 <Form.Item className="label-custom" label="." >
-                    <Button loading={ loadingSave } type="primary"  htmlType="submit" className="login-form-button" block>
+                    <Button type="primary"  htmlType="submit" className="login-form-button" block>
                         {!cardUpdating ? 'Crear' : 'Modificar' }
                     </Button>
                 </Form.Item>

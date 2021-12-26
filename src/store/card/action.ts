@@ -3,8 +3,10 @@ import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { Card, CardActionTypes, cardAddNew, cardByEdition, cardDelete, cardLoad, cardLoadUpdating, cardResetUpdating, cardsResetMySelection, cardUpdate, selectMyCards } from "./types";
 
-export const startAddNewCard = (card: any) => {
+export const startAddNewCard = (card: any, showLoading: Function, hideLoading: Function) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        showLoading();
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -28,16 +30,21 @@ export const startAddNewCard = (card: any) => {
                 console.log(respJson.msg);
             }
 
+            hideLoading();
+
         } catch (error) {
             console.log(error);
             message.error('Error al crear carta!');
+            hideLoading();
         }
     }
 };
 
-export const startUpdateCard = (id: string, card: any) => {
+export const startUpdateCard = (id: string, card: any, showLoading: Function, hideLoading: Function) => {
 
     return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        showLoading();
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -47,6 +54,7 @@ export const startUpdateCard = (id: string, card: any) => {
             if (resp.status === 200) {
 
                 dispatch(updateCard(respJson));
+                dispatch(loadCardUpdating(respJson));
                 message.success(`Carta "${respJson.name}" actualizada correctamente`);
 
             } else if (respJson.errors) {
@@ -61,9 +69,12 @@ export const startUpdateCard = (id: string, card: any) => {
                 console.log(respJson.msg);
             }
 
+            hideLoading();
+
         } catch (error) {
             console.log(error);
             message.error('Error al actualizar carta!');
+            hideLoading();
 
         }
     }
@@ -115,6 +126,7 @@ export const startDeleteCard = (id: string) => {
 export const startLoadCardUpdating = (id: string) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
 
+
         try {
             const token = localStorage.getItem('token') as string;
             const resp = await runFetch('api/card/' + id, {}, 'GET', token);
@@ -135,6 +147,7 @@ export const startLoadCardUpdating = (id: string) => {
                 message.warn(respJson.msg, 5);
                 console.log(respJson.msg);
             }
+
 
         } catch (error) {
             console.log(error);
@@ -180,10 +193,10 @@ export const resetCardUpdating = () => {
 }
 
 
-export const loadCardUpdating = (id: string): CardActionTypes => {
+export const loadCardUpdating = (card: Card): CardActionTypes => {
     return {
         type: cardLoadUpdating,
-        payload: id
+        payload: card
     }
 };
 

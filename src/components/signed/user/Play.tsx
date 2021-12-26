@@ -219,7 +219,7 @@ const Play: FC = () => {
             title: 'Usuario',
             dataIndex: 'username',
             key: 'username',
-            width: '20%',
+            width: '15%',
             ...getColumnSearchProps('username', ref0),
             sorter: (a: any, b: any) => { 
                 if(a.username < b.username) { return -1; }
@@ -253,7 +253,7 @@ const Play: FC = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Estado',
+            title: 'Online',
             dataIndex: 'online',
             key: 'online',
             width: '15%',
@@ -308,7 +308,6 @@ const Play: FC = () => {
             title: '',
             dataIndex: '',
             key: 'x',
-            width: '15%',
             render: (text, row) => {
 
                 if (!playing && !row.playing && row.online && haveDecks() && isCorrectDeckDefault()) {

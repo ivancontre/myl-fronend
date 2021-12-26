@@ -65,7 +65,7 @@ type CardLoadAction = {
 
 type CardLoadUpdatingAction = {    
     type: typeof cardLoadUpdating,
-    payload: string
+    payload: Card
 };
 
 type CardResetUpdatingAction = {    
