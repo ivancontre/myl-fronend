@@ -26,13 +26,14 @@ export type FrecuencyCard = {
 export type RaceCard = {
     id: string;
     name: string;
-    edition: string;
 };
 
 export type EditionCard = {
     id: string;
     name: string;
     races: RaceCard[];
+    status: boolean;
+    era: EraCard;
 };
 
 export type EraCard = {

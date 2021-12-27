@@ -328,7 +328,8 @@ const NewDeck: FC = () => {
                         style={{ width: "100%" }}
                         onChange={ handleSelectEdition }
                         value={ editionId }   
-                        disabled={ !eraId }               
+                        disabled={ !eraId }      
+                        virtual={false}         
                     >
                         {
                             eras.find(era => era.id === eraId)?.editions.map(edition => (
@@ -362,6 +363,7 @@ const NewDeck: FC = () => {
                         onChange={ handleSelectRace }
                         disabled={ !cardsByEdition.length }
                         value={ raceId }
+                        virtual={false}
                     >
                         {
                             races.length > 0 && races.map(race => (
