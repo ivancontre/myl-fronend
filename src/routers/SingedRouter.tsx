@@ -217,9 +217,8 @@ export const SingedRouter: FC = () => {
             <Layout>
                 <Header
                     hidden={ hiddenMenu }
-                    style={{ position: 'fixed', zIndex: 1, width: '100%' }}
+                    style={{ position: 'fixed', zIndex: 2, width: '100%' }}
                 >
-
                     <Menu  theme="dark" mode="horizontal" selectedKeys={[ selectedOption ]}>
 
                         <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0, fontSize: 16}}>
@@ -284,7 +283,7 @@ export const SingedRouter: FC = () => {
                     
                 </Header>
                 
-                <Content className="site-layout" style={{ padding: path === 'match' ? 0 : '0 10px', marginTop: path === 'match' ? 0 : 64 }} >
+                <Content className={ path === 'match' ? "content-layout-match site-layout" : "content-layout site-layout"} >
                     <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : '24px 10px 10px 10px', minHeight: 380 }} >
                         <Switch>
 
@@ -332,7 +331,7 @@ export const SingedRouter: FC = () => {
                         </Switch>
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Desarrollado por Iván Cristóbal Contreras Jara ©2022</Footer>
+                <Footer style={{ textAlign: 'center' }}>Developed by <em>Iván Cristóbal Contreras Jara</em> ©2022</Footer>
             </Layout>   
         </Spin>         
     )
