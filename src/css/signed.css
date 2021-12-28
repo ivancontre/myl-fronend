@@ -22,7 +22,10 @@ ul.menu-myl{
 }
 
 .ant-layout-header {
+    height: 64px;
     background: #18183B;
+    padding: 0;
+    line-height: 64px;
 }
 .ant-menu.ant-menu-dark {
     background: #18183B;
@@ -60,6 +63,15 @@ footer.ant-layout-footer {
         padding: 10px 50px;
         font-size: 12px;
     }
+
+    .ant-layout-header {
+        height: 54px;
+        line-height: 54px;
+    }
+
+    .content-layout {
+        margin-top: 54px;
+    }
     
 }
   
@@ -67,5 +79,14 @@ footer.ant-layout-footer {
     footer.ant-layout-footer {
         padding: 24px 50px;
         font-size: 14px;
+    }
+
+    .ant-layout-header {
+        height: 64px;
+        line-height: 64px;
+    }
+
+    .content-layout {
+        margin-top: 64px;
     }
 }

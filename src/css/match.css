@@ -158,9 +158,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .row-buttons {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  margin: 3px
 }
 
 .name-opponent {
@@ -183,11 +181,15 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
 @media (min-width: 576px) {
   .message-warning {
-    font-size: 10px;
+    font-size: 8px;
+  }
+
+  div.content-actions > div.divider-vs{
+    margin: 3px 0;
   }
 
   .divider-vs > span.ant-divider-inner-text{
-    font-size: 15px;
+    font-size: 15px;    
   }
   
 }
@@ -199,5 +201,9 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
   .divider-vs > span.ant-divider-inner-text{
     font-size: 20px;
+  }
+
+  div.content-actions > div.divider-vs{
+    margin: 16px 0;
   }
 }

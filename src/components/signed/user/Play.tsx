@@ -219,7 +219,6 @@ const Play: FC = () => {
             title: 'Usuario',
             dataIndex: 'username',
             key: 'username',
-            width: '15%',
             ...getColumnSearchProps('username', ref0),
             sorter: (a: any, b: any) => { 
                 if(a.username < b.username) { return -1; }
@@ -232,7 +231,6 @@ const Play: FC = () => {
             title: 'V',
             dataIndex: 'victories',
             key: 'victories',
-            width: '10%',
             sorter: (a: any, b: any) => { 
                 if(a.victories < b.victories) { return -1; }
                 if(a.victories > b.victories) { return 1; }
@@ -244,7 +242,6 @@ const Play: FC = () => {
             title: 'D',
             dataIndex: 'defeats',
             key: 'defeats',
-            width: '10%',
             sorter: (a: any, b: any) => { 
                 if(a.defeats < b.defeats) { return -1; }
                 if(a.defeats > b.defeats) { return 1; }
@@ -256,7 +253,6 @@ const Play: FC = () => {
             title: 'Online',
             dataIndex: 'online',
             key: 'online',
-            width: '15%',
             sorter: (a: any, b: any) => { 
                 if(a.online < b.online) { return -1; }
                 if(a.online > b.online) { return 1; }
@@ -265,13 +261,13 @@ const Play: FC = () => {
             sortDirections: ['descend', 'ascend'],
             render: (text, row) => {
                 return (row.online ? <Tag color="lime">Online</Tag> : <Tag color="magneta">Desconectado</Tag>) 
-            }
+            },
+            //responsive: ['sm'],
         },
         {
             title: 'Era',
             dataIndex: 'era',
             key: 'era',
-            width: '15%',
             sorter: (a: any, b: any) => { 
                 if(a.era < b.era) { return -1; }
                 if(a.era > b.era) { return 1; }

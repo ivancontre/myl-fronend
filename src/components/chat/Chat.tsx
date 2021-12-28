@@ -10,6 +10,7 @@ import '../../css/chat.css';
 import { SocketContext } from '../../context/SocketContext';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
+import Buttons from '../buttons/Buttons';
 
 const Chat = () => {
 
@@ -60,6 +61,15 @@ const Chat = () => {
             </div>
 
             <SendMessage />
+
+            <div>
+                <div className="row-buttons">
+                    <Buttons />
+                </div>
+            </div>
+            
+
+            
 
         </div>
         

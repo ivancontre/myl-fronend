@@ -29,12 +29,11 @@
     word-wrap: break-word;
     color: black;
     margin-bottom: 0;
-    
 }
 
-.chat {
+/* .chat {
     padding-bottom: 1px;
-}
+} */
 
 .content-text {
     padding-left: 3px;

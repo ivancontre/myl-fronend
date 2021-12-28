@@ -31,7 +31,6 @@ import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icon
 import { isTouchDevice } from '../helpers/touch';
 import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
-import Buttons from '../components/buttons/Buttons';
 import { startSetDetailAction } from '../store/auth/action';
 import Phases from '../components/phases/Phases';
 
@@ -657,7 +656,7 @@ const MatchPage: FC = () => {
 
                             <Row gutter={[16, 16]} justify="center" style={{paddingTop: 3}}>
                                 <Col style={{width: '95%', textAlign: 'center'}}>
-                                    <Alert className="message-warning animate__animated animate__pulse animate__infinite" message="Si recargas o te mueves con las flechas del navegador perderás la partida" type="warning" showIcon/>
+                                    <Alert className="message-warning animate__animated animate__pulse animate__infinite" message="No recargues el navegador" type="warning" showIcon/>
                                 </Col> 
                             </Row>
 
@@ -681,13 +680,7 @@ const MatchPage: FC = () => {
                                 <Col span={24} style={{backgroundColor: 'white', borderRadius: 2}} >
                                     <Chat />
                                 </Col>
-                            </Row>   
-
-                            <Row gutter={[3, 3]} className="row-buttons">
-                                <Col span={24}>
-                                    <Buttons />
-                                </Col>
-                            </Row> 
+                            </Row>
 
                         </Col>
                     </Row>
