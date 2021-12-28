@@ -172,3 +172,32 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   padding-bottom: 5px;
 
 }
+
+.message-warning {
+  font-size: 14px;
+}
+
+.divider-vs > span.ant-divider-inner-text{
+  font-size: 20px;
+}
+
+@media (min-width: 576px) {
+  .message-warning {
+    font-size: 10px;
+  }
+
+  .divider-vs > span.ant-divider-inner-text{
+    font-size: 15px;
+  }
+  
+}
+
+@media (min-width: 992px) { 
+  .message-warning {
+    font-size: 14px;
+  }
+
+  .divider-vs > span.ant-divider-inner-text{
+    font-size: 20px;
+  }
+}

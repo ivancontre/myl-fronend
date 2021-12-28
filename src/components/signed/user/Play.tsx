@@ -290,28 +290,14 @@ const Play: FC = () => {
             onFilter: (text, row) => row.era?.indexOf(text as string) === 0,
         },
         {
-            title: '¿Jugando?',
-            dataIndex: 'playing',
-            key: 'playing',
-            width: '15%',
-            sorter: (a: any, b: any) => { 
-                if(a.playing < b.playing) { return -1; }
-                if(a.playing > b.playing) { return 1; }
-                return 0;
-            },
-            sortDirections: ['descend', 'ascend'],
-            render: (text, row) => {
-                return (row.playing ? <Tag color="volcano">Jugando...</Tag> : 'No') 
-            }
-        },
-        {
             title: '',
             dataIndex: '',
             key: 'x',
             render: (text, row) => {
-
                 if (!playing && !row.playing && row.online && haveDecks() && isCorrectDeckDefault()) {
-                    return <Button onClick={ () => invite(row.id, row.username) } ghost icon={<TeamOutlined />}>Invitar a jugar</Button>
+                    return <Button size="small" onClick={ () => invite(row.id, row.username) } ghost icon={<TeamOutlined />}>Invitar a jugar</Button>
+                } else if (row.playing){
+                    return <Tag color="volcano">Jugando...</Tag>
                 }
             },
         },
@@ -385,7 +371,7 @@ const Play: FC = () => {
             }
 
             <Table<User>
-                 pagination={{ defaultPageSize: 15 }}
+                 pagination={{ defaultPageSize: 50 }}
                  rowKey="id" 
                  columns={ columns } 
                  dataSource={ activeUsersForPlay as User[] } 

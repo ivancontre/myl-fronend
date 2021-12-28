@@ -93,7 +93,7 @@ const SendMessage: FC = () => {
                 >
                     <Input.Search
                         enterButton={<SendOutlined />}
-                        size="large"
+                        size="small"
                         onSearch={ onSearch }
                         placeholder="Escribir mensaje..." 
                     />

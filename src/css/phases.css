@@ -22,3 +22,17 @@
     background-image: linear-gradient(to right, #000000, #4f231c, #865109, #8f9500, #2ae13b);
     z-index: 2;
 }
+
+
+@media (min-width: 576px) {
+    .phase {
+        font-size: 10px;
+    }
+    
+  }
+  
+@media (min-width: 992px) { 
+    .phase {
+        font-size: 13px;
+    }
+}

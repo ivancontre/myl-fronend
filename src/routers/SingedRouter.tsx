@@ -37,12 +37,12 @@ import { resetModal } from '../store/ui-modal/action';
 import { playReset } from '../store/play/action';
 import Account from '../components/signed/user/Account';
 
-const { Content, Sider } = Layout;
+const { Content, Header, Footer } = Layout;
 const { confirm } = Modal;
 
 export const SingedRouter: FC = () => {
 
-    const { hiddenMenu, selectedOption, collapsedOn, collapsedOff, collapsedMenu, loading } = useContext(MenuContext);
+    const { hiddenMenu, selectedOption, loading } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
 
     const { matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
@@ -212,37 +212,15 @@ export const SingedRouter: FC = () => {
 
     }, [socket]);
 
-    const onCollapse = (collapsed: boolean) => {
-        collapsed ? collapsedOn(): collapsedOff();
-    };
-
-    const getWidthContent = () => {
-
-        if (hiddenMenu) return 0;
-
-        if (collapsedMenu) return 85;
-
-        return 200;
-    };
-
     return (
         <Spin spinning={ loading } tip="Espere por favor...">
             <Layout>
-                <Sider
+                <Header
                     hidden={ hiddenMenu }
-                    collapsible
-                    collapsed={ collapsedMenu }
-                    onCollapse={ onCollapse }
-                    breakpoint="xs"
-                    style={{
-                        overflow: 'auto',
-                        height: '100vh',
-                        position: 'fixed',
-                        left: 0,
-                    }}
+                    style={{ position: 'fixed', zIndex: 1, width: '100%' }}
                 >
 
-                    <Menu className="menu-myl" theme="dark" mode="inline" selectedKeys={[ selectedOption ]}>
+                    <Menu  theme="dark" mode="horizontal" selectedKeys={[ selectedOption ]}>
 
                         <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0, fontSize: 16}}>
                             { `Bienvenido ${username}`}
@@ -304,59 +282,57 @@ export const SingedRouter: FC = () => {
 
                     </Menu>
                     
-                </Sider>
+                </Header>
                 
-                <Layout className="site-layout" style={{ marginLeft: getWidthContent() }} >
+                <Content className="site-layout" style={{ padding: path === 'match' ? 0 : '0 10px', marginTop: path === 'match' ? 0 : 64 }} >
+                    <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : '24px 10px 10px 10px', minHeight: 380 }} >
+                        <Switch>
 
-                    <Content className={ path === 'match' ? 'content-layout-match' : 'content-layout'} >
-                        <div className="site-layout-background" style={{ padding: path === 'match' ? 0 : 20 }} >
-                            <Switch>
+                            <Route exact strict path="/match" component={ MatchPage } />
 
-                                <Route exact strict path="/match" component={ MatchPage } />
+                            <Route exact path="/play" component={ Play } />
 
-                                <Route exact path="/play" component={ Play } />
+                            <Route exact path="/decks" component={ Decks } />
+                            
+                            <Route exact path="/decks/new" component={ NewDeck } />
 
-                                <Route exact path="/decks" component={ Decks } />
-                                
-                                <Route exact path="/decks/new" component={ NewDeck } />
+                            <Route exact path="/account" component={ Account } />
 
-                                <Route exact path="/account" component={ Account } />
+                            <Route exact path="/decks/:id/edit" component={ NewDeck } />
 
-                                <Route exact path="/decks/:id/edit" component={ NewDeck } />
+                            {
+                                role === 'ADMIN_ROLE' && (
+                                    <Route exact path="/cards" component={ Cards } />
+                                    
+                                )
+                            }
 
-                                {
-                                    role === 'ADMIN_ROLE' && (
-                                        <Route exact path="/cards" component={ Cards } />
-                                        
-                                    )
-                                }
+                            {
+                                role === 'ADMIN_ROLE' && (
+                                    <Route exact path="/cards/new" component={ NewCard } />
+                                    
+                                )
+                            }
 
-                                {
-                                    role === 'ADMIN_ROLE' && (
-                                        <Route exact path="/cards/new" component={ NewCard } />
-                                        
-                                    )
-                                }
+                            {
+                                role === 'ADMIN_ROLE' && (
+                                    <Route exact path="/cards/:id/edit" component={ NewCard } />
+                                    
+                                )
+                            }
 
-                                {
-                                    role === 'ADMIN_ROLE' && (
-                                        <Route exact path="/cards/:id/edit" component={ NewCard } />
-                                        
-                                    )
-                                }
+                            {
+                                role === 'ADMIN_ROLE' && (
+                                    <Route exact path="/users" component={ Users } />
+                                )
+                            }
 
-                                {
-                                    role === 'ADMIN_ROLE' && (
-                                        <Route exact path="/users" component={ Users } />
-                                    )
-                                }
+                            <Redirect to="/play" />
 
-                                <Redirect to="/play" />
-
-                            </Switch>
-                        </div>
-                    </Content>
-                </Layout>
+                        </Switch>
+                    </div>
+                </Content>
+                <Footer style={{ textAlign: 'center' }}>Desarrollado por Iván Cristóbal Contreras Jara ©2022</Footer>
             </Layout>   
         </Spin>         
     )

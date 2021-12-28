@@ -21,6 +21,9 @@ ul.menu-myl{
     transition: all 0.2s;
 }
 
+.ant-layout-header {
+    background: #18183B;
+}
 .ant-menu.ant-menu-dark {
     background: #18183B;
 }
