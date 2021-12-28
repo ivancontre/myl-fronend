@@ -49,3 +49,23 @@ ul.menu-myl{
 .section-layout {
     height: 100vh;
 }
+
+footer.ant-layout-footer {
+    color: rgba(255, 255, 255, 0.85);
+    background: #000;
+}
+
+@media (min-width: 576px) {
+    footer.ant-layout-footer {
+        padding: 10px 50px;
+        font-size: 12px;
+    }
+    
+}
+  
+@media (min-width: 992px) { 
+    footer.ant-layout-footer {
+        padding: 24px 50px;
+        font-size: 14px;
+    }
+}
