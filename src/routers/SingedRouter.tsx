@@ -214,7 +214,7 @@ export const SingedRouter: FC = () => {
 
     return (
         <Spin spinning={ loading } tip="Espere por favor...">
-            <Layout>
+            <Layout className="section-layout">
                 <Header
                     hidden={ hiddenMenu }
                     style={{ position: 'fixed', zIndex: 2, width: '100%' }}
