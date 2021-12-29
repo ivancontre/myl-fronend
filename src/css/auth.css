@@ -20,3 +20,10 @@ div.btn-login-google > button {
 div.btn-login-google > button > div {
     padding: unset !important;
 }
+
+div.auth-content {
+    background-image: linear-gradient(to top, #000000, #060002, #0a0006, #0c000c, #0b0012, #0b0012, #0b0012, #0b0012, #0c000c, #0a0006, #060002, #000000);
+    padding: 17px;
+    opacity: 0.95;
+    border-radius: 7px;
+}

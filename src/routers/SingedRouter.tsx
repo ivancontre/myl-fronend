@@ -56,6 +56,11 @@ export const SingedRouter: FC = () => {
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
+    useEffect(() => {
+        document.body.classList.remove("body-auth");
+        document.body.classList.add('body-signed');
+    }, [])
+
     const finishMatch = useCallback(() => {
         dispatch(startSetDetailAction());
         Modal.destroyAll();

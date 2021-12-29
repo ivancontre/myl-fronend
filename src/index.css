@@ -1,7 +1,15 @@
 @import '~antd/dist/antd.dark.css';
 
-body {
+.body-signed {
     background-image: linear-gradient(to top, #000000, #060002, #0a0006, #0c000c, #0b0012, #0b0012, #0b0012, #0b0012, #0c000c, #0a0006, #060002, #000000);
+    
+}
+
+.body-auth {
+    background-image: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1640782770/thumb-1920-96051_dupnrl.jpg");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: cover;
     
 }
 

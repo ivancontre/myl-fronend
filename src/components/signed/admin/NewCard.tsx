@@ -52,7 +52,7 @@ const NewCard = () => {
 
     const [checkIsMachinery, setCheckIsMachinery] = useState<boolean>(false);
     const [checkIsUnique, setCheckIsUnique] = useState<boolean>(false);
-    const [checkStatus, setCheckStatus] = useState<boolean>(false);
+    const [checkStatus, setCheckStatus] = useState<boolean>(true);
     const [disableMachinery, setDisableMachinery] = useState<boolean>(true);
     const [fileList, setFileList] = useState<any>();
     const [eraId, setEraId] = useState<string>('');

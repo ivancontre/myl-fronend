@@ -262,6 +262,12 @@ const Cards: FC = () => {
 
     const addNewCard = () => {
         history.push(`/cards/new`);
+        // let cont = 0;
+        // for (const card of cards) {
+        //     if (card.edition === 'Katana') {
+        //         handleDelete(card.id)
+        //     }
+        // }
     };
 
     return (

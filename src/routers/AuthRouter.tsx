@@ -1,5 +1,5 @@
-import { Col, Layout, Row } from 'antd';
-import React, { FC } from 'react';
+import { Col, Layout, Row, Typography } from 'antd';
+import React, { FC, useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 
@@ -9,8 +9,16 @@ import RecoveryPasswordPage from '../pages/RecoveryPasswordPage';
 import VerifyAccountPage from '../pages/VerifyAccountPage';
 
 const { Content } = Layout;
+const { Title } = Typography;
 
 export const AuthRouter: FC = () => {
+
+    useEffect(() => {
+        document.body.classList.remove("body-signed");
+        document.body.classList.add('body-auth');
+    }, [])
+
+
     return (
 
         <Layout className="site-layout">
@@ -21,8 +29,13 @@ export const AuthRouter: FC = () => {
                 }}
             >
                 <div style={{ padding: 24 }}>
-                    <Row justify="space-around" align="middle">
-                        <Col xs={ 24 } sm= { 12 } md={ 9 } lg={ 9 } xl={ 6 } >
+                    <Row justify="center" align="middle">
+                        <Col xs={ 24 } sm= { 12 } md={ 9 } lg={ 9 } xl={ 6 } style={{textAlign: 'center'}} >
+                            <Title level={ 1 }>MyLApp</Title>
+                        </Col>
+                    </Row>
+                    <Row justify="center" align="middle">
+                        <Col xs={ 24 } sm= { 12 } md={ 9 } lg={ 9 } xl={ 6 } className="auth-content">
                             <Switch>
 
                                 <Route exact path="/auth/verify/:token" component={ VerifyAccountPage } />

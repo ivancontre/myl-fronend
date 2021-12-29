@@ -60,7 +60,7 @@ footer.ant-layout-footer {
 
 @media (min-width: 576px) {
     footer.ant-layout-footer {
-        padding: 10px 50px;
+        padding: 7px 50px;
         font-size: 12px;
     }
 
@@ -77,7 +77,7 @@ footer.ant-layout-footer {
   
 @media (min-width: 992px) { 
     footer.ant-layout-footer {
-        padding: 24px 50px;
+        padding: 15px 50px;
         font-size: 14px;
     }
 
