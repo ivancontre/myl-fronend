@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button,  Typography } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { startRecoveryPasswordAction } from '../store/auth/action';
@@ -44,7 +44,7 @@ const RecoveryPasswordPage = () => {
                 >
                     <Input 
                         type="text" 
-                        prefix={<UserOutlined className="site-form-item-icon" />} 
+                        prefix={<MailOutlined className="site-form-item-icon" />} 
                         placeholder="Ingresa tu correo" 
                     />
                 </Form.Item>
