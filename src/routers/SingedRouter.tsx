@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, message, Modal, notification, Popconfirm, Spin } from 'antd';
+import { Button, Layout, Menu, message, Modal, notification, Spin } from 'antd';
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import {
@@ -126,14 +126,6 @@ export const SingedRouter: FC = () => {
         dispatch(resetDeck());
         dispatch(resetModal());
         dispatch(playReset());
-    };   
-
-    const onConfirm = () => {
-        google ? signOut() : handleLogout();
-    };
-
-    const cancel = () => {
-
     };
 
     const close = () => {
@@ -217,6 +209,26 @@ export const SingedRouter: FC = () => {
 
     }, [socket]);
 
+    const onConfirm = () => {
+        google ? signOut() : handleLogout();
+    };
+
+    const logoutModal = () => {
+            confirm({
+                title: '¿Cerrar sesión?',
+                icon: <ExclamationCircleOutlined />,
+                okText: 'OK',
+                cancelText: 'Cancelar',
+                onOk() {
+                    onConfirm();                  
+                    
+                },
+                onCancel() {
+                    
+                },
+            });
+        };
+
     return (
         <Spin spinning={ loading } tip="Espere por favor...">
             <Layout className={ path !== 'match' ? 'section-layout' : ''}>
@@ -269,18 +281,9 @@ export const SingedRouter: FC = () => {
                         }
                         
 
-                        <Menu.Item className="btn-logout" key="logout" icon={<LogoutOutlined />} title="">
+                        <Menu.Item key="logout" icon={<LogoutOutlined />}>
 
-                            <Popconfirm
-                                title="¿Salir?"
-                                okText="Sí"
-                                placement="right"
-                                onConfirm={ onConfirm }
-                                onCancel={ cancel }
-                                cancelText="No"
-                            >
-                                Cerrar sesión
-                            </Popconfirm>
+                            <Button type="link" onClick={ logoutModal }>Cerrar sesión</Button>
                             
                         </Menu.Item>
 
