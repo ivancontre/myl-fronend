@@ -400,12 +400,12 @@ const NewDeck: FC = () => {
             <Row style={{ paddingTop: 10 }}>
                 <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
                     <Col className="container-deck" span={ 14 } >
-                        <Tag color="gold">{`Total: ${cardsByEdition.length}`}</Tag>
-                        <Tag color="green">{`Aliados: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
-                        <Tag color="green">{`Armas: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
-                        <Tag color="green">{`Oros: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
-                        <Tag color="green">{`Talismanes: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>                        
-                        <Tag color="green">{`Tótems: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
+                        <Tag className="tag-new-deck" color="gold">{`Total: ${cardsByEdition.length}`}</Tag>
+                        <Tag className="tag-new-deck" color="green">{`Aliados: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
+                        <Tag className="tag-new-deck" color="green">{`Armas: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
+                        <Tag className="tag-new-deck" color="green">{`Oros: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
+                        <Tag className="tag-new-deck" color="green">{`Talismanes: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>                        
+                        <Tag className="tag-new-deck" color="green">{`Tótems: ${(cardsByEdition.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
                         <Divider />
 
                         {
@@ -441,7 +441,7 @@ const NewDeck: FC = () => {
                                     <Form.Item 
                                         style={{width: '100%'}}
                                     >
-                                        <Button htmlType="submit" type="primary" style={{float: 'right'}} >{params.id ? 'Actualizar' : 'Guardar'}</Button>
+                                        <Button className="btn-save-deck" htmlType="submit" type="primary">{params.id ? 'Actualizar' : 'Guardar'}</Button>
                                     </Form.Item>
 
                                 </Form>
@@ -450,12 +450,12 @@ const NewDeck: FC = () => {
 
                         <Row style={{ paddingTop: 10 }}>
                             <Col span={ 24 }>
-                                <Tag color="gold">{`Total: ${selectMyCards.length}`}</Tag>
-                                <Tag color="green">{`Aliados: ${(selectMyCards.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
-                                <Tag color="green">{`Armas: ${(selectMyCards.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
-                                <Tag color="green">{`Oros: ${(selectMyCards.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
-                                <Tag color="green">{`Talismanes: ${(selectMyCards.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>
-                                <Tag color="green">{`Tótems: ${(selectMyCards.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
+                                <Tag className="tag-new-deck" color="gold">{`Total: ${selectMyCards.length}`}</Tag>
+                                <Tag className="tag-new-deck" color="green">{`Aliados: ${(selectMyCards.filter(card => getNameType(card.type) === 'Aliado')).length}`}</Tag>
+                                <Tag className="tag-new-deck" color="green">{`Armas: ${(selectMyCards.filter(card => getNameType(card.type) === 'Arma')).length}`}</Tag>
+                                <Tag className="tag-new-deck" color="green">{`Oros: ${(selectMyCards.filter(card => getNameType(card.type) === 'Oro')).length}`}</Tag>
+                                <Tag className="tag-new-deck" color="green">{`Talismanes: ${(selectMyCards.filter(card => getNameType(card.type) === 'Talismán')).length}`}</Tag>
+                                <Tag className="tag-new-deck" color="green">{`Tótems: ${(selectMyCards.filter(card => getNameType(card.type) === 'Tótem')).length}`}</Tag>
 
                                 <Divider />
 

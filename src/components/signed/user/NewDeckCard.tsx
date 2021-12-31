@@ -177,8 +177,8 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
         <span ref={ ref } className="movable-item-new-deck animate__animated animate__flipInX'" style={{ opacity, borderRadius: 10 }} data-handler-id={ handlerId } >
             
             <Image
-                width={ 65 }
                 src={ card.img }
+                className="image-card-new-deck"
             />
 
         </span>

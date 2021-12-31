@@ -60,17 +60,17 @@ footer.ant-layout-footer {
 
 @media (min-width: 576px) {
     footer.ant-layout-footer {
-        padding: 7px 50px;
-        font-size: 12px;
+        padding: 5px 50px;
+        font-size: 10px;
     }
 
     .ant-layout-header {
-        height: 54px;
-        line-height: 54px;
+        height: 45px;
+        line-height: 45px;
     }
 
     .content-layout {
-        margin-top: 54px;
+        margin-top: 45px;
     }
     
 }

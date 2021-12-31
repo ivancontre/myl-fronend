@@ -1,5 +1,5 @@
 .container-deck {
-    padding: 15px;
+    padding: 10px;
     border: 2px solid rgba(255, 255, 255, 0.12);
     border-radius: 5px;
     overflow-y: auto;
@@ -87,3 +87,45 @@ div.disabled > div.react-tag-input > input.react-tag-input__input {
     pointer-events: none;
 }
 
+.image-card-new-deck {
+    width: 65px;
+}
+
+.tag-new-deck {
+    margin-bottom: 2px;
+}
+
+.btn-save-deck {
+    float: right;
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+
+    .image-card-new-deck {
+        width: 40px;
+    }
+
+    .movable-item-new-deck {
+        width: 40px;
+        height: 58px;
+        margin: 2px;
+    }
+
+    .btn-save-deck {
+        float: right;
+    }
+
+}
+  
+@media (min-width: 992px) { 
+    .image-card-new-deck {
+        width: 65px;
+    }
+
+    .movable-item-new-deck {
+        width: 65px;
+        height: 93px;
+        margin: 6px;
+    }
+}
