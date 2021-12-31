@@ -9,7 +9,7 @@
 }
 .messages {
     border-radius: 2px;
-    height: 530px;
+    height: 500px;
     overflow: auto;
     margin-bottom: 5px;
     
@@ -21,7 +21,7 @@
     border: 2px solid #731717;
     margin: 2px;   
     background: rgb(22,15,15);
-background: linear-gradient(0deg, rgba(22,15,15,0.5578606442577031) 0%, rgba(185,56,56,0.13489145658263302) 36%);
+    background: linear-gradient(0deg, rgba(22,15,15,0.5578606442577031) 0%, rgba(185,56,56,0.13489145658263302) 36%);
     
 }
 
@@ -29,7 +29,7 @@ background: linear-gradient(0deg, rgba(22,15,15,0.5578606442577031) 0%, rgba(185
     border: 1px solid black;
     margin: 2px;
     background: rgb(28,33,190);
-background: linear-gradient(0deg, rgba(28,33,190,0.7483368347338936) 0%, rgba(15,19,113,0.16850490196078427) 24%);
+    background: linear-gradient(0deg, rgba(28,33,190,0.7483368347338936) 0%, rgba(15,19,113,0.16850490196078427) 24%);
 }
 
 .button-send {

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const typesCardLoad = '[typesCard] Load';
 export const frecuenciesCardLoad = '[frecuenciesCard] Load';
 export const racesCardLoad = '[racesCard] Load';
@@ -34,6 +36,7 @@ export type EditionCard = {
     races: RaceCard[];
     status: boolean;
     era: EraCard;
+    releaseDate: moment.Moment;
 };
 
 export type EraCard = {

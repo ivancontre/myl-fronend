@@ -33,6 +33,7 @@ import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
 import { startSetDetailAction } from '../store/auth/action';
 import Phases from '../components/phases/Phases';
+import Detail from '../components/detail/Detail';
 
 const { confirm } = Modal;
 
@@ -61,7 +62,7 @@ const MatchPage: FC = () => {
 
     const dispatch = useDispatch();
 
-    const { match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
+    const { cardSelected, match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
     const history = useHistory();
    
@@ -677,10 +678,20 @@ const MatchPage: FC = () => {
                             <Divider className="divider-vs"> {`vs ${opponentUsername}`} </Divider>
 
                             <Row justify="space-around" align="middle">
-                                <Col span={24} style={{backgroundColor: 'white', borderRadius: 2}} >
+                                <Col span={24}>
                                     <Chat />
                                 </Col>
                             </Row>
+                            {cardSelected && (
+                                <Row className="row-detail">
+                                <Col>
+                                    <Detail />
+                                </Col>
+                            </Row>
+                            )
+                            
+                            }
+                            
 
                         </Col>
                     </Row>

@@ -12,7 +12,8 @@ import {    change,
             setTakeControlOpponentCard, 
             setWeapon, 
             setOpponentUsername,
-            setPlayOpenHand
+            setPlayOpenHand,
+            setSelectedCard
 } from "./types";
 
 
@@ -104,5 +105,12 @@ export const setPlayOpenHandAction = (open: boolean) => {
     return {
         type: setPlayOpenHand,
         payload: open
+    }
+};
+
+export const setSelectedCardAction = (card: Card | null) => {
+    return {
+        type: setSelectedCard,
+        payload: card
     }
 };

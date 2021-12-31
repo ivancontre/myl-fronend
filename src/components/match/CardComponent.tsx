@@ -10,7 +10,7 @@ import { ToolOutlined, UserOutlined } from '@ant-design/icons';
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { changeMatch, changOpponenteMatch, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch, setSelectedCardAction, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
 import { openModalAssignWeapon, openModalSelectXcards, openModalSelectXcardsOpponent, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
@@ -968,6 +968,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                                         height={ height }
                                         src={ card.img }
                                         className={isOpponent ? 'img-180-deg' : ''}
+                                        onClick={ () => {
+                                            dispatch(setSelectedCardAction(card));
+                                        }}
                                     />   
                                 </>                     
                             }
@@ -990,6 +993,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                                 height={ height }
                                 src={ card.img }
                                 className={isOpponent ? 'img-180-deg' : ''}
+                                onClick={ () => {
+                                    dispatch(setSelectedCardAction(card));
+                                }}
                             />
                                                     
                         }
