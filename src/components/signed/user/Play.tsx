@@ -368,6 +368,7 @@ const Play: FC = () => {
 
             <Table<User>
                  pagination={{ defaultPageSize: 50 }}
+                 scroll={{ x: 200 }}
                  rowKey="id" 
                  columns={ columns } 
                  dataSource={ activeUsersForPlay as User[] } 

@@ -233,6 +233,7 @@ const Decks: FC = () => {
                     selectedRowKeys: [deckDefault?.id as string]
                 }}
                 pagination={{ defaultPageSize: 15 }}
+                scroll={{ x: 200 }}
                 rowKey="id" 
                 columns={ columns } 
                 dataSource={ decks as Deck[]} 

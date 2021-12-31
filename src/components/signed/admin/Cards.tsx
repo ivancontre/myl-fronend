@@ -282,6 +282,7 @@ const Cards: FC = () => {
             <Table<Card>
                 pagination={{ defaultPageSize: 15 }}
                 rowKey="id" 
+                scroll={{ x: 200 }}
                 columns={ columns } 
                 dataSource={ cards } 
                 style={{ paddingTop: 10 }}
