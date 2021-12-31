@@ -125,21 +125,18 @@ const Users: FC = () => {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
-            width: '15%',
             ...getColumnSearchProps('id', ref0),
             sorter: (a: any, b: any) => { 
                 if(a.id < b.id) { return -1; }
                 if(a.id > b.id) { return 1; }
                 return 0;
             },
-            sortDirections: ['descend', 'ascend'],
-            fixed: 'left',
+            sortDirections: ['descend', 'ascend']
         },
         {
             title: 'Usuario',
             dataIndex: 'username',
             key: 'username',
-            width: '10%',
             ...getColumnSearchProps('username', ref1),
             sorter: (a: any, b: any) => { 
                 if(a.username < b.username) { return -1; }
@@ -147,13 +144,11 @@ const Users: FC = () => {
                 return 0;
             },
             sortDirections: ['descend', 'ascend'],
-            fixed: 'left',
         },
         {
             title: 'Correo',
             dataIndex: 'email',
             key: 'email',
-            width: '15%',
             ...getColumnSearchProps('email', ref2),
             sorter: (a: any, b: any) => { 
                 if(a.email < b.email) { return -1; }
@@ -166,7 +161,6 @@ const Users: FC = () => {
             title: 'Últ. vez online',
             dataIndex: 'lastTimeOnline',
             key: 'lastTimeOnline',
-            width: '10%',
             render: (text, row) => {
                 if (row.online) {
                     return <Tag color="lime">Online</Tag>
@@ -181,7 +175,6 @@ const Users: FC = () => {
             title: 'Últ. vez juego',
             dataIndex: 'lastTimePlaying',
             key: 'lastTimePlaying',
-            width: '10%',
             render: (text, row) => {
                 if (row.playing) {
                     return <Tag color="lime">Jugando</Tag>
@@ -196,7 +189,6 @@ const Users: FC = () => {
             title: 'Mazo por defecto',
             dataIndex: 'decks',
             key: 'decks',
-            width: '10%',
             render: (text, row) => {
                 return row.defaultDeck ? <Tag color="lime">Sí</Tag> : <Tag color="magneta">No</Tag>
             }
@@ -205,7 +197,6 @@ const Users: FC = () => {
             title: 'Online',
             dataIndex: 'online',
             key: 'online',
-            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.online < b.online) { return -1; }
                 if(a.online > b.online) { return 1; }
@@ -220,7 +211,6 @@ const Users: FC = () => {
             title: 'Playing',
             dataIndex: 'playing',
             key: 'playing',
-            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.playing < b.playing) { return -1; }
                 if(a.playing > b.playing) { return 1; }
@@ -235,7 +225,6 @@ const Users: FC = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.status < b.status) { return -1; }
                 if(a.status > b.status) { return 1; }
@@ -250,7 +239,6 @@ const Users: FC = () => {
             title: 'Verify',
             dataIndex: 'verify',
             key: 'verify',
-            width: '5%',
             sorter: (a: any, b: any) => { 
                 if(a.verify < b.verify) { return -1; }
                 if(a.verify > b.verify) { return 1; }
@@ -265,7 +253,6 @@ const Users: FC = () => {
             title: 'Acciones',
             dataIndex: '',
             key: 'x',
-            width: '15%',
             render: (text, row) => {
 
                 return <>
@@ -284,23 +271,20 @@ const Users: FC = () => {
 
 
                 </>
-            },
-            fixed: 'right',
+            }
         },
     ];
 
     return (
         <div>
             <Table<User>
-                 scroll={{ x: 1500 }}
+                 scroll={{ x: 200 }}
                  pagination={{ defaultPageSize: 50 }}
                  rowKey="id" 
                  columns={ columns } 
                  dataSource={ users as User[] } 
                  style={{ paddingTop: 10 }}
                  loading={ users === null ? true : false }
-                 size="small"
-                  sticky
              />
         </div>
     )
