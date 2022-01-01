@@ -22,8 +22,14 @@
     z-index: 2;
 }
 
+@media all and (orientation:portrait) {
+    .phase {
+        font-size: 9px;
+    }
+}
 
-@media (min-width: 576px) {
+
+@media all and (orientation:landscape) {
     .phase {
         font-size: 10px;
     }

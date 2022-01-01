@@ -11,6 +11,7 @@
     text-align: justify;
     margin: 1px;
     border-radius: 1px;
+    width: 100%;
 }
 
 .row-detail {
@@ -33,11 +34,18 @@
     padding: 4px;
 }
 
-@media (min-width: 576px) {
+@media all and (orientation:portrait) {
+    .row-detail {
+        position: unset;
+        bottom: auto;
+        left: auto;
+    }
+}
+
+@media all and (orientation:landscape) {
     .content-detail {
         font-size: 10px;
-    }
-    
+    }    
 }
 
 @media (min-width: 992px) { 

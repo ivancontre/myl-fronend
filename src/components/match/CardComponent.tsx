@@ -33,9 +33,6 @@ export interface CardProps {
     card: Card;
 };
 
-const height = 65;
-const width = 45;
-
 const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOpponent, withPopover, isPrivate }) => {
 
     const ref = useRef<HTMLInputElement>(null); 
@@ -951,11 +948,9 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         <div ref={ ref }  style={{ opacity }} className={ getClassName() } data-handler-id={ handlerId } onContextMenu={ detail } >
                             { isPrivate ?
                                 <img
-                                    width={ width }
-                                    height={ height }
                                     alt={ card.name }
                                     src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
-                                    className={isOpponent ? 'img-180-deg' : ''}
+                                    className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                                 />
                                 : 
 
@@ -964,10 +959,8 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                                     {card.bearerId && <UserOutlined className={isOpponent ? 'img-180-deg icon-arm-opponent' : 'icon-arm'} height={ 10 } width={ 10 } />}
                                     
                                     <Image
-                                        width={ width }
-                                        height={ height }
                                         src={ card.img }
-                                        className={isOpponent ? 'img-180-deg' : ''}
+                                        className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                                         onClick={ () => {
                                             dispatch(setSelectedCardAction(card));
                                         }}
@@ -981,18 +974,14 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                     <div ref={ ref }  style={{ opacity }} className={ getClassName() } data-handler-id={ handlerId } >
                         { conditionShowPirvateCards() ?
                             <img
-                                width={ width }
-                                height={ height }
                                 alt={ card.name }
                                 src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
-                                className={isOpponent ? 'img-180-deg' : ''}
+                                className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                             />
                             : 
                             <Image
-                                width={ width }
-                                height={ height }
                                 src={ card.img }
-                                className={isOpponent ? 'img-180-deg' : ''}
+                                className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                                 onClick={ () => {
                                     dispatch(setSelectedCardAction(card));
                                 }}

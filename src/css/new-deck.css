@@ -100,7 +100,43 @@ div.disabled > div.react-tag-input > input.react-tag-input__input {
     width: 100%;
 }
 
-@media (min-width: 576px) {
+.search-my-cards {
+    padding-bottom: 15px;
+}
+
+@media all and (orientation:portrait) {
+    .image-card-new-deck {
+        width: 30px;
+    }
+
+    .movable-item-new-deck {
+        width: 30px;
+        height: 42px;
+        margin: 2px;
+    }
+
+    .btn-save-deck {
+        float: right;
+    }
+}
+
+@media all and (orientation:landscape) {
+    .image-card-new-deck {
+        width: 40px;
+    }
+
+    .movable-item-new-deck {
+        width: 40px;
+        height: 58px;
+        margin: 2px;
+    }
+
+    .btn-save-deck {
+        float: right;
+    }
+}
+
+/* @media (min-width: 576px) {
 
     .image-card-new-deck {
         width: 40px;
@@ -116,7 +152,7 @@ div.disabled > div.react-tag-input > input.react-tag-input__input {
         float: right;
     }
 
-}
+} */
   
 @media (min-width: 992px) { 
     .image-card-new-deck {

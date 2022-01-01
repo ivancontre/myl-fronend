@@ -459,7 +459,7 @@ const NewDeck: FC = () => {
 
                                 <Divider />
 
-                                <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearchInMyCards } disabled={ !selectMyCards.length } style={{paddingBottom: 15}} value={ searchTextInMyCards } onChange={ onChangeSearchTextInMyCards } />
+                                <Search placeholder="Buscar por nombre de carta" className="search-my-cards" enterButton onSearch={ onSearchInMyCards } disabled={ !selectMyCards.length } value={ searchTextInMyCards } onChange={ onChangeSearchTextInMyCards } />
 
                                 <NewDeckCardContainer title="my-cards" >
                                     { selectMyCards && returnItemsForZone('my-cards')}

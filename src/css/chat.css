@@ -77,7 +77,21 @@
     font-style: italic;
 }
 
-@media (min-width: 576px) {
+@media all and (orientation:portrait) {
+    .messages {
+        font-size: 9px;
+    }
+
+    .my-username {
+        font-size: 10px;
+    }
+
+    .opponent-username {
+        font-size: 10px;
+    }
+}
+
+@media all and (orientation:landscape) {
     .messages {
         font-size: 9px;
     }

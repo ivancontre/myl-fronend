@@ -216,31 +216,31 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
 
                         {
                             (!isOpponent && title === UNPAID_GOLD_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE)} icon={<CaretUpOutlined />} size="small" className="icon-zone-action" />
                             )
                         }
 
                         {
                             (!isOpponent && title === GOLDS_PAID_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white',height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE)} icon={<CaretDownOutlined />} size="small" className="icon-zone-action" />
                             )
                         }
 
                         {
                             (!isOpponent && title === ATTACK_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE)} icon={<CaretDownOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(ATTACK_ZONE, DEFENSE_ZONE)} icon={<CaretDownOutlined />} size="small" className="icon-zone-action" />
                             )
                         }
 
                         {
                             (!isOpponent && title === DEFENSE_ZONE) && (
-                                <Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE)} icon={<CaretUpOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                <Button type="link" onClick={ () => sendToZone(DEFENSE_ZONE, ATTACK_ZONE)} icon={<CaretUpOutlined />} size="small" className="icon-zone-action" />
                             )
                         }
 
                         {
                             (isOpponent && title === CASTLE_ZONE && Object.keys(opponentMatch).length === 0) && (
-                                <Button type="link" onClick={ reloadOpponentMatch } icon={<ReloadOutlined />} size="small" style={{ color: 'white', height: 12, width: 12, float: 'right', marginRight: 1 }} />
+                                <Button type="link" onClick={ reloadOpponentMatch } icon={<ReloadOutlined />} size="small" className="icon-zone-action" />
                             )
                         }
 
@@ -253,7 +253,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                                     visible={ visiblePopover }
                                     onVisibleChange={ handleVisibleChangePopever }
                                 >
-                                    <Button type="link" icon={<MoreOutlined />} size="small" style={{ color: 'white', height: 15, width: 15, float: 'right' }} />
+                                    <Button type="link" icon={<MoreOutlined />} size="small" className="icon-zone-action" />
                                 </Popover>
                                 
                             )

@@ -181,7 +181,68 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   font-size: 20px;
 }
 
-@media (min-width: 576px) {
+.icon-zone-action {
+  color: white;
+  height: 15px !important;
+  width: 15px !important;
+  float: right; 
+}
+
+.img-card-match {
+  height: 65px;
+  width: 45px;
+}
+
+@media all and (orientation:portrait) {
+
+  footer.ant-layout-footer {
+    padding: 5px 50px;
+    font-size: 10px;
+  }
+
+  .title-zone {
+    font-size: 7px;
+  }
+
+  .title-zone-opponent {
+    font-size: 7px;
+  }
+  
+  .icon-zone-action > span > * {
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .movable-item {
+    margin: 2px;
+    height: 55px;
+    width: 40px;
+  }
+
+  .img-card-match {
+    height: 55px;
+    width: 40px;
+  }
+
+  .my-card {
+    height: 60px;
+    width: 45px;
+    min-width: 45px;
+  }
+
+  .opponent-card {
+    height: 60px;
+    width: 45px;
+    min-width: 45px;
+  }
+
+  .zone {
+    height: 87px;
+  }
+  
+}
+
+@media all and (orientation:landscape) {
   .message-warning {
     font-size: 8px;
   }
@@ -192,6 +253,11 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
   .divider-vs > span.ant-divider-inner-text{
     font-size: 15px;    
+  }
+
+  footer.ant-layout-footer {
+    padding: 5px 50px;
+    font-size: 10px;
   }
   
 }

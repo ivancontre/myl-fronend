@@ -34,6 +34,7 @@ import { resetChatAction } from '../store/chat/action';
 import { startSetDetailAction } from '../store/auth/action';
 import Phases from '../components/phases/Phases';
 import Detail from '../components/detail/Detail';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const { confirm } = Modal;
 
@@ -54,6 +55,8 @@ const MatchPage: FC = () => {
 
     }, []);
 
+    const { width } = useWindowDimensions();
+    console.log(width)
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
@@ -492,7 +495,7 @@ const MatchPage: FC = () => {
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
                     <Row gutter={[3, 3]}>
-                        <Col span={ 19 }>
+                        <Col span={ width > 479 ? 19 : 24 }>
                                 <Row gutter={[3, 3]}>
 
                                     <Col span={10}> 
@@ -653,7 +656,7 @@ const MatchPage: FC = () => {
                                 </Row>
                             
                         </Col>
-                        <Col span={ 5 } className="content-actions">
+                        <Col span={ width > 479 ? 5 : 24 } className="content-actions">
 
                             <Row gutter={[16, 16]} justify="center" style={{paddingTop: 3}}>
                                 <Col style={{width: '95%', textAlign: 'center'}}>
@@ -684,11 +687,11 @@ const MatchPage: FC = () => {
                             </Row>
                             {cardSelected && (
                                 <Row className="row-detail">
-                                <Col>
-                                    <Detail />
-                                </Col>
-                            </Row>
-                            )
+                                    <Col span={24}>
+                                        <Detail />
+                                    </Col>
+                                </Row>
+                                )
                             
                             }
                             
