@@ -58,7 +58,24 @@ footer.ant-layout-footer {
     background: #000;
 }
 
-@media (min-width: 576px) {
+@media all and (orientation:portrait) {
+    footer.ant-layout-footer {
+        padding: 5px 50px;
+        font-size: 10px;
+    }
+
+    .ant-layout-header {
+        height: 45px;
+        line-height: 45px;
+    }
+
+    .content-layout {
+        margin-top: 45px;
+    }
+    
+}
+
+@media all and (orientation:landscape) {
     footer.ant-layout-footer {
         padding: 5px 50px;
         font-size: 10px;

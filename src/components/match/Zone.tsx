@@ -107,16 +107,16 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         });
     };
 
-    const sendToZone = (origin: string, destiny: string) => {
-
-        sendMessage(`Moviendo ${ destiny === CASTLE_ZONE ? 'y barajando' : '' } todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`);
+    const sendToZone = (origin: string, destiny: string) => {        
 
         let newMatch = { ...match };        
         if (!newMatch[origin].length) {
             message.warn(`No hay cartas en la zona de ${origin}` );
             setVisiblePopover(false);
             return;
-        }    
+        }
+        
+        sendMessage(`Moviendo ${ destiny === CASTLE_ZONE ? 'y barajando' : '' } todas las cartas de <strong>${origin}</strong> a <strong>${destiny}</strong>`);
 
         newMatch[destiny] = [...newMatch[destiny], ...newMatch[origin]];
 

@@ -56,8 +56,6 @@ const MatchPage: FC = () => {
     }, []);
 
     const { width } = useWindowDimensions();
-    console.log(width)
-
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
 
