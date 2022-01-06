@@ -949,7 +949,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                             { isPrivate ?
                                 <img
                                     alt={ card.name }
-                                    src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
+                                    src={ "https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg" }
                                     className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                                 />
                                 : 
@@ -975,7 +975,7 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                         { conditionShowPirvateCards() ?
                             <img
                                 alt={ card.name }
-                                src={ "https://res.cloudinary.com/dfcm5wuuf/image/upload/v1635185102/reverso-carta_avpq6q.png" }
+                                src={ "https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg" }
                                 className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
                             />
                             : 

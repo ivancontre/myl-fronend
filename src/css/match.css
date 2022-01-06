@@ -26,7 +26,7 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
 }
 
 .content-match {
-  background-image: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1636077498/pexels-pixabay-235985_awktjo.jpg");
+  background-image: url("../assets/match.jpg");
 }
 
 .scroll {

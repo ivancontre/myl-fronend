@@ -25,10 +25,10 @@ const Detail: FC = () => {
         <Row className="content-detail">
             <Col span={20}>
                 <div className="title-card"><strong>{`${cardSelected?.name} (${getTypeName(cardSelected?.type as string)})`}</strong></div>
-                    <div>
-                        <span><strong>Fuerza:</strong> {cardSelected?.strength ? cardSelected?.strength : 'Sin fuerza'}</span>
-                        <span className="span-cost"><strong>Coste:</strong> {cardSelected?.cost}</span>
-                    </div>
+                    <p>
+                        {cardSelected?.strength && (<span><strong>Fuerza:</strong> {cardSelected?.strength }</span>)}
+                        {cardSelected?.cost && (<span className="span-cost"><strong>Coste:</strong> {cardSelected?.cost}</span>)}
+                    </p>
                 <p>{cardSelected?.ability}</p>
             </Col>
             <Col span={4} className="detail-img">

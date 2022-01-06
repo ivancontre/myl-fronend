@@ -270,10 +270,41 @@ const Cards: FC = () => {
         // }
     };
 
+    /*const hola = async () => {
+        const axios = require('axios').default;
+        const cardsFiltered = cards.filter(card => card.edition === 'Compendium' )
+        console.log(cardsFiltered)
+        for(const card of cardsFiltered){
+            let image = await axios.get(card.img, {responseType: 'blob'});
+
+            let blob = new Blob(
+                [image.data], 
+                { type: image.headers['content-type'] }
+              )
+            let formData = new FormData();
+            formData.append('files[]', blob);
+            formData.append('id', card.id as string);
+            formData.append('edition', card.edition as string);
+            await axios({
+                method: 'patch',
+                data: formData,
+                url: 'http://localhost:8080/api/card',
+                headers: {
+                    "x-token": localStorage.getItem('token') as string,
+                    "Content-Type": "multipart/form-data"
+                }
+
+            });
+
+
+
+        }
+    }*/
     return (
         <>
             <Tooltip title="Agregar carta">
                 <Button onClick={ addNewCard } type="primary" shape="circle" icon={<PlusOutlined />} />
+                {/* <Button onClick={ hola } type="primary" shape="circle" >hola</Button> */}
             </Tooltip>
 
             <p style={{ paddingTop: 20}}><Tag color="green">{ `Total: ${cards.length}`}</Tag></p>
