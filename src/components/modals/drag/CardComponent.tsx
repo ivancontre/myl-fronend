@@ -17,6 +17,7 @@ export interface NewDeckCardProps {
     card: Card;
     isOrigin: boolean;
     onlyRead?: boolean;
+    isPrivate?: boolean
 };
 
 interface DragCard extends Card {
@@ -26,7 +27,7 @@ interface DragCard extends Card {
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE, EXILE_ZONE, REMOVAL_ZONE, CEMETERY_ZONE } = ZONE_NAMES;
 
-const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, isOrigin, onlyRead }) => {   
+const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, isOrigin, onlyRead, isPrivate }) => {   
 
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null); 
@@ -182,7 +183,7 @@ const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, 
             
             <Image
                 width={ 65 }
-                src={ card.img }
+                src={ !isPrivate ? card.img : 'https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg'}
             />
 
         </span>

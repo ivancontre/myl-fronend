@@ -1,4 +1,4 @@
-import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard, uiOpenModalAssignModal, uiCloseModalAssignModal, uiResetModal, uiCloseModalViewAuxiliary, uiOpenModalViewAuxiliary, uiOpenModalViewAuxiliaryOpponent, uiCloseModalViewAuxiliaryOpponent, uiOpenModalSelectXCastleOpponent, uiCloseModalSelectXCastleOpponent, uiOpenModalViewXCastleOpponent, uiCloseModalViewXCastleOpponent } from './types';
+import { ModalActionTypes, uiOpenModalThrowXcards, uiCloseModalThrowXcards, uiOpenModalViewCastle, uiCloseModalViewCastle, uiCloseModalViewXCastle, uiOpenModalViewXCastle, uiOpenModalSelectXCastle, uiCloseModalSelectXCastle, uiOpenModalViewCastleOpponent, uiCloseModalViewCastleOpponent, uiOpenModalViewCementery, uiCloseModalViewCementery, uiOpenModalViewExile, uiCloseModalViewExile, uiOpenModalViewRemoval, uiCloseModalViewRemoval, uiOpenModalViewCementeryOpponent, uiCloseModalViewCementeryOpponent, uiOpenModalViewExileOpponent, uiCloseModalViewExileOpponent, uiOpenModalViewRemovalOpponent, uiCloseModalViewRemovalOpponent, uiOpenModalViewHandOpponent, uiCloseModalViewHandOpponent, uiOpenModalTakeControlOpponentCard, uiCloseModalTakeControlOpponentCard, uiOpenModalAssignModal, uiCloseModalAssignModal, uiResetModal, uiCloseModalViewAuxiliary, uiOpenModalViewAuxiliary, uiOpenModalViewAuxiliaryOpponent, uiCloseModalViewAuxiliaryOpponent, uiOpenModalSelectXCastleOpponent, uiCloseModalSelectXCastleOpponent, uiOpenModalViewXCastleOpponent, uiCloseModalViewXCastleOpponent, uiOpenModalDiscardOpponent, uiCloseModalDiscardOpponent } from './types';
 
 export const openModalThrowXcards = (): ModalActionTypes => {
     return {
@@ -222,6 +222,18 @@ export const openModalAssignWeapon = (): ModalActionTypes => {
 export const closeModalAssignWeapon = (): ModalActionTypes => {
     return {
         type: uiCloseModalAssignModal
+    }
+};
+
+export const openModalOpponentDiscard = (): ModalActionTypes => {
+    return {
+        type: uiOpenModalDiscardOpponent
+    }
+};
+
+export const closeModalOpponentDiscard = (): ModalActionTypes => {
+    return {
+        type: uiCloseModalDiscardOpponent
     }
 };
 

@@ -23,7 +23,7 @@ import '../css/match.css';
 import ThrowXcardsModal from '../components/modals/ThrowXcardsModal';
 import ViewCardsModal from '../components/modals/ViewCardsModal';
 import SelectXcardsModal from '../components/modals/SelectXcardsModal';
-import { openModalViewCastleOpponent, openModalViewHandOpponent, openModalViewXCastleOpponent, resetModal } from '../store/ui-modal/action';
+import { openModalOpponentDiscard, openModalViewCastleOpponent, openModalViewHandOpponent, openModalViewXCastleOpponent, resetModal } from '../store/ui-modal/action';
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
@@ -35,6 +35,7 @@ import { startSetDetailAction } from '../store/auth/action';
 import Phases from '../components/phases/Phases';
 import Detail from '../components/detail/Detail';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import OpponentDiscard from '../components/modals/OpponentDiscard';
 
 const { confirm } = Modal;
 
@@ -87,7 +88,8 @@ const MatchPage: FC = () => {
             modalOpenViewHandOpponent,
             modalOpenTakeControlOpponentCard,
             modalOpenAssignWeapon,
-            modalOpenSelectXcardsOpponent
+            modalOpenSelectXcardsOpponent,
+            modalOpenDiscardOpponent
     } = useSelector((state: RootState) => state.uiModal);
 
     const { socket } = useContext(SocketContext);
@@ -290,6 +292,36 @@ const MatchPage: FC = () => {
 
     useEffect(() => {
         
+        socket?.on('showing-discard-opponent', (data) => {
+            dispatch(openModalOpponentDiscard())
+        });
+
+        return () => {
+            socket?.off('showing-discard-opponent');
+        }
+        
+    }, [socket, dispatch]);
+
+    useEffect(() => {
+        
+        socket?.on('discarding-to-opponent', (data) => {
+            
+            const newMatch = { ...match }
+            newMatch[CEMETERY_ZONE] = [...newMatch[CEMETERY_ZONE], ...data.toDiscard];
+            const toDiscardIds = data.toDiscard.map((c: Card) => c.id);
+            newMatch[HAND_ZONE] = newMatch[HAND_ZONE].filter(card => !toDiscardIds.includes(card.id));
+            dispatch(changeMatch(newMatch));
+
+        });
+
+        return () => {
+            socket?.off('discarding-to-opponent');
+        }
+        
+    }, [socket, dispatch, match]);
+
+    useEffect(() => {
+        
         socket?.on('changing-opponent', (data) => {
             dispatch(changOpponenteMatch(data));
         });
@@ -489,6 +521,8 @@ const MatchPage: FC = () => {
             { modalOpenTakeControlOpponentCard && <TakeControlOpponentCardModal zone={ takeControlOpponentCardZone } index={ takeControlOpponentCardIndex } /> }
 
             { modalOpenAssignWeapon && <AssingWeaponModal /> }
+
+            { modalOpenDiscardOpponent && <OpponentDiscard />}
 
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>

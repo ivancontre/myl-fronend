@@ -154,6 +154,23 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
         setVisiblePopover(false);
     };
 
+    const discardOpponent = () => {
+
+        if (!match[HAND_ZONE].length) {
+            message.warn(`No hay cartas en la ${HAND_ZONE}` );
+            setVisiblePopover(false);
+            return;
+        }
+        
+        sendMessage(`Dando acceso para que oponente descarte mis cartas al azar`)
+
+        socket?.emit('show-discard-opponent', {
+            matchId
+        });
+
+        setVisiblePopover(false);
+    };
+
     const content = (
         <div>
             <Button type="link" onClick={ showHandToOpponent }>Mostrar mano</Button><br/>
@@ -169,6 +186,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                     <Button type="link" onClick={ () => onClickPlayOpenHand(false) }>Jugar mano cubierta</Button>
                 )
             }
+            <br/><Button type="link" onClick={ discardOpponent }>Oponente me descarta al azar</Button>
              
         </div>        
     );
@@ -247,7 +265,7 @@ const Zone: FC<ZoneProps> = ({ children, className, title, isOpponent, withCount
                         {
                             (!isOpponent && title === HAND_ZONE) && (
                                 <Popover 
-                                    placement="right" 
+                                    placement="left" 
                                     trigger="click"
                                     content={ content }
                                     visible={ visiblePopover }

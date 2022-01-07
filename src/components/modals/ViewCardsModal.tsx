@@ -48,7 +48,6 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             if (amount) {
                 dispatch(setViewCardsOrigin(origin[zone].slice(-amount)));
             } else {
-                console.log('object')
                 dispatch(setViewCardsOrigin(origin[zone]));
             }
     
