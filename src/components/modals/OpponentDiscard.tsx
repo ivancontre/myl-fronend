@@ -142,6 +142,7 @@ const OpponentDiscard: FC = () => {
                         card={ card }
                         isOrigin={ isOrigin }
                         isPrivate
+                        discard
                     />
                 ));
     };
@@ -158,6 +159,7 @@ const OpponentDiscard: FC = () => {
                         card={ card }
                         isOrigin={ isOrigin }
                         isPrivate
+                        discard
                     />
                 ));
     };
