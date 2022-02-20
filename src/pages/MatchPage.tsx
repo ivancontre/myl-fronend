@@ -308,8 +308,8 @@ const MatchPage: FC = () => {
             
             const newMatch = { ...match }
             newMatch[CEMETERY_ZONE] = [...newMatch[CEMETERY_ZONE], ...data.toDiscard];
-            const toDiscardIds = data.toDiscard.map((c: Card) => c.id);
-            newMatch[HAND_ZONE] = newMatch[HAND_ZONE].filter(card => !toDiscardIds.includes(card.id));
+            const toDiscardIds = data.toDiscard.map((c: Card) => c.idx);
+            newMatch[HAND_ZONE] = newMatch[HAND_ZONE].filter(card => !toDiscardIds.includes(card.idx));
             dispatch(changeMatch(newMatch));
 
         });
