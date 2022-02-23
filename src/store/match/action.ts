@@ -13,7 +13,8 @@ import {    change,
             setWeapon, 
             setOpponentUsername,
             setPlayOpenHand,
-            setSelectedCard
+            setSelectedCard,
+            setCardToMove
 } from "./types";
 
 
@@ -112,5 +113,12 @@ export const setSelectedCardAction = (card: Card | null) => {
     return {
         type: setSelectedCard,
         payload: card
+    }
+};
+
+export const setCardToMoveAction = (data: any) => {
+    return {
+        type: setCardToMove,
+        payload: data
     }
 };

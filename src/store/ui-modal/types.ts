@@ -48,6 +48,9 @@ export const uiCloseModalSelectXCastleOpponent = '[ui-modal] Close modal SelectX
 export const uiOpenModalDiscardOpponent = '[ui-modal] Open modal DiscardOpponent';
 export const uiCloseModalDiscardOpponent = '[ui-modal] Close modal DiscardOpponent';
 
+export const uiOpenModalDestinyCastleOptions = '[ui-modal] Open modal DestinyCastleOptions';
+export const uiCloseModalDestinyCastleOptions = '[ui-modal] Close modal DestinyCastleOptions';
+
 export const uiResetModal = '[ui-modal] Reset modals';
 
 export type UiModalState = {
@@ -76,6 +79,8 @@ export type UiModalState = {
     modalOpenAssignWeapon: boolean;
 
     modalOpenDiscardOpponent: boolean;
+
+    modalDestinyCastleOptions: boolean;
 };
 
 type ModalThrowXcardsOpenAction = {
@@ -233,6 +238,15 @@ type ModalDiscardOpponentCloseAction = {
     type: typeof uiCloseModalDiscardOpponent
 };
 
+type ModalDestinyCastleOptionsOpenAction = {
+    type: typeof uiOpenModalDestinyCastleOptions
+};
+
+type ModalDestinyCastleOptionsCloseAction = {
+    type: typeof uiCloseModalDestinyCastleOptions
+};
+
+
 type ModalResetAction = {
     type: typeof uiResetModal
 };
@@ -279,4 +293,6 @@ ModalAssignWeaponOpenAction |
 ModalAssignWeaponCloseAction |
 ModalDiscardOpponentOpenAction |
 ModalDiscardOpponentCloseAction |
+ModalDestinyCastleOptionsOpenAction |
+ModalDestinyCastleOptionsCloseAction |
 ModalResetAction;

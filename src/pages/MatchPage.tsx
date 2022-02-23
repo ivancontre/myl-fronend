@@ -36,6 +36,7 @@ import Phases from '../components/phases/Phases';
 import Detail from '../components/detail/Detail';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import OpponentDiscard from '../components/modals/OpponentDiscard';
+import DestinyCastleOptionsModal from '../components/modals/DestinyCastleOptionsModal';
 
 const { confirm } = Modal;
 
@@ -89,7 +90,8 @@ const MatchPage: FC = () => {
             modalOpenTakeControlOpponentCard,
             modalOpenAssignWeapon,
             modalOpenSelectXcardsOpponent,
-            modalOpenDiscardOpponent
+            modalOpenDiscardOpponent,
+            modalDestinyCastleOptions
     } = useSelector((state: RootState) => state.uiModal);
 
     const { socket } = useContext(SocketContext);
@@ -523,6 +525,8 @@ const MatchPage: FC = () => {
             { modalOpenAssignWeapon && <AssingWeaponModal /> }
 
             { modalOpenDiscardOpponent && <OpponentDiscard />}
+
+            { modalDestinyCastleOptions && <DestinyCastleOptionsModal />}
 
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>

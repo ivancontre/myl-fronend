@@ -1,4 +1,4 @@
-import { MatchState, MatchActionTypes, change, setMatchId, resetMatchValues, setOpponentId, setOpponentUsername, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon, setPlayOpenHand, setSelectedCard } from "./types";
+import { MatchState, MatchActionTypes, change, setMatchId, resetMatchValues, setOpponentId, setOpponentUsername, changeOpponent, setCardsOrigin, setCardsDestiny, setAmountCardsView, setTakeControlOpponentCard, setWeapon, setPlayOpenHand, setSelectedCard, setCardToMove } from "./types";
 
 const initialState: MatchState = {
     matchId: null,
@@ -15,7 +15,8 @@ const initialState: MatchState = {
     takeControlOpponentCardControlType: '',
     selectedWeapon: null,
     playOpenHand: false,
-    cardSelected: null
+    cardSelected: null,
+    cardToMove: null
 };
 
 export const matchReducer = (state: typeof initialState = initialState, action: MatchActionTypes): MatchState => {
@@ -95,6 +96,12 @@ export const matchReducer = (state: typeof initialState = initialState, action: 
             return {
                 ...state,
                 cardSelected: action.payload
+            };
+
+        case setCardToMove:
+            return {
+                ...state,
+                cardToMove: action.payload
             };
 
         case resetMatchValues:

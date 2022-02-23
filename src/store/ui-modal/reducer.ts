@@ -39,7 +39,9 @@ import {
     uiOpenModalViewXCastleOpponent,
     uiCloseModalViewXCastleOpponent,
     uiCloseModalDiscardOpponent,
-    uiOpenModalDiscardOpponent
+    uiOpenModalDiscardOpponent,
+    uiOpenModalDestinyCastleOptions,
+    uiCloseModalDestinyCastleOptions
 } from "./types";
 
 
@@ -68,7 +70,9 @@ const initialState: UiModalState = {
 
     modalOpenAssignWeapon: false,
 
-    modalOpenDiscardOpponent: false
+    modalOpenDiscardOpponent: false,
+
+    modalDestinyCastleOptions: false
 };
 
 export const uiModalReducer = (state: typeof initialState = initialState, action: ModalActionTypes): UiModalState => {
@@ -307,6 +311,20 @@ export const uiModalReducer = (state: typeof initialState = initialState, action
             return {
                 ...state,
                 modalOpenDiscardOpponent: true
+            }
+        }
+
+        case uiOpenModalDestinyCastleOptions: {
+            return {
+                ...state,
+                modalDestinyCastleOptions: true
+            }
+        }
+
+        case uiCloseModalDestinyCastleOptions: {
+            return {
+                ...state,
+                modalDestinyCastleOptions: false
             }
         }
 

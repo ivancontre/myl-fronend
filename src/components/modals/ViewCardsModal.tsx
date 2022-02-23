@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
-import { Alert, Modal, Select } from 'antd';
+import { Alert, Modal, Select, Space, Radio, RadioChangeEvent } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -41,6 +41,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
     const dispatch = useDispatch();
+
+    const [option, setOption] = useState('SHUFFLE');
 
     useEffect(() => {
 
@@ -94,6 +96,10 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         dispatch(setAmountCardsViewAction(1));
     };
 
+    const onChangeZone = (e: RadioChangeEvent) => {
+        setOption(e.target.value);
+    };
+
     const sendMessage = (text: string) => {
 
         for (let [, value] of Object.entries(ZONE_NAMES)) {
@@ -137,38 +143,29 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
         let newMatch = { ...origin };
 
-        /*if (!amount) {
-
-            console.log(viewCardsOrigin);
-            console.log(newMatch[zone])
-            if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone])) {
-                
-                sendMessage(`Ordenando "${zone}" 1`);
-            }
-
-        } else {
-
-            if (JSON.stringify(viewCardsOrigin) !== JSON.stringify(newMatch[zone].slice(-amount))) {
-                
-                sendMessage(`Ordenando "${zone}" 2`);
-            }
-        }*/
-
         newMatch[zone] = !amount ? viewCardsOrigin : [...origin[zone].filter((card: Card, index: number) => index < origin[zone].length - amount), ...viewCardsOrigin];        
         
-        if (optionSelect && viewCardsDestiny.length) {
-
-            newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
+        if (optionSelect && viewCardsDestiny.length) {            
 
             if (optionSelect !== CASTLE_ZONE) {
-
+                newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
                 sendMessage(`Moviendo "${viewCardsDestiny.length}" carta(s) de "${zone}" a "${optionSelect}"`);
 
             } else {
 
-                newMatch = shuffle({ ...newMatch }, CASTLE_ZONE);
+                if (option === 'SHUFFLE') {
 
-                sendMessage(`Moviendo y barajando "${viewCardsDestiny.length}" carta(s) de "${zone}" a "${optionSelect}"`);
+                    newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
+                    newMatch = shuffle({ ...newMatch }, CASTLE_ZONE);
+                    sendMessage(`Moviendo y barajando "${viewCardsDestiny.length}" carta(s) de "${zone}" a "${optionSelect}"`);
+
+                } else if (option === 'START') {
+                    newMatch[optionSelect] = [...newMatch[optionSelect], ...viewCardsDestiny];
+                    sendMessage(`Moviendo "${viewCardsDestiny.length}" carta(s) de "${zone}" al principio de "${optionSelect}"`);
+                } else {
+                    newMatch[optionSelect] = [...viewCardsDestiny, ...newMatch[optionSelect]];
+                    sendMessage(`Moviendo "${viewCardsDestiny.length}" carta(s) de "${zone}" al final de "${optionSelect}"`);
+                }                
 
             }
 
@@ -307,6 +304,18 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
                         <CardComponentContainer title={ optionSelect } >
                             { viewCardsDestiny && returnItemsForZoneDestiny(optionSelect, false)}
                         </CardComponentContainer>
+                    )
+                }
+
+                {
+                    !onlyRead && optionSelect === CASTLE_ZONE && viewCardsDestiny.length > 0 && (
+                        <Radio.Group value={ option } onChange={ onChangeZone } style={{marginTop: 20}}>
+                            <Space direction="vertical">
+                                <Radio value={ 'SHUFFLE' }>{`Barajar en el ${CASTLE_ZONE}`}</Radio>
+                                <Radio value={ 'START' }>{`Poner al principio del ${CASTLE_ZONE}`}</Radio>
+                                <Radio value={ 'END' }>{`Poner al final del ${CASTLE_ZONE}`}</Radio>
+                            </Space>
+                        </Radio.Group>
                     )
                 }
 

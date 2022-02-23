@@ -18,6 +18,8 @@ export const setPlayOpenHand = '[match] set play open hand';
 
 export const setSelectedCard = '[match] set selected card';
 
+export const setCardToMove = '[match] set card to move';
+
 export type MatchState = {
     matchId: string | null;
     match: Dictionary<Card[] | []>;
@@ -34,6 +36,7 @@ export type MatchState = {
     selectedWeapon: any;
     playOpenHand: boolean;
     cardSelected: Card | null;
+    cardToMove: any;
 };
 
 export type Dictionary<TValue> = {
@@ -109,6 +112,11 @@ type MatchSetSelectedCard = {
     payload: Card
 };
 
+type MatchSetCardToMove = {
+    type: typeof setCardToMove,
+    payload: any
+};
+
 export type MatchActionTypes = 
 ChangeAction | 
 MatchSetId | 
@@ -122,4 +130,5 @@ MatchAmountCardsView |
 MatchControlOpponentCard |
 MatchSetWeapon |
 MatchSetPlayOpenHand |
-MatchSetSelectedCard;
+MatchSetSelectedCard |
+MatchSetCardToMove;

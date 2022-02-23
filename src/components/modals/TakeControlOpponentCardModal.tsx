@@ -41,8 +41,7 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
 
         const card = newOpponentMatch[zone].find((card: Card, index2: number) => index2 === index) as Card;        
 
-        newOpponentMatch[zone] = newOpponentMatch[zone].filter((card: Card, index2: number) => index2 !== index);
-        newMatch[optionSelect] = [...newMatch[optionSelect], card];
+        
 
         if (card.armsId?.length) {
 
@@ -52,6 +51,46 @@ const TakeControlOpponentCardModal: FC<TakeControlOpponentCardModalProps> = ({zo
                 newMatch[SUPPORT_ZONE] = [...newMatch[SUPPORT_ZONE], armCardInMyZone];
             }
         }
+
+        if (card.bearerId) {
+            const bearerInOpponentDefenseZone = newOpponentMatch[DEFENSE_ZONE].find((c: Card) => c.idx === card.bearerId);
+
+            if (bearerInOpponentDefenseZone) {
+
+                newOpponentMatch[DEFENSE_ZONE] = newOpponentMatch[DEFENSE_ZONE].map((c: Card) => {
+                    if (c.idx === bearerInOpponentDefenseZone.idx) {
+                        return {
+                            ...c,
+                            armsId: card.armsId?.filter((armId: string) => armId !== card.idx)
+                        }
+                    }
+        
+                    return c;
+                });
+        
+            } else {
+        
+                const bearerInOpponentAttackZone = newOpponentMatch[ATTACK_ZONE].find((c: Card) => c.idx === card.bearerId);
+        
+                if (bearerInOpponentAttackZone) {
+                    newOpponentMatch[ATTACK_ZONE] = newOpponentMatch[ATTACK_ZONE].map((c: Card) => {
+                        if (c.idx === bearerInOpponentAttackZone.idx) {
+                            return {
+                                ...c,
+                                armsId: card.armsId?.filter((armId: string) => armId !== card.idx)
+                            }
+                        }
+        
+                        return c;
+                    });
+                }
+            }
+
+            delete card.bearerId;
+        }
+
+        newOpponentMatch[zone] = newOpponentMatch[zone].filter((card: Card, index2: number) => index2 !== index);
+        newMatch[optionSelect] = [...newMatch[optionSelect], card];
 
         dispatch(changeMatch(newMatch));
         dispatch(changOpponenteMatch(newOpponentMatch));

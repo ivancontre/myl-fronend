@@ -10,15 +10,16 @@ import { ToolOutlined, UserOutlined } from '@ant-design/icons';
 import { ZONE_NAMES } from "../../constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { changeMatch, changOpponenteMatch, setSelectedCardAction, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
+import { changeMatch, changOpponenteMatch, setCardToMoveAction, setSelectedCardAction, setTakeControlOpponentCardAction, setWeaponAction } from '../../store/match/action';
 import { Button, Image, message, Popover } from 'antd';
-import { openModalAssignWeapon, openModalSelectXcards, openModalSelectXcardsOpponent, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
+import { openModalAssignWeapon, openModalDestinyCastleOptions, openModalSelectXcards, openModalSelectXcardsOpponent, openModalTakeControlOpponentCard, openModalThrowXcards, openModalViewAuxiliary, openModalViewAuxiliaryOpponent, openModalViewCastle, openModalViewCementery, openModalViewCementeryOpponent, openModalViewExile, openModalViewExileOpponent, openModalViewRemoval, openModalViewRemovalOpponent } from '../../store/ui-modal/action';
 import { shuffle } from '../../helpers/shuffle';
 import { throwXcards } from '../../helpers/throwsCards';
 import { SocketContext } from '../../context/SocketContext';
 import { Message } from '../../store/chat/types';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
+import { processArm, processArmsFromBearer } from '../../helpers/moveCards';
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
@@ -87,97 +88,36 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
         if (cardToMove.user === myUserId) { // Moviendo mis propias cartas
 
             // si tiene armas, puede tener armas mías o armas asignadas por el oponente
-            if (cardToMove.armsId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
-                
-                for (const armId of cardToMove.armsId as string[]) {
-
-                    const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-
-                    if (armCardInMyZone) {
-
-                        newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-
-                        delete armCardInMyZone.bearerId;
-
-                        if (armCardInMyZone.user === myUserId) {
-                            
-                            sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}"`);                            
-                            newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
-
-                        } else {
-
-                            sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}" oponente`);
-                            haveOpponentArm = true;
-                            newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
-
-                        }
-
-                    }
-
-                }
-
+            if (cardToMove.armsId && (zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE)) {
+                haveOpponentArm = processArmsFromBearer(cardToMove, newCards, newCardsOpponent, zoneName, myUserId, 'SHUFFLE', sendMessage);
                 delete cardToMove.armsId;
 
             }
 
             // si es un arma. Aquí el arma es mía
-            if (cardToMove.bearerId && (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
+            if (cardToMove.bearerId && (zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE  || zoneName === HAND_ZONE)) {
                 // Al portador se le debe quitar esta arma
-                const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                if (bearerInMyDefenseZone) {
-
-                    newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                        if (card.idx === bearerInMyDefenseZone.idx) {
-                            return {
-                                ...card,
-                                armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                            }
-                        }
-
-                        return card;
-                    });
-
-                } else {
-
-                    const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                    if (bearerInMyAttackZone) {
-                        newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyAttackZone.idx) {
-                                return {
-                                    ...card,
-                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                                }
-                            }
-    
-                            return card;
-                        });
-                    }
-                }
-
+                processArm(cardToMove, newCards);
                 delete cardToMove.bearerId;
             }
-
-            newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
-            newCards[zoneName] = [...newCards[zoneName], cardToMove];
-
+            
             if (zoneName === CASTLE_ZONE) { // Se baraja previamente si el destino es el Castillo
 
-                sendMessage(`Moviendo y barajando "${item.name}" de "${item.zone}" a "${zoneName}"`);
-                const newMatch = shuffle({ ...newCards }, CASTLE_ZONE);
-                dispatch(changeMatch(newMatch));
+                dispatch(setCardToMoveAction({
+                    card: cardToMove,
+                    index,
+                    fromZone: item.zone,
+                    toZone: zoneName
 
-                if (haveOpponentArm) {
-                    const newMatchOpponent = shuffle({ ...newCardsOpponent }, CASTLE_ZONE);
-                    dispatch(changOpponenteMatch(newMatchOpponent));
-                    socket?.emit('update-match-opponent', {
-                        match: newMatchOpponent,
-                        matchId
-                    });
-                }
+                }));
+                
+                dispatch(openModalDestinyCastleOptions());
 
             } else {
+
+                newCards[item.zone] = newCards[item.zone].filter((card: Card, index2: number) => index2 !== index);
+                newCards[zoneName] = [...newCards[zoneName], cardToMove];
+
                 const message = zoneName === HAND_ZONE ? `Moviendo carta de "${item.zone}" a "${zoneName}"` : `Moviendo "${item.name}" de "${item.zone}" a "${zoneName}"`
                 sendMessage(message);
                 dispatch(changeMatch(newCards));
@@ -198,70 +138,14 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
             if (zoneName === CASTLE_ZONE || zoneName === CEMETERY_ZONE || zoneName === EXILE_ZONE || zoneName === REMOVAL_ZONE || zoneName === HAND_ZONE) {
                 // Si es un aliado con armas, elimino sus armas y las armas las enío al destino
                 if (cardToMove.armsId) {
-                    for (const armId of cardToMove.armsId as string[]) {
-    
-                        const armCardInMyZone = newCards[SUPPORT_ZONE].find((card: Card) => card.idx === armId);
-                        
-                        if (armCardInMyZone) {
-    
-                            newCards[SUPPORT_ZONE] = newCards[SUPPORT_ZONE].filter((card: Card) => card.idx !== armId);
-    
-                            delete armCardInMyZone.bearerId;
-    
-                            if (armCardInMyZone.user === myUserId) {
-
-                                sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}"`);                                
-                                newCards[zoneName] = [...newCards[zoneName], armCardInMyZone];
-    
-                            } else {
-    
-                                sendMessage(`Moviendo "${armCardInMyZone.name}" de "${SUPPORT_ZONE}" a "${zoneName}" oponente`);    
-                                newCardsOpponent[zoneName] = [...newCardsOpponent[zoneName], armCardInMyZone];
-    
-                            }
-    
-                        }
-    
-                    }
-    
+                    processArmsFromBearer(cardToMove, newCards, newCardsOpponent, zoneName, myUserId as string, 'SHUFFLE', sendMessage);    
                     delete cardToMove.armsId;
                 }
 
                 // Si es un arma, borro su portador
                 if (cardToMove.bearerId) {
                     // Al portador se le debe quitar esta arma
-                    const bearerInMyDefenseZone = newCards[DEFENSE_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                    if (bearerInMyDefenseZone) {
-                        newCards[DEFENSE_ZONE] = newCards[DEFENSE_ZONE].map((card: Card) => {
-                            if (card.idx === bearerInMyDefenseZone.idx) {
-                                return {
-                                    ...card,
-                                    armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                                }
-                            }
-
-                            return card;
-                        })
-                    } else {
-
-                        const bearerInMyAttackZone = newCards[ATTACK_ZONE].find((card: Card) => card.idx === cardToMove.bearerId);
-
-                        if (bearerInMyAttackZone) {
-                            newCards[ATTACK_ZONE] = newCards[ATTACK_ZONE].map((card: Card) => {
-                                if (card.idx === bearerInMyAttackZone.idx) {
-                                    return {
-                                        ...card,
-                                        armsId: card.armsId?.filter((armId: string) => armId !== cardToMove.idx)
-                                    }
-                                }
-        
-                                return card;
-                            })
-                        }
-
-                    }
-
+                    processArm(cardToMove, newCards);
                     delete cardToMove.bearerId;
                 }
 
