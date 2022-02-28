@@ -7,6 +7,7 @@ import '../css/auth.css';
 import RegisterPage from '../pages/RegisterPage';
 import RecoveryPasswordPage from '../pages/RecoveryPasswordPage';
 import VerifyAccountPage from '../pages/VerifyAccountPage';
+import CardsAvailable from '../components/cardsAvailable/CardsAvailable';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -50,6 +51,11 @@ export const AuthRouter: FC = () => {
 
                             </Switch>
 
+                        </Col>
+                    </Row>
+                    <Row justify="center" align="middle">
+                        <Col xs={ 24 } sm= { 12 } md={ 9 } lg={ 9 } xl={ 6 } className="auth-content" style={{ padding: 10, marginTop: 5}}>
+                            <CardsAvailable />
                         </Col>
                     </Row>
                 </div>

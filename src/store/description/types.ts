@@ -5,6 +5,7 @@ export const frecuenciesCardLoad = '[frecuenciesCard] Load';
 export const racesCardLoad = '[racesCard] Load';
 export const editionsCardLoad = '[editionsCard] Load';
 export const erasCardLoad = '[erasCard] Load';
+export const erasCardsAvailableLoad = '[erasCard] Load Cards Available';
 export const resetDescription = '[description] Rest';
 
 export type DescriptionState = {
@@ -12,7 +13,8 @@ export type DescriptionState = {
     frecuencies: FrecuencyCard[];
     races: RaceCard[];
     editions: EditionCard[];
-    eras: EraCard[]
+    eras: EraCard[];
+    cardsAvailabe: EraCard[];
 };
 
 export type TypeCard = {
@@ -71,8 +73,13 @@ type EraCardLoadAction = {
     payload: EraCard[]
 };
 
+type EraCardsAvailableLoadAction = {
+    type: typeof erasCardsAvailableLoad,
+    payload: EraCard[]
+}
+
 type ResetDescriptionAction = {
     type: typeof resetDescription;
 };
 
-export type DescriptionCardActionTypes = TypeLoadAction | FrecuencyCardLoadAction | RaceCardLoadAction | EditionCardLoadAction | EraCardLoadAction | ResetDescriptionAction;
+export type DescriptionCardActionTypes = TypeLoadAction | FrecuencyCardLoadAction | RaceCardLoadAction | EditionCardLoadAction | EraCardLoadAction | ResetDescriptionAction | EraCardsAvailableLoadAction;
