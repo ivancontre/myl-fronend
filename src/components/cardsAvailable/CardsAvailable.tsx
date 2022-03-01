@@ -38,7 +38,7 @@ const CardsAvailable: FC = () => {
             Ver cartas disponibles
         </Button>
 
-        <Alert message="Para una mejor experiencia use Google Chrome :)" type='warning' closable showIcon></Alert>
+        <Alert message="Para una mejor experiencia de usuario use Google Chrome :)" type='warning' closable showIcon></Alert>
 
         <Drawer title="Eras y ediciones disponibles:" placement="right" onClose={onClose} visible={visible}>
             
