@@ -14,6 +14,8 @@ import { PrivateRouter } from './PrivateRouter';
 import { PublicRouter } from './PublicRouter';
 import { SingedRouter } from './SingedRouter';
 
+
+
 const AppRouter: FC = () => {
 
     const dispatch = useDispatch();
@@ -39,7 +41,10 @@ const AppRouter: FC = () => {
 
     if (checking) {
         return (
-            <Spin size="large" />
+            <div className='spinner-general'>
+                <Spin size="large" tip='Cargando...'/>
+            </div>
+            
         )
     }
 
