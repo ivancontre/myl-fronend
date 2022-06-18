@@ -1,4 +1,4 @@
-import { Result } from 'antd';
+import { Spin } from 'antd';
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -39,9 +39,7 @@ const AppRouter: FC = () => {
 
     if (checking) {
         return (
-            <Result
-                title="Validando sesión..."
-            />
+            <Spin size="large" />
         )
     }
 
