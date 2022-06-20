@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { runFetch } from "../../helpers/fetch";
 import { resetMySelection } from "../card/action";
 import { CardActionTypes } from "../card/types";
-import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault, deckReset } from "./types";
+import { Deck, DeckActionTypes, deckAddNew, deckDelete, deckLoad, deckLoadUpdating, deckResetUpdating, deckUpdate, deckSetDefault, deckReset, deckSet } from "./types";
 
 export const startAddNewDeck = (deck: any, history: any, showLoading: Function, hideLoading: Function) => {
     return async (dispatch: Dispatch<DeckActionTypes | CardActionTypes>) => {
@@ -148,6 +148,31 @@ export const startDeleteDeck = (id: string) => {
     }
 };
 
+export const startGetDeck = (id: string, showLoading: Function, hideLoading: Function) => {
+    return async (dispatch: Dispatch<DeckActionTypes>) => {
+        showLoading();
+        try {
+            const token = localStorage.getItem('token') as string;
+            const resp = await runFetch('api/deck/'+ id, {}, 'GET', token);
+            let respJson = await resp.json();
+
+            if (resp.status === 200) {
+                dispatch(setDeck(respJson));
+            } else {
+                message.warn(respJson.msg, 7);
+                console.log(respJson.msg);  
+            }
+
+            hideLoading();
+
+        } catch (error) {
+            console.log(error);
+            hideLoading();
+            message.error('Error al eliminar mazos!');
+        }
+    }
+};
+
 export const loadDeckUpdating = (id: string): DeckActionTypes => {
     return {
         type: deckLoadUpdating,
@@ -224,5 +249,12 @@ export const deleteDeck = (id: string): DeckActionTypes => {
 export const resetDeck = (): DeckActionTypes => {
     return {
         type: deckReset
+    }
+};
+
+const setDeck = (deck: Deck): DeckActionTypes => {
+    return {
+        type: deckSet,
+        payload: deck
     }
 };

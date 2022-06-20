@@ -155,8 +155,10 @@ export const startLoadCardUpdating = (id: string) => {
     }
 };
 
-export const startLoadCardByEdition = (editionId: string) => {
+export const startLoadCardByEdition = (editionId: string, showLoading: Function, hideLoading: Function) => {
     return async (dispatch: Dispatch<CardActionTypes>) => {
+
+        showLoading();
 
         try {
             const token = localStorage.getItem('token') as string;
@@ -165,7 +167,7 @@ export const startLoadCardByEdition = (editionId: string) => {
 
             if (resp.status === 200) {
 
-                dispatch(loadCardsByEdition(respJson));
+                dispatch(loadCardsByEdition(respJson.cards));
                 
             } else if (respJson.errors) {
 
@@ -179,8 +181,11 @@ export const startLoadCardByEdition = (editionId: string) => {
                 console.log(respJson.msg);
             }
 
+            hideLoading();
+
         } catch (error) {
             console.log(error);
+            hideLoading();
             message.error('Error al obtener cartas!');
         }
     }

@@ -1,4 +1,4 @@
-import { DeckState, DeckActionTypes, deckAddNew, deckLoad, Deck, deckLoadUpdating, deckResetUpdating, deckDelete, deckUpdate, deckSetDefault, deckReset } from "./types";
+import { DeckState, DeckActionTypes, deckAddNew, deckLoad, Deck, deckLoadUpdating, deckResetUpdating, deckDelete, deckUpdate, deckSetDefault, deckReset, deckSet } from "./types";
 
 const initialState: DeckState = {
     decks: null,
@@ -64,6 +64,12 @@ export const deckReducer = (state: typeof initialState = initialState, action: D
                     return e;
                 })  as Deck[],
                 deckDefault: action.payload.isDefault ? state.decks?.find((e: Deck) => e.id === action.payload.id) as Deck : null
+            };
+
+        case deckSet:
+            return {
+                ...state,
+                deckUpdating: action.payload
             };
 
         case deckReset:

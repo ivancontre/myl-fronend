@@ -13,7 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import '../../../css/new-deck.css';
-import { loadDeckUpdating, startAddNewDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
+import { loadDeckUpdating, startAddNewDeck, startGetDeck, startLoadDeck, startUpdateDeck } from '../../../store/deck/action';
 import { Card } from '../../../store/card/types';
 import useHideMenu from '../../../hooks/useHideMenu';
 import { MenuContext } from '../../../context/MenuContext';
@@ -46,6 +46,7 @@ const NewDeck: FC = () => {
     const [typeId, setTypeId] = useState<string | undefined>(undefined);
     const [raceId, setRaceId] = useState<string | undefined>(undefined);
     const [editionId, setEditionId] = useState<string | undefined>(undefined);
+    const [deckId, setDeckId] = useState<string | undefined>(undefined);
 
     const [search, setSearch] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
@@ -102,14 +103,30 @@ const NewDeck: FC = () => {
         setEraId(eraId);
         setRaceId(undefined);
         setEditionId(undefined);
+        setDeckId(undefined)
         dispatch(loadCardsByEdition([]));
     };
 
-    const handleSelectEdition = async (editionId: string) => {
+    const handleSelectDeck = async (deckId: string) => {
+
+        // if (selectMyCards.length) {
+        //     message.warning('Si selecciona un mazo se eliminará las cartas seleccionadas')
+        //     return;
+        // }
         setLoading(true);
 
+        setDeckId(deckId);
+        dispatch(startGetDeck(deckId, showLoading, hideLoading))
+
+        setLoading(false);
+    }; 
+
+    const handleSelectEdition = async (editionId: string) => {
+        //setLoading(true);
+
         setRaceId(undefined);
-        setEditionId(editionId)
+        setDeckId(undefined);
+        setEditionId(editionId);
 
         for (const edition of editions) {
             if (edition.id === editionId) {
@@ -118,7 +135,7 @@ const NewDeck: FC = () => {
             }
         }
 
-        await dispatch(startLoadCardByEdition(editionId));
+        await dispatch(startLoadCardByEdition(editionId, showLoading, hideLoading));
 
         setLoading(false);
     };
@@ -321,7 +338,7 @@ const NewDeck: FC = () => {
             </Row> 
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
-                <Col span={ 24 } >
+                <Col span={ 12 } >
                     <Select
                         listHeight={300}
                         placeholder="Seleccione una edición"
@@ -334,6 +351,24 @@ const NewDeck: FC = () => {
                         {
                             eras.find(era => era.id === eraId)?.editions.map(edition => (
                                 <Select.Option key={ edition.id } value={ edition.id }>{ edition.name }</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Col>
+
+                <Col span={ 12 } >
+                    <Select
+                        listHeight={300}
+                        placeholder="Seleccione un mazo base"
+                        style={{ width: "100%" }}
+                        onChange={ handleSelectDeck }
+                        value={ deckId }   
+                        disabled={ !editionId }      
+                        virtual={false}         
+                    >
+                        {
+                            eras.find(era => era.id === eraId)?.editions.find(edition => edition.id === editionId)?.defaultDecks?.map(deck => (
+                                <Select.Option key={ deck.id } value={ deck.id as string}>{ deck.name }</Select.Option>
                             ))
                         }
                     </Select>

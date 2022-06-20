@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Deck } from "../deck/types";
 
 export const typesCardLoad = '[typesCard] Load';
 export const frecuenciesCardLoad = '[frecuenciesCard] Load';
@@ -39,6 +40,7 @@ export type EditionCard = {
     status: boolean;
     era: EraCard;
     releaseDate: moment.Moment;
+    defaultDecks?: Deck[]
 };
 
 export type EraCard = {
