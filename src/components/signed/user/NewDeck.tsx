@@ -246,7 +246,7 @@ const NewDeck: FC = () => {
             body.era = selectMyCards[0].era;
         }
 
-        if (!deckUpdating) {
+        if (!deckUpdating || deckId) {
             
             await dispatch(startAddNewDeck(body, history, showLoading, hideLoading));
             
@@ -359,7 +359,7 @@ const NewDeck: FC = () => {
                 <Col span={ 12 } >
                     <Select
                         listHeight={300}
-                        placeholder="Seleccione un mazo base"
+                        placeholder="Seleccione un mazo prediseñado"
                         style={{ width: "100%" }}
                         onChange={ handleSelectDeck }
                         value={ deckId }   
