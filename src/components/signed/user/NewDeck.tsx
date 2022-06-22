@@ -378,7 +378,7 @@ const NewDeck: FC = () => {
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 12 } >
                     <Select
-                        placeholder="Seleccione un tipo"
+                        placeholder="Busque por un tipo de carta"
                         style={{ width: "100%" }}
                         onChange={ handleSelectType }
                         disabled={ !cardsByEdition.length }
@@ -393,7 +393,7 @@ const NewDeck: FC = () => {
                 </Col>
                 <Col span={ 12 } >
                     <Select
-                        placeholder="Seleccione una raza"
+                        placeholder="Busque por una raza de carta"
                         style={{ width: "100%" }}
                         onChange={ handleSelectRace }
                         disabled={ !cardsByEdition.length }
@@ -411,7 +411,7 @@ const NewDeck: FC = () => {
 
             <Row gutter={[16, 16]} style={{ paddingTop: 10 }}>
                 <Col span={ 12 } >
-                    <Search placeholder="Buscar por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ onChangeSearchText }/>
+                    <Search placeholder="Busque por nombre de carta" enterButton onSearch={ onSearch } disabled={ !cardsByEdition.length } value={ searchText } onChange={ onChangeSearchText }/>
                 </Col>
                 <Col span={ 12 } className={!cardsByEdition.length ? 'disabled': 'not-disabled'}>
                     <ReactTagInput 
