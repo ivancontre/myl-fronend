@@ -238,7 +238,7 @@ export const SingedRouter: FC = () => {
                 >
                     <Menu  theme="dark" mode="horizontal" selectedKeys={[ selectedOption ]}>
 
-                        <Menu.Item key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0, fontSize: 16}}>
+                        <Menu.Item icon={<LogoutOutlined />} key="profile" className="welcome" style={{ background: '#0F0F23', marginTop: 0, fontSize: 16}} onClick={ logoutModal }>
                             { `Bienvenido ${username}`}
                         </Menu.Item>
 
@@ -279,13 +279,6 @@ export const SingedRouter: FC = () => {
                                 </Menu.Item>
                             )
                         }
-                        
-
-                        <Menu.Item key="logout" icon={<LogoutOutlined />}>
-
-                            <Button type="link" onClick={ logoutModal }>Cerrar sesión</Button>
-                            
-                        </Menu.Item>
 
                     </Menu>
                     
