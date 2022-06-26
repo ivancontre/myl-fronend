@@ -12,7 +12,7 @@ export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, c
     localStorage.openpages = Date.now();
 
     const onLocalStorageEvent = (e: StorageEvent) => {
-        
+
         if(e.key === 'openpages'){
             localStorage.page_available = Date.now();
         }
@@ -30,6 +30,45 @@ export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, c
 
         return () => {
             window.removeEventListener("storage", onLocalStorageEvent);
+        };
+
+    }, []);
+
+    // const onOrientationChange = async (e: any) => {
+    //     console.log(window.screen.orientation)
+    //     if (window.screen.orientation.angle === 0) {
+    //         console.log('to landscape')
+    //         await window.screen.orientation.lock('landscape');
+    //     }
+    // }
+
+
+    // useEffect(() => {
+    //     window.addEventListener('orientationchange', onOrientationChange, false);
+
+    //     return () => {
+    //         window.removeEventListener("orientationchange", onOrientationChange);
+    //     };
+
+    // }, []);
+
+    const handleWindowSizeChange = () => {
+        const width = window.innerWidth;
+
+        if (width <= 768) {
+            console.log('is mobile')
+            window.screen.orientation.lock('landscape');
+            return true
+        }
+        console.log('is browser')
+        return false;
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange, false);
+
+        return () => {
+            window.removeEventListener("resize", handleWindowSizeChange);
         };
 
     }, []);
