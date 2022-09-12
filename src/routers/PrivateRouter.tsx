@@ -36,7 +36,7 @@ export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, c
 
     const onVisibilityChange = () => {
         if (document.visibilityState === 'visible') {
-          alert("Tab reopened, refetch the data!");
+          console.log("Tab reopened, refetch the data!");
         }
     };
 
