@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
+import React, { FC, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
@@ -67,6 +67,7 @@ const MatchPage: FC = () => {
 
     const { cardSelected, match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
+    //const { playing } = useSelector((state: RootState) => state.auth);  
     const history = useHistory();
    
     const [visiblePopover, setVisiblePopover] = useState(false);
@@ -493,6 +494,25 @@ const MatchPage: FC = () => {
         }
         
     }, [socket, match, matchId]);
+
+    const onVisibilityChange = useCallback(() => {
+        if (matchId && document.visibilityState === 'visible' && width <= 768) {
+            console.log("Tab reopened, refetch the data!");
+            socket?.emit('recovery-match', {
+                opponentId,
+                matchId
+            });
+        }
+    }, [opponentId, matchId, socket, width]);
+
+    useLayoutEffect(() => {
+        document.addEventListener("visibilitychange", onVisibilityChange);
+    
+        return () => {
+            document.removeEventListener("visibilitychange", onVisibilityChange);
+        };
+        
+    }, [onVisibilityChange]);
 
     return (
         <>

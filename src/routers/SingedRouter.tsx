@@ -97,6 +97,11 @@ export const SingedRouter: FC = () => {
 
             setTimeout(() => {
                 finishMatch();
+
+                return () => {
+                    socket?.off('i-missed-match');
+                }
+
             }, 2000);
         }
 
@@ -167,10 +172,13 @@ export const SingedRouter: FC = () => {
 
     const initMatch = useCallback( (payload: any) => {
 
+        dispatch(matchSetMatchId(payload.matchId));
+
+        if (!payload.recovery) {
             dispatch(matchSetOpponentId(payload.opponentId));
-            dispatch(matchSetOpponentUsername(payload.opponentUsername));
-            dispatch(matchSetMatchId(payload.matchId));
+            dispatch(matchSetOpponentUsername(payload.opponentUsername)); 
             history.replace('/match');
+        }
             
     }, [dispatch, history]);
 

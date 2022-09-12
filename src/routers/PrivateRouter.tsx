@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -32,18 +32,6 @@ export const PrivateRouter: React.FC<ProtectedRouteProps> = ({isAuthenticated, c
             window.removeEventListener("storage", onLocalStorageEvent);
         };
 
-    }, []);
-
-    const onVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-          console.log("Tab reopened, refetch the data!");
-        }
-    };
-
-    useLayoutEffect(() => {
-        document.addEventListener("visibilitychange", onVisibilityChange);
-    
-        return () => document.removeEventListener("visibilitychange", onVisibilityChange);
     }, []);
 
     // const onOrientationChange = async (e: any) => {
