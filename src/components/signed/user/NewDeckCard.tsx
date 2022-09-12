@@ -173,12 +173,20 @@ const NewDeckCard: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card }) 
 
     drag(ref); 
 
+
     return (
         <span ref={ ref } className="movable-item-new-deck animate__animated animate__flipInX'" style={{ opacity, borderRadius: 10 }} data-handler-id={ handlerId } >
             
             <Image
                 src={ card.img }
                 className="image-card-new-deck"
+                placeholder={
+                    <Image
+                        preview={false}
+                        //src={card.img.replace('upload', 'upload/e_blur:800')}
+                        src="https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg"
+                    />
+                }
             />
 
         </span>

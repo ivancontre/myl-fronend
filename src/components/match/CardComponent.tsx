@@ -866,6 +866,13 @@ const CardComponent: FC<CardProps> = ({ id, index, moveCard, zone, card, isOppon
                             <Image
                                 src={ card.img }
                                 className={isOpponent ? 'img-180-deg img-card-match' : 'img-card-match'}
+                                placeholder={
+                                    <Image
+                                        preview={false}
+                                        //src={card.img.replace('upload', 'upload/e_blur:800')}
+                                        src="https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg"
+                                    />
+                                }
                                 onClick={ () => {
                                     dispatch(setSelectedCardAction(card));
                                 }}

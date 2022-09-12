@@ -1,6 +1,5 @@
 .content-detail {
-    background-image: url("../assets/detail.jpg");
-    background-repeat: no-repeat;
+    background-color: white;
     background-size: 100% 100%;
     color: black;
     font-style: italic;

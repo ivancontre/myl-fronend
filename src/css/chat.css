@@ -2,11 +2,7 @@
     position: absolute;
     bottom: 0;
 }
-.chat {
-    background-image: url("https://res.cloudinary.com/dfcm5wuuf/image/upload/v1640791145/31241-pergamino_ictn46.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
+
 .messages {
     border-radius: 2px;
     height: 500px;
@@ -20,21 +16,33 @@
 .my-message {
     border: 2px solid #731717;
     margin: 2px;   
-    background: rgb(22,15,15);
-    background: linear-gradient(0deg, rgba(22,15,15,0.5578606442577031) 0%, rgba(185,56,56,0.13489145658263302) 36%);
+    background-color: white;
+    float: left;
     
 }
 
 .opponent-message {
     border: 1px solid black;
     margin: 2px;
-    background: rgb(28,33,190);
-    background: linear-gradient(0deg, rgba(28,33,190,0.7483368347338936) 0%, rgba(15,19,113,0.16850490196078427) 24%);
+    background-color: cornflowerblue;
+    float: right;
 }
 
 .button-send {
     padding-left: 3px;
     padding-right: 3px;
+}
+
+.my-username {
+    font-weight: bold;
+    color: black;
+    font-size: 13px;
+}
+
+.opponent-username {
+    font-weight: bold;
+    color: black;
+    font-size: 13px;
 }
 
 .button-send > form > div > div > div > div > span {
@@ -51,26 +59,15 @@
 }
 
 .content-text {
-    padding-left: 3px;
-    padding-right: 3px;
-    border-radius: 3px;
-}
-
-.my-username {
-    font-weight: bold;
-    color: black;
-    font-size: 13px;
-}
-
-.opponent-username {
-    font-weight: bold;
-    color: black;
-    font-size: 13px;
+    padding: 5px;
+    border-radius: 8px;
+    width: 90%;
 }
 
 .message-date {
     font-size: 8px;
     text-align: right;
+    margin-bottom: 0;
 }
 
 .font-action {
