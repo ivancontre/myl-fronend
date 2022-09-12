@@ -88,12 +88,12 @@ const SendMessage: FC = () => {
             >
 
                 <Form.Item
-                    style={{paddingBottom: 0, marginBottom: 2}}
+                    style={{padding: 5, marginBottom: 2}}
                     name="message"
                 >
                     <Input.Search
                         enterButton={<SendOutlined />}
-                        size="small"
+                        size="middle"
                         onSearch={ onSearch }
                         placeholder="Escribir mensaje..." 
                     />

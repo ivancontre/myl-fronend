@@ -27,10 +27,8 @@
 }
 
 .detail-img {
-    display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4px;
 }
 
 @media all and (orientation:portrait) {

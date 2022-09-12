@@ -23,7 +23,7 @@ const Detail: FC = () => {
 
     return (
         <Row className="content-detail">
-            <Col span={20}>
+            <Col span={18} style={{padding: 5}}>
                 <div className="title-card"><strong>{`${cardSelected?.name} (${getTypeName(cardSelected?.type as string)})`}</strong></div>
                     <p>
                         {cardSelected?.strength && (<span><strong>Fuerza:</strong> {cardSelected?.strength }</span>)}
@@ -31,7 +31,7 @@ const Detail: FC = () => {
                     </p>
                 <p>{cardSelected?.ability}</p>
             </Col>
-            <Col span={4} className="detail-img">
+            <Col span={6} className="detail-img">
                 <Image
                     height={ 'auto' }
                     src={ cardSelected?.img }

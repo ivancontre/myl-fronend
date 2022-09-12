@@ -47,7 +47,7 @@ const Buttons: FC = () => {
 
     return (
         <div>
-            <Button type="ghost" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionCircleOutlined />} style={{marginBottom: 3, borderRadius: 2, backgroundColor:  "darkgoldenrod"}} >
+            <Button type="ghost" block onClick={ () => randomIntFromInterval(1, 6) } icon={ <QuestionCircleOutlined />} style={{marginBottom: 3, borderRadius: 3, backgroundColor:  "darkgoldenrod"}} >
                 Lanzar dado
             </Button>
 
