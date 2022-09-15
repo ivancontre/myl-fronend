@@ -33,7 +33,7 @@ const Detail: FC = () => {
             </Col>
             <Col span={6} className="detail-img">
                 <Image
-                    height={ 'auto' }
+                    className='img-card-detail'
                     src={ cardSelected?.img }
                 />  
             </Col>

@@ -89,6 +89,7 @@ div.disabled > div.react-tag-input > input.react-tag-input__input {
 
 .image-card-new-deck {
     width: 65px;
+    border-radius: 3px;
 }
 
 .tag-new-deck {

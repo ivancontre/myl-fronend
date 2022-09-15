@@ -116,3 +116,7 @@ footer.ant-layout-footer {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 4px;
 }
+
+.ant-image-preview-img {
+    border-radius: 30px;
+}

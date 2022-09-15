@@ -191,6 +191,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 .img-card-match {
   height: 65px;
   width: 45px;
+  border-radius: 3px;
 }
 
 @media all and (orientation:portrait) {

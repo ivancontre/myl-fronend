@@ -44,18 +44,8 @@ const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOV
 
 const MatchPage: FC = () => {
 
-    const onContextMenu = (e: MouseEvent) => {
-        e.preventDefault()
-    };
-
-    useEffect(() => {
-        window.addEventListener('contextmenu', onContextMenu);
-
-        return () => {
-            window.removeEventListener("contextmenu", onContextMenu);
-        };
-
-    }, []);
+    
+    
 
     const { width } = useWindowDimensions();
     const { pathname } = useLocation();
@@ -71,6 +61,53 @@ const MatchPage: FC = () => {
     const history = useHistory();
    
     const [visiblePopover, setVisiblePopover] = useState(false);
+
+    const { socket } = useContext(SocketContext);
+
+
+    const onContextMenu = (e: MouseEvent) => {
+        e.preventDefault()
+    };
+
+    useEffect(() => {
+        window.addEventListener('contextmenu', onContextMenu);
+
+        return () => {
+            window.removeEventListener("contextmenu", onContextMenu);
+        };
+
+    }, []);
+
+    const onVisibilityChange = useCallback(() => {
+        if (matchId && document.visibilityState === 'visible' && width <= 768) {
+            socket?.emit('recovery-match', {
+                opponentId,
+                matchId
+            });
+        }
+    }, [opponentId, matchId, socket, width]);
+
+    useLayoutEffect(() => {
+        document.addEventListener("visibilitychange", onVisibilityChange);
+    
+        return () => {
+            document.removeEventListener("visibilitychange", onVisibilityChange);
+        };
+        
+    }, [onVisibilityChange]);
+
+    const alertUser = (e: any) => {
+        e.preventDefault();
+        e.returnValue = "";
+    };
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", alertUser);
+        return () => {
+          window.removeEventListener("beforeunload", alertUser);
+        };
+    }, []);
+      
     
     const { 
             modalOpenThrowXcards, 
@@ -95,7 +132,6 @@ const MatchPage: FC = () => {
             modalDestinyCastleOptions
     } = useSelector((state: RootState) => state.uiModal);
 
-    const { socket } = useContext(SocketContext);
 
     const finishMatch = useCallback(() => {
 
@@ -494,25 +530,6 @@ const MatchPage: FC = () => {
         }
         
     }, [socket, match, matchId]);
-
-    const onVisibilityChange = useCallback(() => {
-        if (matchId && document.visibilityState === 'visible' && width <= 768) {
-            console.log("Tab reopened, refetch the data!");
-            socket?.emit('recovery-match', {
-                opponentId,
-                matchId
-            });
-        }
-    }, [opponentId, matchId, socket, width]);
-
-    useLayoutEffect(() => {
-        document.addEventListener("visibilitychange", onVisibilityChange);
-    
-        return () => {
-            document.removeEventListener("visibilitychange", onVisibilityChange);
-        };
-        
-    }, [onVisibilityChange]);
 
     return (
         <>

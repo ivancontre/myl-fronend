@@ -31,6 +31,11 @@
     align-items: center;
 }
 
+.img-card-detail {
+    height: auto;
+    border-radius: 3px;
+}
+
 @media all and (orientation:portrait) {
     .row-detail {
         position: unset;
