@@ -26,32 +26,33 @@ import { startLogout, startSetDetailAction } from '../store/auth/action';
 import Decks from '../components/signed/user/Decks';
 import NewDeck from '../components/signed/user/NewDeck';
 import { SocketContext } from '../context/SocketContext';
-import { matchSetMatchId, matchSetOpponentId, matchSetOpponentUsername, resetMatch } from '../store/match/action';
+import { changeMatch, changOpponenteMatch, matchSetMatchId, matchSetOpponentId, matchSetOpponentUsername, resetMatch } from '../store/match/action';
 import { resetDeckUpdating, resetDeck } from '../store/deck/action';
 import { resetCardUpdating } from '../store/card/action';
 import { resetAllDescription } from '../store/description/action';
 import MatchPage from '../pages/MatchPage';
 import { RootState } from '../store';
-import { resetChatAction } from '../store/chat/action';
+import { addMessageAction, resetChatAction } from '../store/chat/action';
 import { resetModal } from '../store/ui-modal/action';
 import { playReset } from '../store/play/action';
 import Account from '../components/signed/user/Account';
+import { scrollToBottom } from '../helpers/scrollToBottom';
 
 const { Content, Header, Footer } = Layout;
 const { confirm } = Modal;
 
 export const SingedRouter: FC = () => {
 
-    const { hiddenMenu, selectedOption, loading } = useContext(MenuContext);
+    const { hiddenMenu, selectedOption, loading, showLoading, hideLoading  } = useContext(MenuContext);
     const { socket } = useContext(SocketContext);
 
-    const { matchId, opponentMatch, opponentId } = useSelector((state: RootState) => state.match);
+    const { matchId, opponentMatch, opponentId, match } = useSelector((state: RootState) => state.match);
 
     const dispatch = useDispatch();
 
     const history = useHistory();
 
-    const { role, username, google } = useSelector((state: RootState) => state.auth);
+    const { role, username, google, playing } = useSelector((state: RootState) => state.auth);
 
     const { pathname } = useLocation();
     const path = pathname.replace('/', '');
@@ -87,7 +88,7 @@ export const SingedRouter: FC = () => {
 
     useEffect(() => {
 
-        if (path !== 'match' && matchId && Object.keys(opponentMatch).length > 0) {
+        if (!playing && path !== 'match' && matchId && Object.keys(opponentMatch).length > 0) {
             socket?.emit('i-missed-match', {
                 opponentId,
                 matchId
@@ -105,7 +106,7 @@ export const SingedRouter: FC = () => {
             }, 2000);
         }
 
-    }, [path, matchId, opponentMatch, finishMatch, finishMutualMatchModal, opponentId, socket]);
+    }, [path, matchId, opponentMatch, finishMatch, finishMutualMatchModal, opponentId, socket, playing]);
 
     const onLogoutGoogleSuccess = () => {
         handleLogout();
@@ -170,28 +171,61 @@ export const SingedRouter: FC = () => {
 
     }, [acceptInvitation]);
 
-    const initMatch = useCallback( (payload: any) => {
+    const initMatch = useCallback( (payload: any) => {        
 
         dispatch(matchSetMatchId(payload.matchId));
-
-        if (!payload.recovery) {
-            dispatch(matchSetOpponentId(payload.opponentId));
-            dispatch(matchSetOpponentUsername(payload.opponentUsername)); 
-            history.replace('/match');
-        }
+        dispatch(matchSetOpponentId(payload.opponentId));
+        dispatch(matchSetOpponentUsername(payload.opponentUsername)); 
+        history.replace('/match');
             
     }, [dispatch, history]);
 
     useEffect(() => {
+
+        socket?.on('recovery-after-reload', (payload) => {
+            console.log("recovery-after-reload");
+
+            showLoading();
+                    
+            console.log('matchId', payload.matchId)
+            setTimeout(() => {   
+                dispatch(matchSetMatchId(payload.matchId));
+                dispatch(matchSetOpponentId(payload.opponentId));
+                dispatch(matchSetOpponentUsername(payload.opponentUsername)); 
+                dispatch(changeMatch(payload.match));
+                dispatch(changOpponenteMatch(payload.opponentMatch));
+
+                for(const message of payload.messages) {
+                    dispatch(addMessageAction(message));
+                }                
+                hideLoading()
+                history.replace('/match');
+                scrollToBottom('messages');
+            }, 500);
+            
+            
+        });
+
+        return () => {
+            socket?.off('recovery-after-reload');
+        }
+        
+    }, [socket, match, matchId, dispatch, history, showLoading, hideLoading]);
+
+    useEffect(() => {
         socket?.on('go-match', (payload: any) => {
-            initMatch(payload);
+            showLoading();
+            setTimeout(() => {
+                initMatch(payload);
+                hideLoading();
+            }, 1000);
         });
 
         return () => {
             socket?.off('go-match');
         }
 
-    }, [socket, initMatch]);
+    }, [socket, initMatch, showLoading, hideLoading]);
     
     useEffect(() => {
 

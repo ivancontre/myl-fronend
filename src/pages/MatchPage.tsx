@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react'
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { Col, Popover, Modal, Row, Button, Divider, Alert } from 'antd';
+import { Col, Popover, Modal, Row, Button, Divider } from 'antd';
 
 import { CloseCircleOutlined } from '@ant-design/icons';
 
@@ -15,7 +15,7 @@ import { SocketContext } from '../context/SocketContext';
 import useHideMenu from '../hooks/useHideMenu';
 import { RootState } from '../store';
 import { Card } from '../store/card/types';
-import { changeMatch, changOpponenteMatch, resetMatch, setAmountCardsViewAction, setPlayOpenHandAction } from '../store/match/action';
+import { changeMatch, changOpponenteMatch, matchSetMatchId, resetMatch, setAmountCardsViewAction, setPlayOpenHandAction } from '../store/match/action';
 import Zone from '../components/match/Zone';
 import { Dictionary } from '../store/match/types';
 
@@ -37,15 +37,14 @@ import Detail from '../components/detail/Detail';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import OpponentDiscard from '../components/modals/OpponentDiscard';
 import DestinyCastleOptionsModal from '../components/modals/DestinyCastleOptionsModal';
+import { User } from '../store/auth/types';
+import { MenuContext } from '../context/MenuContext';
 
 const { confirm } = Modal;
 
 const { CASTLE_ZONE, DEFENSE_ZONE, ATTACK_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, SUPPORT_ZONE, HAND_ZONE, GOLDS_PAID_ZONE, UNPAID_GOLD_ZONE, AUXILIARY_ZONE } = ZONE_NAMES;
 
 const MatchPage: FC = () => {
-
-    
-    
 
     const { width } = useWindowDimensions();
     const { pathname } = useLocation();
@@ -55,15 +54,15 @@ const MatchPage: FC = () => {
 
     const dispatch = useDispatch();
 
+    const { showLoading, hideLoading  } = useContext(MenuContext);
     const { cardSelected, match, emmitChange, matchId, opponentMatch, opponentId, opponentUsername, amountCardsView, takeControlOpponentCardIndex, takeControlOpponentCardZone } = useSelector((state: RootState) => state.match);
     const { deckDefault } = useSelector((state: RootState) => state.decks);
-    //const { playing } = useSelector((state: RootState) => state.auth);  
+    const { activeUsersForPlay } = useSelector((state: RootState) => state.play);
     const history = useHistory();
    
     const [visiblePopover, setVisiblePopover] = useState(false);
 
     const { socket } = useContext(SocketContext);
-
 
     const onContextMenu = (e: MouseEvent) => {
         e.preventDefault()
@@ -77,37 +76,6 @@ const MatchPage: FC = () => {
         };
 
     }, []);
-
-    const onVisibilityChange = useCallback(() => {
-        if (matchId && document.visibilityState === 'visible' && width <= 768) {
-            socket?.emit('recovery-match', {
-                opponentId,
-                matchId
-            });
-        }
-    }, [opponentId, matchId, socket, width]);
-
-    useLayoutEffect(() => {
-        document.addEventListener("visibilitychange", onVisibilityChange);
-    
-        return () => {
-            document.removeEventListener("visibilitychange", onVisibilityChange);
-        };
-        
-    }, [onVisibilityChange]);
-
-    const alertUser = (e: any) => {
-        e.preventDefault();
-        e.returnValue = "";
-    };
-
-    useEffect(() => {
-        window.addEventListener("beforeunload", alertUser);
-        return () => {
-          window.removeEventListener("beforeunload", alertUser);
-        };
-    }, []);
-      
     
     const { 
             modalOpenThrowXcards, 
@@ -151,15 +119,21 @@ const MatchPage: FC = () => {
         confirm({
             title: '¿Seguro que quieres abandonar la partida?',
             icon: <ExclamationCircleOutlined />,
-            content: 'Si abandonas la partida perderás y tu oponente será el ganador',
+            content: activeUsersForPlay?.find((user: User) => user.id === opponentId)?.online ? 'Si abandonas la partida perderás y tu oponente será el ganador' : 'Tu oponente está desconectado, si abandonas la partida serás el ganador de igual forma',
             okText: 'Sí',
             cancelText: 'No',
             onOk() {
+                showLoading();
                 socket?.emit('close-match', {
                     matchId,
                     opponentId
                 }, () => {
-                    finishMatch();
+                    setTimeout(() => {
+                        finishMatch();
+                        hideLoading();
+                        
+                    }, 1500);
+                    
                 });
                 
             },
@@ -178,11 +152,13 @@ const MatchPage: FC = () => {
                 okText: 'Aprobar',
                 cancelText: 'Rechazar',
                 onOk() {
+                    showLoading();
                     socket?.emit('approve-request-leave-mutual-match', {
                         matchId,
                         opponentId
                     }, () => {
                         finishMatch();
+                        hideLoading();
                     });                    
                     
                 },
@@ -193,7 +169,7 @@ const MatchPage: FC = () => {
                     }); 
                 },
             });
-        }, [matchId, opponentId, socket, finishMatch],
+        }, [matchId, opponentId, socket, finishMatch, showLoading, hideLoading],
     );
 
     const finishMutualMatchModal = useCallback(
@@ -272,7 +248,7 @@ const MatchPage: FC = () => {
 
     useEffect(() => {
 
-        if (deckDefault?.cards.length) {
+        if (Object.keys(match).length === 0 && deckDefault?.cards.length) {
             console.log('changeMatch');
             const myCards: Dictionary<Card[] | []> = {};
             myCards[CASTLE_ZONE] = deckDefault?.cards as Card[];
@@ -290,7 +266,7 @@ const MatchPage: FC = () => {
             dispatch(changeMatch(myCards));  
         }
 
-    }, [dispatch, deckDefault?.cards]);
+    }, [dispatch, deckDefault?.cards, match]);
 
     useEffect(() => {
         
@@ -427,7 +403,7 @@ const MatchPage: FC = () => {
             youWinModal('Tu oponente abandonó la partida');
             setTimeout(() => {
                 finishMatch();
-            }, 2000);
+            }, 1500);
         });
 
         return () => {
@@ -453,10 +429,11 @@ const MatchPage: FC = () => {
         socket?.on('finish-approve-leave-mutual-match', () => {   
             
             finishMutualMatchModal('Tu oponente aprobó el abandono mutuo. Saliendo...');
-
+            showLoading();
             setTimeout(() => {
                 finishMatch();
-            }, 2000);            
+                hideLoading();
+            }, 1500);            
             
         });
 
@@ -464,7 +441,7 @@ const MatchPage: FC = () => {
             socket?.off('finish-approve-leave-mutual-match');
         }
 
-    }, [socket, finishMutualMatchModal, finishMatch]);
+    }, [socket, finishMutualMatchModal, finishMatch, showLoading, hideLoading]);
 
     useEffect(() => {
 
@@ -473,7 +450,7 @@ const MatchPage: FC = () => {
 
             setTimeout(() => {
                 Modal.destroyAll();
-            }, 2000);
+            }, 1500);
 
         });
 
@@ -493,20 +470,24 @@ const MatchPage: FC = () => {
 
             finishMutualMatchModal('Perdiste :(');
 
+            showLoading();
             setTimeout(() => {
                 finishMatch();
-            }, 2000);
+                hideLoading();
+            }, 1500);
         }
-    }, [match, socket, matchId, opponentId, finishMutualMatchModal, finishMatch]);
+    }, [match, socket, matchId, opponentId, finishMutualMatchModal, finishMatch, showLoading, hideLoading]);
 
     useEffect(() => {
 
         socket?.on('you-win-match', () => {
             youWinModal('Ganaste :)');
 
+            showLoading();
             setTimeout(() => {
                 finishMatch();
-            }, 2000);
+                hideLoading();
+            }, 1500);
 
         });
 
@@ -514,7 +495,7 @@ const MatchPage: FC = () => {
             socket?.off('you-win-match');
         }
 
-    }, [socket, finishMutualMatchModal, youWinModal, finishMatch]);
+    }, [socket, finishMutualMatchModal, youWinModal, finishMatch, showLoading, hideLoading]);
 
     useEffect(() => {
 
@@ -530,6 +511,20 @@ const MatchPage: FC = () => {
         }
         
     }, [socket, match, matchId]);
+
+    useEffect(() => {
+
+        socket?.on('recovery-after-reload-opponent', (payload) => {
+            console.log("recovery-after-reload-opponent");
+            console.log('matchId', payload.matchId)
+            dispatch(matchSetMatchId(payload.matchId));
+        });
+
+        return () => {
+            socket?.off('recovery-after-reload-opponent');
+        }
+        
+    }, [socket, matchId, dispatch]);
 
     return (
         <>
@@ -731,12 +726,6 @@ const MatchPage: FC = () => {
                         </Col>
                         <Col span={ width > 479 ? 5 : 24 } className="content-actions">
 
-                            <Row gutter={[16, 16]} justify="center" style={{paddingTop: 3}}>
-                                <Col style={{width: '95%', textAlign: 'center'}}>
-                                    <Alert className="message-warning animate__animated animate__pulse animate__infinite" message="No recargues el navegador" type="warning" showIcon/>
-                                </Col> 
-                            </Row>
-
                             <Row gutter={[16, 16]} style={{paddingTop: 5}}>
                                 <Col style={{width: '100%'}}>
                                     <Popover
@@ -751,7 +740,14 @@ const MatchPage: FC = () => {
                                 </Col> 
                             </Row>     
 
-                            <Divider className="divider-vs"> {`vs ${opponentUsername}`} </Divider>
+                            <Divider className="divider-vs">
+                                 {`vs ${opponentUsername}`} 
+                                <p style={{margin: 0, fontSize: 13}}>
+                                    {
+                                        activeUsersForPlay?.find((user: User) => user.id === opponentId)?.online ? '(conectado)' : '(desconectado)'
+                                    }
+                                </p>
+                            </Divider>
 
                             <Row justify="space-around" align="middle">
                                 <Col span={24}>
