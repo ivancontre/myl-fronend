@@ -194,6 +194,10 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   border-radius: 3px;
 }
 
+.ant-image-img-custom {
+  border-radius: 3px;
+}
+
 @media all and (orientation:portrait) {
 
   .title-zone {

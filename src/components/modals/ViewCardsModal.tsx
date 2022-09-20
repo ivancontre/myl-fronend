@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react'
-import { Alert, Modal, Select, Space, Radio, RadioChangeEvent } from 'antd';
+import { Alert, Modal, Select, Space, Radio, Input, RadioChangeEvent } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -21,6 +21,7 @@ import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import { Message } from '../../store/chat/types';
 import { shuffle } from '../../helpers/shuffle';
+const { Search } = Input;
 
 const { DEFENSE_ZONE, ATTACK_ZONE, HAND_ZONE, UNPAID_GOLD_ZONE, GOLDS_PAID_ZONE, AUXILIARY_ZONE, CEMETERY_ZONE, EXILE_ZONE, REMOVAL_ZONE, CASTLE_ZONE } = ZONE_NAMES;
 
@@ -37,6 +38,8 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
     const { viewCardsOrigin, viewCardsDestiny, matchId } = useSelector((state: RootState) => state.match);
 
     const { socket } = useContext(SocketContext);
+    const [search, setSearch] = useState<string>('');
+    const [searchText, setSearchText] = useState<string>('');
 
     const { id: myUserId, username } = useSelector((state: RootState) => state.auth);
 
@@ -59,6 +62,24 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
         
         
     }, [dispatch, origin, zone, amount]);
+
+    const onSearch = (value: string) => {
+        if (!value) {
+            setSearch('');
+            return;
+        }
+
+        setSearch(value);
+    };
+
+    const onChangeSearchText = (event: any) => {
+        if (event.target.value) {
+            setSearchText(event.target.value as string)
+        } else {
+            setSearchText('');
+            setSearch('');
+        }
+    };
 
     const { 
             modalOpenViewCastle, 
@@ -208,6 +229,10 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
 
     const returnItemsForZoneOrigin = (zoneName: string, isOrigin: boolean) => {
         return viewCardsOrigin
+                .filter(card => {
+                    return (search ? card.name.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(search.toUpperCase()) > -1 : true)
+                
+                })
                 .map((card, index) => (
                     <CardComponent 
                         key={ index }
@@ -265,6 +290,7 @@ const ViewCardsModal: FC<ViewCastleModalProps> = ({ origin, zone, amount, onlyRe
             onOk={ handleOkModal }
         >
             <Alert style={{marginBottom: 20}} message={`Las cartas que están a la derecha son las primeras en el ${zone}`} type="info" showIcon/>
+            <Search style={{marginBottom: 20}} placeholder="Busque por nombre de carta" enterButton onSearch={ onSearch } disabled={ !viewCardsOrigin.length } value={ searchText } onChange={ onChangeSearchText }/>
 
             <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
                 <CardComponentContainer title={ zone } >

@@ -184,7 +184,7 @@ const CardComponent: FC<NewDeckCardProps> = ({ id, index, moveCard, zone, card, 
             
             <Image
                 width={ 65 }
-                className={discard ? "img-180-deg" : ""}
+                className={discard ? "ant-image-img-custom img-180-deg" : "ant-image-img-custom"}
                 src={ !isPrivate ? card.img : 'https://res.cloudinary.com/dcx2yyhxg/image/upload/v1641388971/assets/reverso-carta_avpq6q_1_x4rzt0.jpg'}
             />
 
