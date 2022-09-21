@@ -1,5 +1,26 @@
+.perspective {
+  padding-left: 11.7rem !important;
+  padding-right: 11.7rem !important;
+  perspective: 59.5rem;
+  top: -5.5rem;
+}
+
+.perspective-match {
+  transform: rotateX(30deg);
+  background-image: url("../assets/match.jpg");
+  padding-right: 4px;
+}
+
 .zone {
   height: 106px;
+  width: 100%;
+  margin: 2px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);  
+}
+
+.zone-opponent {
+  height: 116px;
   width: 100%;
   margin: 2px;
   border-radius: 2px;
@@ -14,20 +35,21 @@
 .title-zone {
   text-align: center;
   background: rgb(14,14,8);
-background: radial-gradient(circle, rgba(14,14,8,1) 0%, rgba(120,15,15,1) 88%);
+  background: radial-gradient(circle, rgba(14,14,8,1) 0%, rgba(120,15,15,1) 88%);
   font-size: 11px;
 }
 
 .title-zone-opponent {
   text-align: center;
   background: rgb(0,0,0);
-background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
-  font-size: 11px;
+  background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
+  font-size: 12px;
+  font-weight: bold;
 }
 
-.content-match {
+/* .content-match {
   background-image: url("../assets/match.jpg");
-}
+} */
 
 .scroll {
   overflow-y: auto;
@@ -44,7 +66,7 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
 
 .movable-item {
   border-radius: 3px;
-  margin: 4px;
+  margin: 0.25rem;
   height: 65px;
   width: 45px;
   display: flex;
@@ -183,8 +205,8 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
 .icon-zone-action {
   color: white;
-  height: 15px !important;
-  width: 15px !important;
+  height: 11px !important;
+  width: 11px !important;
   float: right; 
 }
 
@@ -199,6 +221,41 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 @media all and (orientation:portrait) {
+
+  .zone-opponent {
+    height: 106px;
+    width: 100%;
+    margin: 2px;
+    border-radius: 2px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.5);  
+  }
+
+  .perspective {
+    padding-left: 1.5px !important;
+    padding-right: 1.5px !important;
+    perspective: unset;
+    top: unset;
+  }
+
+  .perspective-match {
+    transform: unset;
+    background-image: url("../assets/match.jpg");
+    padding-right: unset;
+  }
+
+  .title-zone {
+    text-align: center;
+    background: rgb(14,14,8);
+    background: radial-gradient(circle, rgba(14,14,8,1) 0%, rgba(120,15,15,1) 88%);
+    font-size: 11px;
+  }
+  
+  .title-zone-opponent {
+    text-align: center;
+    background: rgb(14,14,8);
+    background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
+    font-size: 11px;
+  }
 
   .title-zone {
     font-size: 7px;
@@ -243,6 +300,25 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 @media all and (orientation:landscape) {
+
+  .perspective {
+    padding-left: 5.7rem !important;
+    padding-right: 5.7rem !important;
+    perspective: 59.5rem;
+    top: -5.5rem;
+  }
+
+  .title-zone-opponent {
+    text-align: center;
+    background: rgb(14,14,8);
+    background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
+    font-size: 9px;
+  }
+
+  .title-zone {
+    font-size: 10px;
+  }
+
   .message-warning {
     font-size: 8px;
   }

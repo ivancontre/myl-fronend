@@ -563,11 +563,12 @@ const MatchPage: FC = () => {
             <div className="content-match">
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
                     <Row gutter={[3, 3]}>
-                        <Col span={ width > 479 ? 19 : 24 }>
+                        <Col span={ width > 479 ? 19 : 24 } className="perspective">
+                            <div className='perspective-match'>
                                 <Row gutter={[3, 3]}>
 
                                     <Col span={10}> 
-                                        <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex' isOpponent withCount >
+                                        <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex-opponent' isOpponent withCount >
                                             { opponentMatch[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, true) }
                                         </Zone>
                                     </Col>
@@ -722,7 +723,7 @@ const MatchPage: FC = () => {
                                         </Zone>
                                     </Col>
                                 </Row>
-                            
+                            </div>
                         </Col>
                         <Col span={ width > 479 ? 5 : 24 } className="content-actions">
 
