@@ -299,8 +299,9 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   
 }
 
-@media all and (orientation:landscape) {
-
+@media only screen and (min-device-width: 480px) 
+                   and (max-device-width: 640px) 
+                   and (orientation: landscape) {
   .perspective {
     padding-left: 5.7rem !important;
     padding-right: 5.7rem !important;
