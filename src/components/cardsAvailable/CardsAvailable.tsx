@@ -2,6 +2,7 @@ import { Alert, Button, Drawer } from 'antd';
 import React, { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { Deck } from '../../store/deck/types';
 import { startLoadEraCardsAvailable } from '../../store/description/action';
 import { EditionCard, EraCard } from '../../store/description/types';
 
@@ -51,7 +52,21 @@ const CardsAvailable: FC = () => {
                                     <ul>
                                         {
                                             era.editions.map((edition: EditionCard) => {
-                                                return <li key={edition.id}>{edition.name}</li>
+                                                return <li key={edition.id}>
+                                                    {edition.name}
+                                                    <ul>
+                                                        {
+                                                            edition.defaultDecks && edition.defaultDecks.map((deck: Deck) => {
+                                                                return <li key={deck.id}>
+                                                                    {deck.name}
+                                                                </li>
+
+                                                            })
+                                                        }
+
+                                                    </ul>
+                                                
+                                                </li>
                                             })
                                         }
                                     </ul>

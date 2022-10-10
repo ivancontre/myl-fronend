@@ -374,7 +374,7 @@ export const SingedRouter: FC = () => {
                         </Switch>
                     </div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Developed by <em>Iván Cristóbal Contreras Jara</em> ©2022</Footer>
+                <Footer style={{ textAlign: 'center' }}>Los datos mostrados en este sitio son copyright de sus respectivos dueños y no se está lucrando con ello :)</Footer>
             </Layout>   
         </Spin>         
     )

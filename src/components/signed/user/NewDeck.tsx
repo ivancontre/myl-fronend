@@ -359,7 +359,7 @@ const NewDeck: FC = () => {
                 <Col span={ 12 } >
                     <Select
                         listHeight={300}
-                        placeholder="Seleccione un mazo prediseñado"
+                        placeholder="Puede seleccionar un mazo prediseñado"
                         style={{ width: "100%" }}
                         onChange={ handleSelectDeck }
                         value={ deckId }   
