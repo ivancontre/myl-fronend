@@ -1,9 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Form, Input, Button,  Typography } from 'antd';
 import { UserOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+
+import { gapi } from 'gapi-script'
 
 import { startLogin, startLoginGoogle } from '../store/auth/action';
 
@@ -29,6 +31,15 @@ const LoginPage: FC = () => {
     const onFailure = (error: any) => {
         console.log(error)
     };
+
+    useEffect(() => {
+        function start() {
+        gapi.auth2.init({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID as string
+        })
+        }
+        gapi.load('client:auth2', start)
+        })
 
     return (
         <>
