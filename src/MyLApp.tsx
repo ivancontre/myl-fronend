@@ -5,9 +5,7 @@ import AppRouter from './routers/AppRouter';
 
 import 'animate.css';
 
-const MyLApp: FC = () => {
-
-    
+const MyLApp: FC = () => {    
 
     return (
             <SocketProvider>

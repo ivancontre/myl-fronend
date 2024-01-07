@@ -270,3 +270,74 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
     margin: 16px 0;
   }
 }
+
+.defense-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419619/assets/output-onlinepngtools_1_sv1unq.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 100px;
+  background-position: center;
+}
+
+.attack-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419874/assets/output-onlinepngtools_3_g4oxjk.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 100px;
+  background-position: center;
+}
+
+.support-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419825/assets/output-onlinepngtools_2_hwo0zi.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 40px;
+  background-position: center;
+}
+
+.paid-gold-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419507/assets/output-onlinepngtools_xe2io7.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 70px;
+  background-position: center;
+}
+
+.unpaid-gold-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419435/assets/oro_no_pagado_op_tbs9kq.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 70px;
+  background-position: center;
+}
+
+.cementery-zone {
+  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665420099/assets/output-onlinepngtools_4_uqg1sd.png');
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 40px;
+  background-position: right;
+}
+
+@media (min-width:320px)  { 
+  /* smartphones, iPhone, portrait 480x320 phones */ 
+}
+@media (min-width:481px)  { 
+  /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
+
+}
+@media (min-width:641px)  { 
+  /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ 
+
+}
+@media (min-width:961px)  { 
+  /* tablet, landscape iPad, lo-res laptops ands desktops */ 
+
+}
+@media (min-width:1025px) { 
+  /* big landscape tablets, laptops, and desktops */
+
+}
+@media (min-width:1281px) { 
+  /* hi-res laptops and desktops */ 
+}

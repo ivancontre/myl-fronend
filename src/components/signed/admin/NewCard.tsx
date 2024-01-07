@@ -63,8 +63,8 @@ const NewCard = () => {
     const history = useHistory();
 
     useEffect(() => {
-        async function getFromAPI() {
-            await dispatch(startLoadCardUpdating(params.id));
+        function getFromAPI() {
+            dispatch(startLoadCardUpdating(params.id));
         }
 
         if (params.id && params.id !== 'undefined') {
