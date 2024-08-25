@@ -58,7 +58,7 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
   position: relative;
 }
 
-.my-card {
+/* .my-card {
   background-color: #780f0f;
   height: 95px;
   width: 67px;
@@ -70,7 +70,7 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
   height: 95px;
   width: 67px;
   min-width: 67px;
-}
+} */
 
 .card-private {
   height: 65px;
@@ -205,6 +205,14 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   border-radius: 3px;
 }
 
+.unpaid-gold-zone {
+  min-height: 100px;
+  background-repeat: no-repeat;
+  background-size: 70px;
+  background-position: center;
+}
+
+
 @media all and (orientation:portrait) {
 
   .title-zone {
@@ -220,10 +228,11 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
     float: unset;
     position: relative;
     left: 50%;
+    padding-top: 5px;
   }
 
   .stack > .movable-item > .img-card-match{
-    height: 62px;
+    height: 69px;
     margin: 1px;
   } 
   
@@ -234,16 +243,16 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
   .movable-item {
     margin: 2px;
-    height: 64px;
-    width: 40px;
+    height: 69px;
+    width: 45px;
   }
 
   .img-card-match {
-    height: 61px;
-    width: 41px;
+    height: 69px;
+    width: 45px;
   }
 
-  .my-card {
+  /* .my-card {
     height: 67px;
     width: 45px;
     min-width: 45px;
@@ -253,10 +262,18 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
     height: 60px;
     width: 45px;
     min-width: 45px;
-  }
+  } */
 
   .zone {
-    height: 92px;
+    height: 96px;
+  }
+  
+  .unpaid-gold-zone {
+    min-height: 81px;
+  }
+
+  .zone-flex {
+    width: 100%;
   }
   
 }
@@ -318,12 +335,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   background-position: center;
 }
 
-.unpaid-gold-zone {
-  min-height: 100px;
-  background-repeat: no-repeat;
-  background-size: 70px;
-  background-position: center;
-}
 
 .cementery-zone {
   min-height: 100px;

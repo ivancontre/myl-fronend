@@ -712,7 +712,7 @@ const MatchPage: FC = () => {
 
                                         <Row gutter={[3, 3]}>
 
-                                        <Col span={10}> 
+                                        <Col xs={7} xl={10}> 
                                             <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex unpaid-gold-zone' withCount >
                                                 { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, false) }
                                             </Zone>
@@ -723,7 +723,7 @@ const MatchPage: FC = () => {
                                                 { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE, true, false, false) }
                                             </Zone>
                                         </Col>
-                                        <Col xs={11} sm={11} md={11} lg={12} xl={12}>
+                                        <Col xs={14} sm={11} md={11} lg={12} xl={12}>
                                             <Zone title={ HAND_ZONE } className='zone-flex' withCount >
                                                 { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE, false, true, false) }
                                             </Zone>
