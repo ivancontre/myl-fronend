@@ -1,7 +1,7 @@
 .zone {
-  height: 106px;
+  height: 127px;
   width: 100%;
-  margin: 2px;
+  margin: 1px;
   border-radius: 2px;
   box-shadow: 1px 1px 6px rgba(0,0,0,0.5);  
 }
@@ -25,8 +25,12 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
   font-size: 11px;
 }
 
-.content-match {
-  background-image: url("../assets/match.jpg");
+/* .content-match {
+  overflow-y: clip;
+} */
+
+.image-match {
+  background-image: url("https://img.wallpapic.com/i6793-333-517/thumb/wood-wooden-brown-light-wallpaper.jpg");
 }
 
 .scroll {
@@ -45,8 +49,8 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
 .movable-item {
   border-radius: 3px;
   margin: 4px;
-  height: 65px;
-  width: 45px;
+  
+  width: 65px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,16 +60,16 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
 
 .my-card {
   background-color: #780f0f;
-  height: 71px;
-  width: 51px;
-  min-width: 51px;
+  height: 95px;
+  width: 67px;
+  min-width: 67px;
 }
 
 .opponent-card {
   background-color: rgb(23, 17, 104);
-  height: 71px;
-  width: 51px;
-  min-width: 51px;
+  height: 95px;
+  width: 67px;
+  min-width: 67px;
 }
 
 .card-private {
@@ -95,13 +99,16 @@ span.icon-arm-opponent {
   
 .stack {
   width: 80px;
+  float: left;
+  position: relative;
+  left: 50%;
 }
 
 .stack > .movable-item  {
   position: absolute;
-  margin: 5px auto;
-  right: 0;
-  left: 0;  
+  display: table;
+  float: left;
+  left: -50%;
 }
 
 .actions {
@@ -189,8 +196,8 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .img-card-match {
-  height: 65px;
-  width: 45px;
+  height: 93px;
+  width: 63px;
   border-radius: 3px;
 }
 
@@ -272,7 +279,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .defense-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419619/assets/output-onlinepngtools_1_sv1unq.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 100px;
@@ -280,7 +286,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .attack-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419874/assets/output-onlinepngtools_3_g4oxjk.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 100px;
@@ -288,7 +293,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .support-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419825/assets/output-onlinepngtools_2_hwo0zi.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 40px;
@@ -296,7 +300,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .paid-gold-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419507/assets/output-onlinepngtools_xe2io7.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 70px;
@@ -304,7 +307,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .unpaid-gold-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665419435/assets/oro_no_pagado_op_tbs9kq.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 70px;
@@ -312,7 +314,6 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .cementery-zone {
-  background-image: url('https://res.cloudinary.com/dcx2yyhxg/image/upload/v1665420099/assets/output-onlinepngtools_4_uqg1sd.png');
   min-height: 100px;
   background-repeat: no-repeat;
   background-size: 40px;

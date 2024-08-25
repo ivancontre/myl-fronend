@@ -564,6 +564,7 @@ const MatchPage: FC = () => {
                 <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
                     <Row gutter={[3, 3]}>
                         <Col span={ width > 479 ? 19 : 24 }>
+                        <div className='image-match'>
                                 <Row gutter={[3, 3]}>
 
                                     <Col span={10}> 
@@ -584,6 +585,10 @@ const MatchPage: FC = () => {
                                         </Zone>
                                     </Col>
                                 </Row> 
+
+                                
+
+                                
 
                                 <Row gutter={[3, 3]}>
                                     
@@ -639,89 +644,94 @@ const MatchPage: FC = () => {
                                         </Zone> 
                                     </Col>
                                 </Row>
+                                </div>
                                 
-                                <Phases />
+                                {/* <Phases /> */}
 
-                                <Row gutter={[3, 3]}>
+                                <div className='image-match'>
+                                    <Row gutter={[3, 3]}>
 
-                                    <Col xs={3} sm={3} md={3} lg={2} xl={2}>
-                                        <Zone title={ EXILE_ZONE } className='stack' withCount >
-                                            { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col xs={3} sm={3} md={3} lg={2} xl={2}>
+                                            <Zone title={ EXILE_ZONE } className='stack' withCount >
+                                                { match[EXILE_ZONE] && returnItemsForZone(EXILE_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                    <Col xs={3} sm={3} md={3} lg={2} xl={2}>
-                                        <Zone title={ CEMETERY_ZONE } className='stack cementery-zone' withCount >
-                                            { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col xs={3} sm={3} md={3} lg={2} xl={2}>
+                                            <Zone title={ CEMETERY_ZONE } className='stack cementery-zone' withCount >
+                                                { match[CEMETERY_ZONE] && returnItemsForZone(CEMETERY_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                    <Col xs={18} sm={18} md={18} lg={20} xl={20}> 
-                                        <Zone title={ ATTACK_ZONE } className='zone-flex attack-zone' >
-                                            { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE, true, false, false) }
-                                        </Zone> 
-                                    </Col>
+                                        <Col xs={18} sm={18} md={18} lg={20} xl={20}> 
+                                            <Zone title={ ATTACK_ZONE } className='zone-flex attack-zone' >
+                                                { match[ATTACK_ZONE] && returnItemsForZone(ATTACK_ZONE, true, false, false) }
+                                            </Zone> 
+                                        </Col>
 
-                                </Row>
+                                        </Row>
 
-                                <Row gutter={[3, 3]}>
+                                        <Row gutter={[3, 3]}>
 
-                                    <Col xs={3} sm={3} md={3} lg={2} xl={2}>
-                                        <Zone title={ REMOVAL_ZONE } className='stack' withCount>
-                                            { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col xs={3} sm={3} md={3} lg={2} xl={2}>
+                                            <Zone title={ REMOVAL_ZONE } className='stack' withCount>
+                                                { match[REMOVAL_ZONE] && returnItemsForZone(REMOVAL_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                    <Col xs={3} sm={3} md={3} lg={2} xl={2}>                                    
-                                        <Zone title={ CASTLE_ZONE } className='stack' withCount >
-                                            { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE, true, true, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col xs={3} sm={3} md={3} lg={2} xl={2}>                                    
+                                            <Zone title={ CASTLE_ZONE } className='stack' withCount >
+                                                { match[CASTLE_ZONE] && returnItemsForZone(CASTLE_ZONE, true, true, false) }
+                                            </Zone>
+                                        </Col>
 
-                                    <Col xs={18} sm={18} md={18} lg={20} xl={20}> 
-                                        <Zone title={ DEFENSE_ZONE } className='zone-flex defense-zone'>
-                                            { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col xs={18} sm={18} md={18} lg={20} xl={20}> 
+                                            <Zone title={ DEFENSE_ZONE } className='zone-flex defense-zone'>
+                                                { match[DEFENSE_ZONE] && returnItemsForZone(DEFENSE_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                </Row>
+                                        </Row>
 
-                                <Row gutter={[3, 3]}>
+                                        <Row gutter={[3, 3]}>
 
-                                    <Col span={ 10 }> 
-                                        <Zone title={ GOLDS_PAID_ZONE } className='zone-flex paid-gold-zone' withCount>
-                                            { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
+                                        <Col span={ 10 }> 
+                                            <Zone title={ GOLDS_PAID_ZONE } className='zone-flex paid-gold-zone' withCount>
+                                                { match[GOLDS_PAID_ZONE] && returnItemsForZone(GOLDS_PAID_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                    
-                                    <Col span={ 14 }> 
-                                        <Zone title={ SUPPORT_ZONE } className='zone-flex support-zone'>
-                                            { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
 
-                                </Row>  
+                                        <Col span={ 14 }> 
+                                            <Zone title={ SUPPORT_ZONE } className='zone-flex support-zone'>
+                                                { match[SUPPORT_ZONE] && returnItemsForZone(SUPPORT_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
 
-                                <Row gutter={[3, 3]}>
+                                        </Row>  
 
-                                    <Col span={10}> 
-                                        <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex unpaid-gold-zone' withCount >
-                                            { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
-                                    
-                                    <Col xs={3} sm={3} md={3} lg={2} xl={2}>
-                                        <Zone title={ AUXILIARY_ZONE } className='stack'>
-                                            { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE, true, false, false) }
-                                        </Zone>
-                                    </Col>
-                                    <Col xs={11} sm={11} md={11} lg={12} xl={12}>
-                                        <Zone title={ HAND_ZONE } className='zone-flex' withCount >
-                                            { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE, false, true, false) }
-                                        </Zone>
-                                    </Col>
-                                </Row>
+                                        <Row gutter={[3, 3]}>
+
+                                        <Col span={10}> 
+                                            <Zone title={ UNPAID_GOLD_ZONE } className='zone-flex unpaid-gold-zone' withCount >
+                                                { match[UNPAID_GOLD_ZONE] && returnItemsForZone(UNPAID_GOLD_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
+
+                                        <Col xs={3} sm={3} md={3} lg={2} xl={2}>
+                                            <Zone title={ AUXILIARY_ZONE } className='stack'>
+                                                { match[AUXILIARY_ZONE] && returnItemsForZone(AUXILIARY_ZONE, true, false, false) }
+                                            </Zone>
+                                        </Col>
+                                        <Col xs={11} sm={11} md={11} lg={12} xl={12}>
+                                            <Zone title={ HAND_ZONE } className='zone-flex' withCount >
+                                                { match[HAND_ZONE] && returnItemsForZone(HAND_ZONE, false, true, false) }
+                                            </Zone>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                
                             
                         </Col>
                         <Col span={ width > 479 ? 5 : 24 } className="content-actions">
