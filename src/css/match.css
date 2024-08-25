@@ -214,6 +214,18 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   .title-zone-opponent {
     font-size: 7px;
   }
+
+  .stack {
+    width: unset;
+    float: unset;
+    position: relative;
+    left: 50%;
+  }
+
+  .stack > .movable-item > .img-card-match{
+    height: 62px;
+    margin: 1px;
+  } 
   
   .icon-zone-action > span > * {
     font-size: 11px;
@@ -222,17 +234,17 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
   .movable-item {
     margin: 2px;
-    height: 55px;
+    height: 64px;
     width: 40px;
   }
 
   .img-card-match {
-    height: 55px;
-    width: 40px;
+    height: 61px;
+    width: 41px;
   }
 
   .my-card {
-    height: 60px;
+    height: 67px;
     width: 45px;
     min-width: 45px;
   }
@@ -244,7 +256,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
   }
 
   .zone {
-    height: 87px;
+    height: 92px;
   }
   
 }

@@ -646,7 +646,7 @@ const MatchPage: FC = () => {
                                 </Row>
                                 </div>
                                 
-                                {/* <Phases /> */}
+                                <Phases />
 
                                 <div className='image-match'>
                                     <Row gutter={[3, 3]}>
