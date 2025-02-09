@@ -1,4 +1,4 @@
-import { Alert, Button, Input, message, Modal, Space, Table, Tag } from 'antd';
+import { Alert, Button, Input, message, Modal, Space, Statistic, Table, Tag } from 'antd';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -301,11 +301,14 @@ const Play: FC = () => {
 
     return (
         <>
+            
              <Alert 
                 style={{ width: "100%", marginBottom: 10 }} 
                 message="En esta sección podrás elegir contra quién jugar. Sólo aparecen los usuarios que al menos tiene un mazo creado con 50 cartas y posee alguno seleccionado por defecto" 
                 type="info" showIcon
             />
+            <Statistic title="N° victorias" value={victories ? victories : 0} />
+            <Statistic title="N° derrotas" value={defeats ? defeats : 0} />
  
             {
                 !haveDecks() && (
@@ -349,9 +352,7 @@ const Play: FC = () => {
                 />
             }
 
-            <p><Tag color="green" style={{fontSize: 14}}>{`N° victorias: ${victories ? victories : '0'}`}</Tag></p>
-            <p><Tag color="red" style={{fontSize: 14}}>{`N° derrotas: ${defeats ? defeats : '0'}`}</Tag></p>
-
+            
             {
                 deckDefault?.era && (
                     <Alert 

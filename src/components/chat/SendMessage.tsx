@@ -1,4 +1,4 @@
-import { Input, Form } from 'antd';
+import { Input, Form, Button } from 'antd';
 import React, { FC, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SendOutlined } from '@ant-design/icons';
@@ -24,6 +24,8 @@ const SendMessage: FC = () => {
     const { username } = useSelector((state: RootState) => state.auth);
 
     const [fields, setFields] = useState<FieldData[]>([]);
+
+    const [message, setMessage] = useState<string>('');
 
     const dispatch = useDispatch();
 
@@ -62,18 +64,24 @@ const SendMessage: FC = () => {
 
     };
 
-    const onSearch = (value: string) => {
+    const onSearch = () => {
 
-        if ( value.length === 0 ){ 
+        if ( message.length === 0 ){ 
             return; 
         }
 
-        sendMessage(value);
+        sendMessage(message);
 
         setFields([{
             name: 'message',
             value: ''
         }]);
+
+        setMessage('');
+    };
+
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(e.target.value)
     };
 
     return (
@@ -87,17 +95,27 @@ const SendMessage: FC = () => {
                 
             >
 
-                <Form.Item
+                {/* <Form.Item
                     style={{padding: 5, marginBottom: 2}}
                     name="message"
                 >
                     <Input.Search
-                        enterButton={<SendOutlined />}
                         size="middle"
                         onSearch={ onSearch }
                         placeholder="Escribir mensaje..." 
                     />
-                </Form.Item>
+                </Form.Item> */}
+                <Input.TextArea
+                    showCount
+                    maxLength={100}
+                    style={{ resize: 'none' }}
+                    placeholder="Escribir mensaje..." 
+                    onChange={onChange}
+                    value={message}
+                />
+                <Button type="primary" block style={{marginBottom: 3, borderRadius: 3}} onClick={onSearch} icon={<SendOutlined />}>
+                    Enviar mensaje
+                </Button>
 
             </Form>
         </div>

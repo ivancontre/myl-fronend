@@ -11,6 +11,7 @@ import { SocketContext } from '../../context/SocketContext';
 import { addMessageAction } from '../../store/chat/action';
 import { scrollToBottom } from '../../helpers/scrollToBottom';
 import Buttons from '../buttons/Buttons';
+import { Divider } from 'antd';
 
 const Chat = () => {
 
@@ -61,6 +62,8 @@ const Chat = () => {
             </div>
 
             <SendMessage />
+
+            <Divider>Acciones</Divider>
 
             <div>
                 <div className="row-buttons">

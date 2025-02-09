@@ -27,7 +27,7 @@ import { openModalOpponentDiscard, openModalViewCastleOpponent, openModalViewHan
 import TakeControlOpponentCardModal from '../components/modals/TakeControlOpponentCardModal';
 import AssingWeaponModal from '../components/modals/AssingWeaponModal';
 
-import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, CheckCircleOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 import { isTouchDevice } from '../helpers/touch';
 import Chat from '../components/chat/Chat';
 import { resetChatAction } from '../store/chat/action';
@@ -564,9 +564,15 @@ const MatchPage: FC = () => {
             { modalDestinyCastleOptions && <DestinyCastleOptionsModal />}
 
             {orientation === 'portrait' ? 
-                <div style={{ background: "red", color: "white", padding: "10px", textAlign: "center" }}>
-                    📱 Gira tu dispositivo para mejor experiencia en horizontal 🖥️
-                </div>
+                <Row>
+                    <Col span={ 24 }>
+                        <div style={{ background: "red", color: "white", padding: "10px", textAlign: "center" }}>
+                            📱 Gira tu dispositivo para mejor experiencia en horizontal 🖥️
+                        </div>
+                    </Col>
+                </Row>
+                
+                
             :
             <div className="content-match">
             <DndProvider backend={ isTouchDevice() ? TouchBackend : HTML5Backend } options={{ enableMouseEvents: true }}>
@@ -574,7 +580,7 @@ const MatchPage: FC = () => {
                     <Col style={{ position: "relative"}} span={ 24 }>
                         <div className='image-match'>
                             
-                            <Button type="primary" className="menu-button" onClick={() => setIsOpen(!isOpen)}  >
+                            <Button type="primary" size='small' className="menu-button" onClick={() => setIsOpen(!isOpen)} icon={!isOpen ? <RightOutlined /> : <LeftOutlined /> } >
                                 {!isOpen ? "Cerrar" : "Abrir"} Menú
                             </Button>
                             <Row gutter={[3, 3]}>
