@@ -1,3 +1,9 @@
+.menu-button {
+  position: fixed;
+  right: 20px;
+  margin-top: 5px;
+  z-index: 3;
+}
 .zone {
   height: 127px;
   width: 100%;
@@ -30,7 +36,8 @@ background: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(27,13,71,1) 100%);
 } */
 
 .image-match {
-  background-image: url("https://img.wallpapic.com/i6793-333-517/thumb/wood-wooden-brown-light-wallpaper.jpg");
+  background: rgb(99,151,153);
+  background: linear-gradient(0deg, rgba(99,151,153,1) 0%, rgba(242,174,25,1) 100%);
 }
 
 .scroll {
@@ -106,7 +113,7 @@ span.icon-arm-opponent {
 
 .stack > .movable-item  {
   position: absolute;
-  display: table;
+  display: flex;
   float: left;
   left: -50%;
 }
@@ -161,9 +168,18 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 }
 
 .content-actions {
+  position: fixed;
   background-color: black;
   border: 3px solid rgb(60, 31, 31);
-  position: relative;
+  right: 0;
+  z-index: 2;
+  padding-top: 40px;
+  
+}
+
+.content-actions-mobile-landscape {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .row-buttons {
@@ -197,7 +213,7 @@ div.select-ally-arm > div.ant-modal-content > div.ant-modal-body{
 
 .img-card-match {
   height: 93px;
-  width: 63px;
+  width: 65px;
   border-radius: 3px;
 }
 
